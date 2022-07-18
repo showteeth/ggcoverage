@@ -1,0 +1,243 @@
+---
+title: >
+  ggcoverage User Guide
+author: 
+- name: Yabing Song
+  affiliation: 
+  - &id1 School of Life Sciences, Tsinghua University
+  email: songyb18@mails.tsinghua.edu.cn
+date: "`r BiocStyle::doc_date()`"
+package: "`r BiocStyle::pkg_ver('ggcoverage')`"
+abstract: >
+  The goal of `r Biocpkg("ggcoverage")` is to simplify the process of visualizing genomic coverage. It contains functions to load genomic data with bam/bigwig/bedgraph file format, create genomic coverage plot, add various annotation to the coverage plot, including gene annotaion, transcription annotion, ideogram annotation and peak annotation.
+output: 
+  BiocStyle::html_document:
+    toc_depth: 4
+    toc_float: true
+fig_caption: TRUE
+vignette: >
+  %\VignetteIndexEntry{ggcoverage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown()
+```
+
+```{r setup, echo=FALSE, warning=FALSE}
+library(knitr)
+htmltools::tagList(rmarkdown::html_dependency_font_awesome())
+
+# set dpi
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  dpi=60
+)
+```
+
+# Getting started
+
+`r Biocpkg("ggcoverage")` is an R package distributed as part of the [Bioconductor](http://bioconductor.org) project and [CRAN](https://cran.r-project.org/).
+To install the package, start R and enter:
+  
+```{r install, eval=FALSE}
+# install via Bioconductor
+if (!requireNamespace("BiocManager", quietly=TRUE))
+  install.packages("BiocManager")
+BiocManager::install("ggcoverage")
+
+# install via CRAN
+install.package("ggcoverage")
+
+# install via Github
+# install.package("remotes")   #In case you have not installed it.
+remotes::install_github("showteeth/ggcoverage")
+```
+
+Once `r Rpackage("ggcoverage")` is installed, it can be loaded by the following command.
+
+```{r library, message=FALSE, warning=FALSE}
+library("rtracklayer")
+library("ggcoverage")
+```
+
+# Introduction
+<img src = "../man/figures/ggcoverage.png" align = "right" width = "200"/>
+
+  The goal of `ggcoverage` is simplify the process of visualizing genomic coverage. It contains three main parts:
+
+* **Load the data**: `ggcoverage` can load bam, bigwig (.bw), bedgraph file from various NGS data, including RNA-seq, ChIP-seq, ATAC-seq, et al.
+* **Create genomic coverage plot**
+* **Add annotaions**: `ggcoverage` supports four different annotaions:
+  * **gene annotaion**: Visualize genomic coverage across whole gene
+  * **transcription annotion**: Visualize genomic coverage across different transcripts
+  * **ideogram annotation**: Visualize the region showing on whole chromosome
+  * **peak annotation**: Visualize genomic coverage and peak identified.
+
+`ggcoverage` utilizes `ggplot2` plotting system, so its usage is ggplot2-style!
+
+-------------
+
+# RNA-seq data
+## Load the data
+The RNA-seq data used here are from [Transcription profiling by high throughput sequencing of HNRNPC knockdown and control HeLa cells](https://bioconductor.org/packages/release/data/experiment/html/RNAseqData.HNRNPC.bam.chr14.html), we select four sample to use as example: ERR127307_chr14, ERR127306_chr14, ERR127303_chr14, ERR127302_chr14, and all bam files are converted to bigwig file with [deeptools](https://deeptools.readthedocs.io/en/develop/).
+
+Load metadata:
+```{r load_metadata}
+# load metadata
+meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+sample.meta = read.csv(meta.file)
+sample.meta
+```
+
+Load track files:
+```{r load_track}
+# track folder
+track.folder = system.file("extdata", "RNA-seq", package = "ggcoverage")
+# load bigwig file
+track.df = LoadTrackFile(track.folder = track.folder, format = "bw",
+                         meta.info = sample.meta)
+# check data
+head(track.df)
+```
+
+Prepare mark region:
+```{r prepare_mark}
+# create mark region
+mark.region=data.frame(start=c(21678900,21732001,21737590),
+                       end=c(21679900,21732400,21737650),
+                       label=c("M1", "M2", "M3"))
+# check data
+mark.region
+```
+
+Load GTF file:
+```{r load_gtf}
+gtf.file = system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+gtf.gr = rtracklayer::import.gff(con = gtf.file, format = 'gtf')
+```
+
+-------------
+
+## Basic coverage
+```{r basic_coverage, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+basic.coverage = ggcoverage(data = track.df, color = "auto", 
+                            mark.region = mark.region, range.position = "out")
+basic.coverage
+```
+
+You can also change Y axis style:
+```{r basic_coverage_2, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+basic.coverage = ggcoverage(data = track.df, color = "auto", 
+                            mark.region = mark.region, range.position = "in")
+basic.coverage
+```
+
+-------------
+
+## Add gene annotation
+```{r gene_coverage, warning=FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+basic.coverage + 
+  geom_gene(gtf.gr=gtf.gr)
+```
+
+-------------
+
+## Add transcript annotation
+```{r transcript_coverage, warning=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
+basic.coverage + 
+  geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5)
+```
+
+-------------
+
+## Add ideogram
+```{r ideogram_coverage_1, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+basic.coverage +
+  geom_gene(gtf.gr=gtf.gr) +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+```{r ideogram_coverage_2, warning=FALSE, fig.height = 14, fig.width = 12, fig.align = "center"}
+basic.coverage +
+  geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5) +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+-------------
+
+# ChIP-seq data
+The ChIP-seq data used here are from [DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html), I select four sample to use as example: Chr18_MCF7_input, Chr18_MCF7_ER_1, Chr18_MCF7_ER_3, Chr18_MCF7_ER_2, and all bam files are converted to bigwig file with [deeptools](https://deeptools.readthedocs.io/en/develop/).
+
+Create metadata:
+```{r load_metadata_chip}
+# load metadata
+sample.meta = data.frame(SampleName=c('Chr18_MCF7_ER_1','Chr18_MCF7_ER_2','Chr18_MCF7_ER_3','Chr18_MCF7_input'),
+                         Type = c("MCF7_ER_1","MCF7_ER_2","MCF7_ER_3","MCF7_input"),
+                         Group = c("IP", "IP", "IP", "Input"))
+sample.meta
+```
+
+Load track files:
+```{r load_track_chip}
+# track folder
+track.folder = system.file("extdata", "ChIP-seq", package = "ggcoverage")
+# load bigwig file
+track.df = LoadTrackFile(track.folder = track.folder, format = "bw",
+                         meta.info = sample.meta)
+# check data
+head(track.df)
+```
+
+Prepare mark region:
+```{r prepare_mark_chip}
+# create mark region
+mark.region=data.frame(start=c(76822533),
+                       end=c(76823743),
+                       label=c("Promoter"))
+# check data
+mark.region
+```
+
+-------------
+
+## Basic coverage
+```{r basic_coverage_chip, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+basic.coverage = ggcoverage(data = track.df, color = "auto", region = "chr18:76822285-76900000", 
+                            mark.region=mark.region, show.mark.label = FALSE)
+basic.coverage
+```
+
+-------------
+
+## Add annotations
+Add **gene**, **ideogram** and **peak** annotaions. To create peak annotaion, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC), you can also use [DEbChIP's](https://github.com/showteeth/DEbChIP) `GetConsensusPeak` (`MSPC`'s wrapper) to do this.
+
+```{r peak_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+# get consensus peak file
+peak.file = system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
+
+basic.coverage +
+  geom_gene(gtf.gr=gtf.gr) +
+  geom_peak(bed.file = peak.file) +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+---------------------
+
+# Session info
+```{r session}
+sessionInfo()
+```
+
+
+
+
+
+
+
+
+
+
