@@ -39,15 +39,10 @@ knitr::opts_chunk$set(
 
 # Getting started
 
-`r Biocpkg("ggcoverage")` is an R package distributed as part of the [Bioconductor](http://bioconductor.org) project and [CRAN](https://cran.r-project.org/).
+`r Biocpkg("ggcoverage")` is an R package distributed as part of the [CRAN](https://cran.r-project.org/).
 To install the package, start R and enter:
   
 ```{r install, eval=FALSE}
-# install via Bioconductor
-if (!requireNamespace("BiocManager", quietly=TRUE))
-  install.packages("BiocManager")
-BiocManager::install("ggcoverage")
-
 # install via CRAN
 install.package("ggcoverage")
 
@@ -213,7 +208,7 @@ basic.coverage
 -------------
 
 ## Add annotations
-Add **gene**, **ideogram** and **peak** annotaions. To create peak annotaion, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC), you can also use [DEbChIP's](https://github.com/showteeth/DEbChIP) `GetConsensusPeak` (`MSPC`'s wrapper) to do this.
+Add **gene**, **ideogram** and **peak** annotaions. To create peak annotaion, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC), you can also use DEbChIP's `GetConsensusPeak` (`MSPC`'s wrapper) to do this.
 
 ```{r peak_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 # get consensus peak file

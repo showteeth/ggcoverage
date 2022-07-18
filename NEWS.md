@@ -1,5 +1,8 @@
 # ggcoverage 0.5.0
 * First CRAN release.
+* Fix bug in `getIdeogram`.
+
+-------------
 
 # ggcoverage 0.4.0
 ## New features

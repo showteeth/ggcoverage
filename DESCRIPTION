@@ -1,6 +1,6 @@
 Package: ggcoverage
 Type: Package
-Title: ggcoverage - Visualize genomic coverage with various annotaion.
+Title: ggcoverage - Visualize genomic coverage with various annotation
 Version: 0.5.0
 Authors@R: 
     person(given = "Yabing",
@@ -10,10 +10,9 @@ Authors@R:
 Maintainer: Yabing Song <songyb0519@gmail.com>
 Description: The goal of ggcoverage is to simplify the process of visualizing genomic coverage. It contains functions to 
     load genomic data with bam/bigwig/bedgraph file format, create genomic coverage plot, add various annotation to 
-    the coverage plot, including gene annotaion, transcription annotion, ideogram annotation and peak annotation.
+    the coverage plot, including gene annotaion, transcription annotation, ideogram annotation and peak annotation.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.1.1
 Imports: 
     biovizBase,
@@ -33,7 +32,10 @@ Imports:
     rtracklayer,
     scales,
     stats,
-    utils
+    utils,
+    methods,
+    GenomeInfoDb,
+    S4Vectors
 Suggests: 
     rmarkdown,
     knitr,

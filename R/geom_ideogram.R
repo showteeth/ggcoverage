@@ -19,6 +19,11 @@
 #' @importFrom ggplot2 ggplot_add ggplot geom_rect aes_string geom_polygon theme_classic theme element_blank
 #' scale_x_continuous scale_y_continuous margin
 #' @importFrom patchwork wrap_plots
+#' @importFrom methods extends
+#' @importFrom utils menu
+#' @importFrom GenomeInfoDb seqlengths seqlengths<-
+#' @importFrom GenomicRanges trim
+#' @importFrom S4Vectors values<-
 #' @export
 #'
 geom_ideogram <- function(genome = "hg19", mark.color = "red", mark.alpha = 0.7, mark.line.size = 1,
@@ -55,7 +60,7 @@ ggplot_add.ideogram <- function(object, plot, object_name) {
   plot.height <- object$plot.height
 
   # get genome and chr ideogram
-  genome.info <- biovizBase::getIdeogram(genome = genome, subchr = plot.chr, cytobands = TRUE)
+  genome.info <- getIdeogram(genome = genome, subchr = plot.chr, cytobands = TRUE)
   genome.info.df <- genome.info %>% as.data.frame()
   # get genome length
   genome.length <- genome.info.df[nrow(genome.info.df), "end"]
