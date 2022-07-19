@@ -29,16 +29,10 @@ ggplot2-style!
 ## Installation
 
 `ggcoverage` is an R package distributed as part of the
-[Bioconductor](http://bioconductor.org) project and
 [CRAN](https://cran.r-project.org/). To install the package, start R and
 enter:
 
 ``` r
-# install via Bioconductor
-if (!requireNamespace("BiocManager", quietly=TRUE))
-  install.packages("BiocManager")
-BiocManager::install("ggcoverage")
-
 # install via CRAN
 install.package("ggcoverage")
 
@@ -166,7 +160,6 @@ basic.coverage +
 basic.coverage +
   geom_gene(gtf.gr=gtf.gr) +
   geom_ideogram(genome = "hg19",plot.space = 0)
-#> [1] "hg19"
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for 'x' is already present. Adding another scale for 'x', which will
@@ -179,7 +172,6 @@ basic.coverage +
 basic.coverage +
   geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5) +
   geom_ideogram(genome = "hg19",plot.space = 0)
-#> [1] "hg19"
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for 'x' is already present. Adding another scale for 'x', which will
@@ -258,9 +250,8 @@ basic.coverage
 
 Add **gene**, **ideogram** and **peak** annotaions. To create peak
 annotaion, we first **get consensus peaks** with
-[MSPC](https://github.com/Genometric/MSPC), you can also use
-[DEbChIP’s](https://github.com/showteeth/DEbChIP) `GetConsensusPeak`
-(`MSPC`’s wrapper) to do this.
+[MSPC](https://github.com/Genometric/MSPC), you can also use DEbChIP’s
+`GetConsensusPeak` (`MSPC`’s wrapper) to do this.
 
 ``` r
 # get consensus peak file
@@ -270,7 +261,6 @@ basic.coverage +
   geom_gene(gtf.gr=gtf.gr) +
   geom_peak(bed.file = peak.file) +
   geom_ideogram(genome = "hg19",plot.space = 0)
-#> [1] "hg19"
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for 'x' is already present. Adding another scale for 'x', which will
