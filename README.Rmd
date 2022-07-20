@@ -23,10 +23,10 @@ knitr::opts_chunk$set(
 
 * **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph files from various NGS data, including DNA-seq, RNA-seq, ChIP-seq, ATAC-seq, et al.
 * **Create genome coverage plot**
-* **Add annotaions**: `ggcoverage` supports four different annotaions:
-  * **GC annotaion**: Visualize genome coverage with GC content
-  * **gene annotaion**: Visualize genome coverage across whole gene
-  * **transcription annotion**: Visualize genome coverage across different transcripts
+* **Add annotations**: `ggcoverage` supports four different annotations:
+  * **GC annotation**: Visualize genome coverage with GC content
+  * **gene annotation**: Visualize genome coverage across whole gene
+  * **transcription annotation**: Visualize genome coverage across different transcripts
   * **ideogram annotation**: Visualize the region showing on whole chromosome
   * **peak annotation**: Visualize genome coverage and peak identified
 
@@ -208,7 +208,7 @@ basic.coverage
 ```
 
 ### Add annotations
-Add **gene**, **ideogram** and **peak** annotaions. To create peak annotaion, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC), you can also use DEbChIP's `GetConsensusPeak` (`MSPC`'s wrapper) to do this.
+Add **gene**, **ideogram** and **peak** annotations. To create peak annotation, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC), you can also use DEbChIP's `GetConsensusPeak` (`MSPC`'s wrapper) to do this.
 
 ```{r peak_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 # get consensus peak file
