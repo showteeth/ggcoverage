@@ -57,6 +57,33 @@ theme_coverage2 <- function(space = 0.2, x.range) {
   )
 }
 
+# theme for geom_gc
+#' Theme for geom_gc.
+#'
+#' @param x.range X axis ranges.
+#' @param margin.len Top and bottom margin.
+#'
+#' @return List of layers.
+#' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
+#' scale_y_continuous scale_x_continuous coord_cartesian
+#'
+theme_gc <- function(x.range, margin.len) {
+  list(
+    theme_classic(),
+    theme(
+      axis.title.y.right = element_text(color = "black", angle = 90, vjust = 0.5),
+      axis.text.x = element_blank(),
+      axis.title.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      panel.border = element_rect(colour = "black", fill = NA, size = 1),
+      plot.margin = margin(t = margin.len, b = margin.len)
+    ),
+    scale_y_continuous(position = "right"),
+    scale_x_continuous(expand = c(0, 0)),
+    coord_cartesian(xlim = x.range)
+  )
+}
+
 
 # theme for geom_gene
 #' Theme for geom_gene.

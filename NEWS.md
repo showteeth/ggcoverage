@@ -1,5 +1,14 @@
+# ggcoverage 0.6.0
+## New features
+* Add `geom_gc` to annotate genome coverage with GC content. 
+
+-------------
+
 # ggcoverage 0.5.0
+## New features
 * First CRAN release.
+
+## Minor changes
 * Fix bug in `getIdeogram`.
 
 -------------

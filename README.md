@@ -1,27 +1,28 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ggcoverage - Visualize and annotate genomic coverage with ggplot2
+# ggcoverage - Visualize and annotate genome coverage with ggplot2
 
 <img src = "man/figures/ggcoverage.png" align = "right" width = "200"/>
 
 ## Introduction
 
-The goal of `ggcoverage` is simplify the process of visualizing genomic
+The goal of `ggcoverage` is simplify the process of visualizing genome
 coverage. It contains three main parts:
 
--   **Load the data**: `ggcoverage` can load bam, bigwig (.bw), bedgraph
-    file from various NGS data, including RNA-seq, ChIP-seq, ATAC-seq,
-    et al.
--   **Create genomic coverage plot**
+-   **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph
+    files from various NGS data, including DNA-seq, RNA-seq, ChIP-seq,
+    ATAC-seq, et al.
+-   **Create genome coverage plot**
 -   **Add annotaions**: `ggcoverage` supports four different annotaions:
-    -   **gene annotaion**: Visualize genomic coverage across whole gene
-    -   **transcription annotion**: Visualize genomic coverage across
+    -   **GC annotaion**: Visualize genome coverage with GC content
+    -   **gene annotaion**: Visualize genome coverage across whole gene
+    -   **transcription annotion**: Visualize genome coverage across
         different transcripts
     -   **ideogram annotation**: Visualize the region showing on whole
         chromosome
-    -   **peak annotation**: Visualize genomic coverage and peak
-        identified.
+    -   **peak annotation**: Visualize genome coverage and peak
+        identified
 
 `ggcoverage` utilizes `ggplot2` plotting system, so its usage is
 ggplot2-style!
@@ -180,6 +181,68 @@ basic.coverage +
 
 <img src="man/figures/README-ideogram_coverage_2-1.png" width="100%" style="display: block; margin: auto;" />
 
+## DNA-seq data
+
+### Load the dta
+
+The DNA-seq data used here are from [Copy number work
+flow](http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html),
+we select tumor sample, and get bin counts with
+`cn.mops::getReadCountsFromBAM` with `WL` 1000.
+
+``` r
+# track file
+track.file = system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")
+track.df = read.table(track.file, header = TRUE)
+# check data
+head(track.df)
+#>   seqnames    start      end score  Type Group
+#> 1     chr4 61743001 61744000    17 tumor tumor
+#> 2     chr4 61744001 61745000    14 tumor tumor
+#> 3     chr4 61745001 61746000    13 tumor tumor
+#> 4     chr4 61746001 61747000    16 tumor tumor
+#> 5     chr4 61747001 61748000    25 tumor tumor
+#> 6     chr4 61748001 61749000    24 tumor tumor
+```
+
+### Basic coverage
+
+``` r
+basic.coverage = ggcoverage(data = track.df,color = NULL, mark.region = NULL,
+                            region = 'chr4:61750000-62,700,000', range.position = "out")
+basic.coverage
+```
+
+<img src="man/figures/README-basic_coverage_dna-1.png" width="100%" style="display: block; margin: auto;" />
+
+### Add annotations
+
+Add **GC**, **ideogram** and **gene** annotaions.
+
+``` r
+# load genome data
+library("BSgenome.Hsapiens.UCSC.hg19")
+#> Loading required package: BSgenome
+#> Loading required package: Biostrings
+#> Loading required package: XVector
+#> 
+#> Attaching package: 'Biostrings'
+#> The following object is masked from 'package:base':
+#> 
+#>     strsplit
+# create plot
+basic.coverage +
+  geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
+  geom_gene(gtf.gr=gtf.gr) +
+  geom_ideogram(genome = "hg19")
+#> Loading ideogram...
+#> Loading ranges...
+#> Scale for 'x' is already present. Adding another scale for 'x', which will
+#> replace the existing scale.
+```
+
+<img src="man/figures/README-gc_coverage-1.png" width="100%" style="display: block; margin: auto;" />
+
 ## ChIP-seq data
 
 The ChIP-seq data used here are from
@@ -236,7 +299,7 @@ mark.region
 #> 1 76822533 76823743 Promoter
 ```
 
-### Basic track
+### Basic coverage
 
 ``` r
 basic.coverage = ggcoverage(data = track.df, color = "auto", region = "chr18:76822285-76900000", 

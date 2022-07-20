@@ -8,7 +8,7 @@
   utils::globalVariables("label")
   utils::globalVariables("end")
   utils::globalVariables("gene_name")
-  utils::globalVariables("type")
+  utils::globalVariables("Type")
 
   invisible()
 }

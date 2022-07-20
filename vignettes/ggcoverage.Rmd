@@ -9,7 +9,7 @@ author:
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('ggcoverage')`"
 abstract: >
-  The goal of `r Biocpkg("ggcoverage")` is to simplify the process of visualizing genomic coverage. It contains functions to load genomic data with bam/bigwig/bedgraph file format, create genomic coverage plot, add various annotation to the coverage plot, including gene annotaion, transcription annotion, ideogram annotation and peak annotation.
+  The goal of `ggcoverage` is to simplify the process of visualizing genome coverage. It contains functions to load data from BAM, BigWig or BedGraph files, create genome coverage plot, add various annotation to the coverage plot, including GC annotation, gene annotation, transcript annotation, ideogram annotation and peak annotation.
 output: 
   BiocStyle::html_document:
     toc_depth: 4
@@ -61,15 +61,16 @@ library("ggcoverage")
 # Introduction
 <img src = "../man/figures/ggcoverage.png" align = "right" width = "200"/>
 
-  The goal of `ggcoverage` is simplify the process of visualizing genomic coverage. It contains three main parts:
+  The goal of `ggcoverage` is simplify the process of visualizing genome coverage. It contains three main parts:
 
-* **Load the data**: `ggcoverage` can load bam, bigwig (.bw), bedgraph file from various NGS data, including RNA-seq, ChIP-seq, ATAC-seq, et al.
-* **Create genomic coverage plot**
+* **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph files from various NGS data, including DNA-seq, RNA-seq, ChIP-seq, ATAC-seq, et al.
+* **Create genome coverage plot**
 * **Add annotaions**: `ggcoverage` supports four different annotaions:
-  * **gene annotaion**: Visualize genomic coverage across whole gene
-  * **transcription annotion**: Visualize genomic coverage across different transcripts
+  * **GC annotaion**: Visualize genome coverage with GC content
+  * **gene annotaion**: Visualize genome coverage across whole gene
+  * **transcription annotion**: Visualize genome coverage across different transcripts
   * **ideogram annotation**: Visualize the region showing on whole chromosome
-  * **peak annotation**: Visualize genomic coverage and peak identified.
+  * **peak annotation**: Visualize genome coverage and peak identified
 
 `ggcoverage` utilizes `ggplot2` plotting system, so its usage is ggplot2-style!
 
@@ -162,6 +163,43 @@ basic.coverage +
 ```
 
 -------------
+
+# DNA-seq data
+## Load the dta
+The DNA-seq data used here are from [Copy number work flow](http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html), we select tumor sample, and get bin counts with `cn.mops::getReadCountsFromBAM` with `WL` 1000.
+
+```{r load_bin_counts}
+# track file
+track.file = system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")
+track.df = read.table(track.file, header = TRUE)
+# check data
+head(track.df)
+```
+
+
+## Basic coverage
+```{r basic_coverage_dna, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+basic.coverage = ggcoverage(data = track.df,color = NULL, mark.region = NULL,
+                            region = 'chr4:61750000-62,700,000', range.position = "out")
+basic.coverage
+```
+
+-------------
+
+## Add annotations
+Add **GC**, **ideogram** and **gene** annotaions.
+
+```{r gc_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+# load genome data
+library("BSgenome.Hsapiens.UCSC.hg19")
+# create plot
+basic.coverage +
+  geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
+  geom_gene(gtf.gr=gtf.gr) +
+  geom_ideogram(genome = "hg19")
+```
+
+---------------------
 
 # ChIP-seq data
 The ChIP-seq data used here are from [DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html), I select four sample to use as example: Chr18_MCF7_input, Chr18_MCF7_ER_1, Chr18_MCF7_ER_3, Chr18_MCF7_ER_2, and all bam files are converted to bigwig file with [deeptools](https://deeptools.readthedocs.io/en/develop/).
