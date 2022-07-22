@@ -39,7 +39,7 @@ knitr::opts_chunk$set(
 
 # Getting started
 
-`r Biocpkg("ggcoverage")` is an R package distributed as part of the [CRAN](https://cran.r-project.org/).
+`ggcoverage` is an R package distributed as part of the [CRAN](https://cran.r-project.org/).
 To install the package, start R and enter:
   
 ```{r install, eval=FALSE}
@@ -51,7 +51,7 @@ install.package("ggcoverage")
 remotes::install_github("showteeth/ggcoverage")
 ```
 
-Once `r Rpackage("ggcoverage")` is installed, it can be loaded by the following command.
+Once `ggcoverage` is installed, it can be loaded by the following command.
 
 ```{r library, message=FALSE, warning=FALSE}
 library("rtracklayer")

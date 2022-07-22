@@ -40,6 +40,22 @@
 #' @importFrom ggrepel geom_text_repel
 #' @export
 #'
+#' @examples
+#' library(ggcoverage)
+#' library(utils)
+#' library(rtracklayer)
+#' meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#' sample.meta <- utils::read.csv(meta.file)
+#' # track folder
+#' track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+#' # load bigwig file
+#' track.df <- LoadTrackFile(
+#'   track.folder = track.folder, format = "bw",
+#'   meta.info = sample.meta
+#' )
+#' gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#' gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
+#' ggcoverage(data = track.df, color = "auto", range.position = "out")
 ggcoverage <- function(data, region = "chr14:21,677,306-21,737,601", gtf.gr = NULL, extend = 2000,
                        gene.name = "HNRNPC", gene.name.type = c("gene_name", "gene_id"),
                        mapping = NULL, color = NULL, facet.key = "Type", facet.order = NULL, facet.color = NULL,

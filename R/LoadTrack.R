@@ -19,6 +19,20 @@
 #' @importFrom utils read.csv
 #' @export
 #'
+#' @examples
+#' library(ggcoverage)
+#' sample.meta <- data.frame(
+#'   SampleName = c("Chr18_MCF7_ER_1", "Chr18_MCF7_ER_2", "Chr18_MCF7_ER_3", "Chr18_MCF7_input"),
+#'   Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),
+#'   Group = c("IP", "IP", "IP", "Input")
+#' )
+#' # track folder
+#' track.folder <- system.file("extdata", "ChIP-seq", package = "ggcoverage")
+#' # load bigwig file
+#' track.df <- LoadTrackFile(
+#'   track.folder = track.folder, format = "bw",
+#'   meta.info = sample.meta
+#' )
 LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wig", "bw", "bedgraph"), meta.info = NULL, meta.file = "",
                           bamcoverage.path = NULL, norm.method = c("RPKM", "CPM", "BPM", "RPGC", "None"),
                           bin.size = 10, bc.extra.para = NULL) {

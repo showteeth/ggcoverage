@@ -41,3 +41,19 @@ Plot.
 \description{
 Add GC Content Annotation to Coverage Plot.
 }
+\examples{
+library(ggcoverage)
+library(utils)
+library(rtracklayer)
+library("BSgenome.Hsapiens.UCSC.hg19")
+# track folder
+track.file <- system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")
+track.df <- utils::read.table(track.file, header = TRUE)
+gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
+basic.coverage <- ggcoverage(
+  data = track.df, color = NULL, mark.region = NULL,
+  region = "chr4:61750000-62,700,000", range.position = "out"
+)
+basic.coverage + geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
+}

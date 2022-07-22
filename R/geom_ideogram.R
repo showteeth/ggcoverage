@@ -26,6 +26,23 @@
 #' @importFrom S4Vectors values<-
 #' @export
 #'
+#' @examples
+#' library(ggcoverage)
+#' library(utils)
+#' library(rtracklayer)
+#' meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#' sample.meta <- utils::read.csv(meta.file)
+#' # track folder
+#' track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+#' # load bigwig file
+#' track.df <- LoadTrackFile(
+#'   track.folder = track.folder, format = "bw",
+#'   meta.info = sample.meta
+#' )
+#' gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#' gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
+#' basic.coverage <- ggcoverage(data = track.df, color = "auto", range.position = "out")
+#' basic.coverage + geom_gene(gtf.gr = gtf.gr) + geom_ideogram(genome = "hg19", plot.space = 0)
 geom_ideogram <- function(genome = "hg19", mark.color = "red", mark.alpha = 0.7, mark.line.size = 1,
                           add.shadow = TRUE, shadow.color = "grey", shadow.alpha = 0.7, shadow.line.size = 1,
                           plot.space = 0.1, plot.height = 0.1) {

@@ -44,3 +44,18 @@ A dataframe.
 \description{
 Load Track File to Dataframe.
 }
+\examples{
+library(ggcoverage)
+sample.meta <- data.frame(
+  SampleName = c("Chr18_MCF7_ER_1", "Chr18_MCF7_ER_2", "Chr18_MCF7_ER_3", "Chr18_MCF7_input"),
+  Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),
+  Group = c("IP", "IP", "IP", "Input")
+)
+# track folder
+track.folder <- system.file("extdata", "ChIP-seq", package = "ggcoverage")
+# load bigwig file
+track.df <- LoadTrackFile(
+  track.folder = track.folder, format = "bw",
+  meta.info = sample.meta
+)
+}

@@ -63,3 +63,21 @@ Plot.
 \description{
 Add Gene Annotation to Coverage Plot.
 }
+\examples{
+library(ggcoverage)
+library(utils)
+library(rtracklayer)
+meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+sample.meta <- utils::read.csv(meta.file)
+# track folder
+track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+# load bigwig file
+track.df <- LoadTrackFile(
+  track.folder = track.folder, format = "bw",
+  meta.info = sample.meta
+)
+gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
+basic.coverage <- ggcoverage(data = track.df, color = "auto", range.position = "out")
+basic.coverage + geom_gene(gtf.gr = gtf.gr)
+}
