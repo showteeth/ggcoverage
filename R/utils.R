@@ -222,7 +222,7 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
       message("Done")
     }
     if (length(subchr)) {
-      gr <- gr[seqnames(gr) == subchr]
+      gr <- gr[GenomeInfoDb::seqnames(gr) == subchr]
     }
 
     gr <- sort(gr)

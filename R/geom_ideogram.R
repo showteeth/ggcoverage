@@ -21,7 +21,7 @@
 #' @importFrom patchwork wrap_plots
 #' @importFrom methods extends
 #' @importFrom utils menu
-#' @importFrom GenomeInfoDb seqlengths seqlengths<-
+#' @importFrom GenomeInfoDb seqlengths seqlengths<- seqnames
 #' @importFrom GenomicRanges trim
 #' @importFrom S4Vectors values<-
 #' @export
