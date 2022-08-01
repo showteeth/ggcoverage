@@ -8,7 +8,7 @@
 #' @param guide.line.color The color of guide line. Default: "red".
 #' @param guide.line.type The line type of guide line. Default: "dashed".
 #' @param plot.space Top and bottom margin. Default: 0.1.
-#' @param plot.height The relative height of gene annotation to coverage plot. Default: 0.2.
+#' @param plot.height The relative height of GC content annotation to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
 #' @importFrom dplyr filter

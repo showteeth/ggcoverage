@@ -33,7 +33,7 @@ geom_gc(
 
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
-\item{plot.height}{The relative height of gene annotation to coverage plot. Default: 0.2.}
+\item{plot.height}{The relative height of GC content annotation to coverage plot. Default: 0.2.}
 }
 \value{
 Plot.

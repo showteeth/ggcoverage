@@ -21,9 +21,10 @@ knitr::opts_chunk$set(
 ## Introduction
   The goal of `ggcoverage` is simplify the process of visualizing genome coverage. It contains three main parts:
 
-* **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph files from various NGS data, including DNA-seq, RNA-seq, ChIP-seq, ATAC-seq, et al.
+* **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph files from various NGS data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, et al.
 * **Create genome coverage plot**
-* **Add annotations**: `ggcoverage` supports four different annotations:
+* **Add annotations**: `ggcoverage` supports six different annotations:
+  * **Base and amino acid annotaion**: Visualize genome coverage at single-nucleotide level with bases and amino acids.
   * **GC annotation**: Visualize genome coverage with GC content
   * **gene annotation**: Visualize genome coverage across whole gene
   * **transcription annotation**: Visualize genome coverage across different transcripts
@@ -136,7 +137,8 @@ basic.coverage +
 ```
 
 ## DNA-seq data
-### Load the dta
+### CNV
+#### Load the data
 The DNA-seq data used here are from [Copy number work flow](http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html), we select tumor sample, and get bin counts with `cn.mops::getReadCountsFromBAM` with `WL` 1000.
 
 ```{r load_bin_counts}
@@ -147,14 +149,14 @@ track.df = read.table(track.file, header = TRUE)
 head(track.df)
 ```
 
-### Basic coverage
+#### Basic coverage
 ```{r basic_coverage_dna, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic.coverage = ggcoverage(data = track.df,color = NULL, mark.region = NULL,
                             region = 'chr4:61750000-62,700,000', range.position = "out")
 basic.coverage
 ```
 
-### Add annotations
+#### Add GC annotations
 Add **GC**, **ideogram** and **gene** annotaions.
 
 ```{r gc_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
@@ -165,6 +167,33 @@ basic.coverage +
   geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
   geom_gene(gtf.gr=gtf.gr) +
   geom_ideogram(genome = "hg19")
+```
+
+### Single-nucleotide level
+#### Load the data
+```{r load_single_nuc}
+# prepare sample metadata
+sample.meta <- data.frame(
+  SampleName = c("tumorA.chr4.selected"),
+  Type = c("tumorA"),
+  Group = c("tumorA")
+)
+# load bam file
+bam.file = system.file("extdata", "DNA-seq", "tumorA.chr4.selected.bam", package = "ggcoverage")
+track.df <- LoadTrackFile(
+  track.file = bam.file,
+  meta.info = sample.meta,
+  single.nuc=TRUE, single.nuc.region="chr4:62474235-62474295"
+)
+head(track.df)
+```
+
+#### Add base and amino acid annotation
+```{r base_aa_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=T, rect.color = "white") +
+  geom_base(bam.file = bam.file,
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
+  geom_ideogram(genome = "hg19",plot.space = 0)
 ```
 
 ## ChIP-seq data

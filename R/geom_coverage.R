@@ -3,6 +3,7 @@
 #' @param data Track prepared by \code{\link{FormatTrack}}.
 #' @param mapping Set of aesthetic mappings created by \code{aes} or \code{aes_}. Default: NULL.
 #' @param color Track color. Default: NULL (select automatically).
+#' @param rect.color The color of every bin. Default: NA.
 #' @param facet.key Sample type key to create coverage plot. Default: Type.
 #' @param facet.order The order of coverage plot. Default: NULL.
 #' @param facet.color The color of sample text. Default: NULL (select automatically).
@@ -45,7 +46,7 @@
 #' ggplot() +
 #'   geom_coverage(data = track.df, color = "auto", mark.region = NULL)
 geom_coverage <- function(data, mapping = NULL,
-                          color = NULL, facet.key = "Type", facet.order = NULL, facet.color = NULL,
+                          color = NULL, rect.color = NA, facet.key = "Type", facet.order = NULL, facet.color = NULL,
                           group.key = "Group", range.size = 3, range.position = c("in", "out"),
                           mark.region = NULL, mark.color = "grey", mark.alpha = 0.5,
                           show.mark.label = TRUE, mark.label.size = 4) {
@@ -111,7 +112,7 @@ geom_coverage <- function(data, mapping = NULL,
 
   # facet formula
   facet.formula <- as.formula(paste0("~ ", facet.key))
-  region.rect <- geom_rect(data = data, mapping = mapping, show.legend = F)
+  region.rect <- geom_rect(data = data, mapping = mapping, show.legend = F, colour = rect.color)
   region.facet <- facet_wrap2(
     facets = facet.formula, ncol = 1, scales = "free_y", strip.position = "right",
     strip = strip_themed(background_y = elem_list_rect(

@@ -11,13 +11,16 @@ The goal of `ggcoverage` is simplify the process of visualizing genome
 coverage. It contains three main parts:
 
 -   **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph
-    files from various NGS data, including DNA-seq, RNA-seq, ChIP-seq,
+    files from various NGS data, including WGS, RNA-seq, ChIP-seq,
     ATAC-seq, et al.
 -   **Create genome coverage plot**
--   **Add annotaions**: `ggcoverage` supports four different annotaions:
-    -   **GC annotaion**: Visualize genome coverage with GC content
-    -   **gene annotaion**: Visualize genome coverage across whole gene
-    -   **transcription annotion**: Visualize genome coverage across
+-   **Add annotations**: `ggcoverage` supports six different
+    annotations:
+    -   **Base and amino acid annotaion**: Visualize genome coverage at
+        single-nucleotide level with bases and amino acids.
+    -   **GC annotation**: Visualize genome coverage with GC content
+    -   **gene annotation**: Visualize genome coverage across whole gene
+    -   **transcription annotation**: Visualize genome coverage across
         different transcripts
     -   **ideogram annotation**: Visualize the region showing on whole
         chromosome
@@ -183,7 +186,9 @@ basic.coverage +
 
 ## DNA-seq data
 
-### Load the dta
+### CNV
+
+#### Load the data
 
 The DNA-seq data used here are from [Copy number work
 flow](http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html),
@@ -205,7 +210,7 @@ head(track.df)
 #> 6     chr4 61748001 61749000    24 tumor tumor
 ```
 
-### Basic coverage
+#### Basic coverage
 
 ``` r
 basic.coverage = ggcoverage(data = track.df,color = NULL, mark.region = NULL,
@@ -215,7 +220,7 @@ basic.coverage
 
 <img src="man/figures/README-basic_coverage_dna-1.png" width="100%" style="display: block; margin: auto;" />
 
-### Add annotations
+#### Add GC annotations
 
 Add **GC**, **ideogram** and **gene** annotaions.
 
@@ -242,6 +247,49 @@ basic.coverage +
 ```
 
 <img src="man/figures/README-gc_coverage-1.png" width="100%" style="display: block; margin: auto;" />
+
+### Single-nucleotide level
+
+#### Load the data
+
+``` r
+# prepare sample metadata
+sample.meta <- data.frame(
+  SampleName = c("tumorA.chr4.selected"),
+  Type = c("tumorA"),
+  Group = c("tumorA")
+)
+# load bam file
+bam.file = system.file("extdata", "DNA-seq", "tumorA.chr4.selected.bam", package = "ggcoverage")
+track.df <- LoadTrackFile(
+  track.file = bam.file,
+  meta.info = sample.meta,
+  single.nuc=TRUE, single.nuc.region="chr4:62474235-62474295"
+)
+head(track.df)
+#>   seqnames    start      end score   Type  Group
+#> 1     chr4 62474235 62474236     5 tumorA tumorA
+#> 2     chr4 62474236 62474237     5 tumorA tumorA
+#> 3     chr4 62474237 62474238     5 tumorA tumorA
+#> 4     chr4 62474238 62474239     6 tumorA tumorA
+#> 5     chr4 62474239 62474240     6 tumorA tumorA
+#> 6     chr4 62474240 62474241     6 tumorA tumorA
+```
+
+#### Add base and amino acid annotation
+
+``` r
+ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=T, rect.color = "white") +
+  geom_base(bam.file = bam.file,
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+#> Loading ideogram...
+#> Loading ranges...
+#> Scale for 'x' is already present. Adding another scale for 'x', which will
+#> replace the existing scale.
+```
+
+<img src="man/figures/README-base_aa_coverage-1.png" width="100%" style="display: block; margin: auto;" />
 
 ## ChIP-seq data
 
@@ -311,8 +359,8 @@ basic.coverage
 
 ### Add annotations
 
-Add **gene**, **ideogram** and **peak** annotaions. To create peak
-annotaion, we first **get consensus peaks** with
+Add **gene**, **ideogram** and **peak** annotations. To create peak
+annotation, we first **get consensus peaks** with
 [MSPC](https://github.com/Genometric/MSPC), you can also use DEbChIP’s
 `GetConsensusPeak` (`MSPC`’s wrapper) to do this.
 

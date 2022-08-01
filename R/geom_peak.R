@@ -4,7 +4,7 @@
 #' @param peak.color Peak color. Default: black.
 #' @param peak.size The line size of peak. Default: 5.
 #' @param plot.space Top and bottom margin. Default: 0.1.
-#' @param plot.height The relative height of gene annotation to coverage plot. Default: 0.2.
+#' @param plot.height The relative height of peak annotation to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
 #' @importFrom utils read.table

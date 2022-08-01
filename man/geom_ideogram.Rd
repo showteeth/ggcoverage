@@ -37,7 +37,7 @@ If missing, will invoke a menu for users to choose from. Default: hg19.}
 
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
-\item{plot.height}{The relative height of gene annotation to coverage plot. Default: 0.2.}
+\item{plot.height}{The relative height of ideogram annotation to coverage plot. Default: 0.2.}
 }
 \value{
 Plot.

@@ -1,22 +1,30 @@
+# ggcoverage 0.7.0
+## New features
+* Added `geom_base` to annotate genome coverage with base and amino acids.
+
+## Minor changes
+* `LoadTrackFile` supported visualization at single-nucleotide level.
+* Added `rect.color` for `geom_coverage` to control  rect border color.
+* Fixed bug in track file format identification.
+
+-------------
+
 # ggcoverage 0.6.0
 ## New features
-* Add `geom_gc` to annotate genome coverage with GC content. 
+* Added `geom_gc` to annotate genome coverage with GC content. 
 
 -------------
 
 # ggcoverage 0.5.0
-## New features
-* First CRAN release.
-
 ## Minor changes
-* Fix bug in `getIdeogram`.
+* Fixed bug in `getIdeogram`.
 
 -------------
 
 # ggcoverage 0.4.0
 ## New features
 * Added `geom_peak` to enhance its usage in ChIP-seq or ATAC-seq data.
-* Change Y axis theme.
+* Changed Y axis theme.
 
 -------------
 
@@ -25,7 +33,7 @@
 * Added `geom_transcript`, `geom_ideogram`.
 
 ## Minor changes
-* Fix bug in `GetGeneGroup`.
+* Fixed bug in `GetGeneGroup`.
 
 -------------
 

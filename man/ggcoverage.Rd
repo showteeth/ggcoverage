@@ -11,8 +11,10 @@ ggcoverage(
   extend = 2000,
   gene.name = "HNRNPC",
   gene.name.type = c("gene_name", "gene_id"),
+  single.nuc = FALSE,
   mapping = NULL,
   color = NULL,
+  rect.color = NA,
   facet.key = "Type",
   facet.order = NULL,
   facet.color = NULL,
@@ -42,11 +44,15 @@ Default: NULL.}
 \item{gene.name.type}{Gene name type (filed of \code{gtf.gr}), chosen from gene_name and gene_id.
 Default: gene_name.}
 
+\item{single.nuc}{Logical value, whether to visualize at single nucleotide level. Default: FALSE.}
+
 \item{mapping}{Set of aesthetic mappings created by \code{aes} or \code{aes_}. Default: NULL.}
 
 \item{color}{Track color. Default: NULL (select automatically).}
 
-\item{facet.key}{Sample type key to create Coverage plot. Default: Type.}
+\item{rect.color}{The color of every bin. Default: NA.}
+
+\item{facet.key}{Sample type key to create coverage plot. Default: Type.}
 
 \item{facet.order}{The order of Coverage plot. Default: NULL.}
 

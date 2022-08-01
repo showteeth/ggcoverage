@@ -8,6 +8,7 @@ geom_coverage(
   data,
   mapping = NULL,
   color = NULL,
+  rect.color = NA,
   facet.key = "Type",
   facet.order = NULL,
   facet.color = NULL,
@@ -27,6 +28,8 @@ geom_coverage(
 \item{mapping}{Set of aesthetic mappings created by \code{aes} or \code{aes_}. Default: NULL.}
 
 \item{color}{Track color. Default: NULL (select automatically).}
+
+\item{rect.color}{The color of every bin. Default: NA.}
 
 \item{facet.key}{Sample type key to create coverage plot. Default: Type.}
 

@@ -10,7 +10,7 @@
 #' @param shadow.alpha The alpha of shadow polygon. Default: 0.7.
 #' @param shadow.line.size The line size of shadow polygon. Default: 1.
 #' @param plot.space Top and bottom margin. Default: 0.1.
-#' @param plot.height The relative height of gene annotation to coverage plot. Default: 0.2.
+#' @param plot.height The relative height of ideogram annotation to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
 #' @importFrom biovizBase getIdeogram
@@ -57,12 +57,22 @@ geom_ideogram <- function(genome = "hg19", mark.color = "red", mark.alpha = 0.7,
 
 #' @export
 ggplot_add.ideogram <- function(object, plot, object_name) {
-  # get plot data
-  plot.data <- plot$layers[[1]]$data
-  # prepare plot range
-  plot.chr <- as.character(plot.data[1, "seqnames"])
-  plot.region.start <- plot$coordinates$limits$x[1]
-  plot.region.end <- plot$coordinates$limits$x[2]
+  if (length(plot$layers) == 0) {
+    # geom_base
+    # get plot data
+    plot.data <- plot[[1]]$layers[[1]]$data
+    # prepare plot range
+    plot.chr <- as.character(plot.data[1, "seqnames"])
+    plot.region.start <- plot.data[1, "start"]
+    plot.region.end <- plot.data[nrow(plot.data), "end"]
+  } else {
+    # get plot data
+    plot.data <- plot$layers[[1]]$data
+    # prepare plot range
+    plot.chr <- as.character(plot.data[1, "seqnames"])
+    plot.region.start <- plot$coordinates$limits$x[1]
+    plot.region.end <- plot$coordinates$limits$x[2]
+  }
 
   # get parameters
   genome <- object$genome

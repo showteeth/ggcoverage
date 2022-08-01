@@ -10,6 +10,8 @@
 #' @param bamcoverage.path The path to \code{bamCoverage}, used when \code{format} is bam. Default: NULL (auto-detect).
 #' @param norm.method Methods to normalize the number of reads per bin, chosen from "RPKM", "CPM", "BPM", "RPGC", "None".
 #' Default: RPKM.
+#' @param single.nuc Logical value, whether to visualize at single nucleotide level. Default: FALSE.
+#' @param single.nuc.region Region for \code{single.nuc}. Default: NULL
 #' @param bin.size Size of the bins, in bases. Default: 50.
 #' @param bc.extra.para Extra parameters for \code{bamCoverage}, eg: "--effectiveGenomeSize 2700000000 --ignoreForNormalization chrX"
 #'
@@ -17,6 +19,9 @@
 #' @importFrom rtracklayer import
 #' @importFrom Rsamtools indexBam
 #' @importFrom utils read.csv
+#' @importFrom GenomicAlignments alphabetFrequencyFromBam
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select
 #' @export
 #'
 #' @examples
@@ -35,37 +40,32 @@
 #' )
 LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wig", "bw", "bedgraph"), meta.info = NULL, meta.file = "",
                           bamcoverage.path = NULL, norm.method = c("RPKM", "CPM", "BPM", "RPGC", "None"),
-                          bin.size = 10, bc.extra.para = NULL) {
+                          single.nuc = FALSE, single.nuc.region = NULL, bin.size = 10, bc.extra.para = NULL) {
   # check parameters
   format <- match.arg(arg = format)
   norm.method <- match.arg(arg = norm.method)
 
   # prepare track files
   if (!is.null(track.folder)) {
-    track.file <- list.files(path = track.folder, full.names = TRUE, pattern = format)
+    track.file <- list.files(path = track.folder, full.names = TRUE, pattern = paste0(format, "$"))
   }
 
   # get track dataframe
   if (format %in% c("wig", "bw", "bedgraph")) {
-    # read track file
-    track.list <- lapply(track.file, function(x) {
-      # get basename
-      track.file.base <- basename(x)
-      # import wig, bigwig and bedgraph file
-      single.track.df <- as.data.frame(rtracklayer::import(x))
-      single.track.df$TrackFile <- track.file.base
-      return(single.track.df)
-    })
-  } else if (format == "bam") {
-    # require deeptools
-    if (is.null(bamcoverage.path)) {
-      bamcoverage.path <- Sys.which("bamCoverage")
-      if (bamcoverage.path == "") {
-        stop("Can not find bamCoverage automatically, please specify the path!")
-      }
+    if (single.nuc) {
+      stop("To visualize single nucleotide, please use bam file!")
     } else {
-      bamcoverage.path <- bamcoverage.path
+      # read track file
+      track.list <- lapply(track.file, function(x) {
+        # get basename
+        track.file.base <- basename(x)
+        # import wig, bigwig and bedgraph file
+        single.track.df <- as.data.frame(rtracklayer::import(x))
+        single.track.df$TrackFile <- track.file.base
+        return(single.track.df)
+      })
     }
+  } else if (format == "bam") {
     # create index
     for (bam in track.file) {
       bam.index.file <- paste(bam, "bai", sep = ".")
@@ -74,29 +74,70 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
         Rsamtools::indexBam(bam)
       }
     }
-    # read track file
-    track.list <- lapply(track.file, function(x) {
-      # get basename
-      track.file.base <- basename(x)
-      # bigwig file
-      out.bw.file <- tempfile(fileext = c(".bw"))
-      # prepare bamCoverage cmd
-      bamcoverage.cmd <- paste(
-        bamcoverage.path, "-b", x, "-o", out.bw.file,
-        "--binSize", bin.size, "--normalizeUsing", norm.method, bc.extra.para
-      )
-      # run command
-      message(paste("Calling bamCoverage: ", bamcoverage.cmd))
-      bamcoverage.status <- system(bamcoverage.cmd, intern = TRUE)
-      bamcoverage.status.code <- attr(bamcoverage.status, "status")
-      if (!is.null(bamcoverage.status.code)) {
-        stop("Run bamCoverage error!")
+    if (single.nuc) {
+      if (!is.null(single.nuc.region)) {
+        single.nuc.region <- gsub(pattern = ",", replacement = "", x = single.nuc.region)
+        single.nuc.region.chr <- unlist(strsplit(x = single.nuc.region, split = ":"))[1]
+        single.nuc.region.se <- unlist(strsplit(x = single.nuc.region, split = ":"))[2]
+        single.nuc.region.start <- unlist(strsplit(x = single.nuc.region.se, split = "-"))[1]
+        single.nuc.region.end <- unlist(strsplit(x = single.nuc.region.se, split = "-"))[2]
+        track.list <- lapply(track.file, function(x) {
+          single.track.df <- GenomicAlignments::alphabetFrequencyFromBam(x, param = single.nuc.region, baseOnly = TRUE) %>% as.data.frame()
+          single.track.df <- single.track.df[, c("A", "G", "C", "T")]
+          single.track.df$score <- rowSums(single.track.df)
+          single.track.df$seqnames <- single.nuc.region.chr
+          single.track.df$start <- single.nuc.region.start:single.nuc.region.end
+          single.track.df$end <- single.track.df$start + 1
+          single.track.df$width <- 1
+          single.track.df$strand <- "*"
+          single.track.df <- single.track.df %>% dplyr::select(-c("A", "G", "C", "T"))
+          # get basename
+          track.file.base <- basename(x)
+          single.track.df$TrackFile <- track.file.base
+          single.track.df <- single.track.df[c(
+            "seqnames", "start", "end", "width",
+            "strand", "score", "TrackFile"
+          )]
+          return(single.track.df)
+        })
+      } else {
+        stop("Please provide region for visualizing single nucleotide!")
       }
-      # import wig, bigwig and bedgraph file
-      single.track.df <- as.data.frame(rtracklayer::import(out.bw.file))
-      single.track.df$TrackFile <- track.file.base
-      return(single.track.df)
-    })
+    } else {
+      # require deeptools
+      if (is.null(bamcoverage.path)) {
+        bamcoverage.path <- Sys.which("bamCoverage")
+        if (bamcoverage.path == "") {
+          stop("Can not find bamCoverage automatically, please specify the path!")
+        }
+      } else {
+        bamcoverage.path <- bamcoverage.path
+      }
+
+      # read track file
+      track.list <- lapply(track.file, function(x) {
+        # get basename
+        track.file.base <- basename(x)
+        # bigwig file
+        out.bw.file <- tempfile(fileext = c(".bw"))
+        # prepare bamCoverage cmd
+        bamcoverage.cmd <- paste(
+          bamcoverage.path, "-b", x, "-o", out.bw.file,
+          "--binSize", bin.size, "--normalizeUsing", norm.method, bc.extra.para
+        )
+        # run command
+        message(paste("Calling bamCoverage: ", bamcoverage.cmd))
+        bamcoverage.status <- system(bamcoverage.cmd, intern = TRUE)
+        bamcoverage.status.code <- attr(bamcoverage.status, "status")
+        if (!is.null(bamcoverage.status.code)) {
+          stop("Run bamCoverage error!")
+        }
+        # import wig, bigwig and bedgraph file
+        single.track.df <- as.data.frame(rtracklayer::import(out.bw.file))
+        single.track.df$TrackFile <- track.file.base
+        return(single.track.df)
+      })
+    }
   }
   # get track dataframe
   track.df <- do.call(rbind, track.list)

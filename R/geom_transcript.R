@@ -13,10 +13,10 @@
 #' @param arrow.gap The gap distance between arrow. Default: NULL.
 #' @param arrow.num Total arrow num of whole region. Default: 50.
 #' @param arrow.length The length of arrow. Default: 0.06.
-#' @param label.size The size of gene label. Default: 3.
-#' @param label.vjust The vjust of gene label. Default: 2.
+#' @param label.size The size of transcript label. Default: 3.
+#' @param label.vjust The vjust of transcript label. Default: 2.
 #' @param plot.space Top and bottom margin. Default: 0.1.
-#' @param plot.height The relative height of gene annotation to coverage plot. Default: 0.2.
+#' @param plot.height The relative height of transcript annotation to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
 #' @importFrom magrittr %>%

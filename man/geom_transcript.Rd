@@ -49,13 +49,13 @@ Default: darkblue for - (minus strand), darkgreen for + (plus strand).}
 
 \item{arrow.length}{The length of arrow. Default: 0.06.}
 
-\item{label.size}{The size of gene label. Default: 3.}
+\item{label.size}{The size of transcript label. Default: 3.}
 
-\item{label.vjust}{The vjust of gene label. Default: 2.}
+\item{label.vjust}{The vjust of transcript label. Default: 2.}
 
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
-\item{plot.height}{The relative height of gene annotation to coverage plot. Default: 0.2.}
+\item{plot.height}{The relative height of transcript annotation to coverage plot. Default: 0.2.}
 }
 \value{
 Plot.

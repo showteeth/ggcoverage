@@ -84,6 +84,84 @@ theme_gc <- function(x.range, margin.len) {
   )
 }
 
+#' Theme for geom_base.
+#'
+#' @param margin.len Top and bottom margin.
+#' @param fill.color Fill color.
+#'
+#' @return List of layers.
+#' @importFrom ggplot2 theme_classic theme element_blank element_text margin
+#' scale_y_continuous scale_x_continuous coord_cartesian scale_fill_manual
+theme_base <- function(margin.len, fill.color) {
+  list(
+    theme_classic(),
+    theme(
+      axis.title.y.right = element_text(color = "black", angle = 90, vjust = 0.5),
+      axis.line = element_blank(),
+      axis.ticks = element_blank(),
+      axis.text = element_blank(),
+      axis.title = element_blank(),
+      legend.position = "none",
+      plot.margin = margin(t = margin.len, b = margin.len)
+    ),
+    scale_y_continuous(expand = c(0, 0), position = "right"),
+    scale_x_continuous(expand = c(0, 0)),
+    coord_cartesian(clip = "off"),
+    scale_fill_manual(values = fill.color)
+  )
+}
+
+#' Theme for geom_base without margin.
+#'
+#' @param fill.color Fill color.
+#'
+#' @return List of layers.
+#' @importFrom ggplot2 theme_classic theme element_blank element_text
+#' scale_y_continuous scale_x_continuous coord_cartesian scale_fill_manual
+theme_base2 <- function(fill.color) {
+  list(
+    theme_classic(),
+    theme(
+      axis.title.y.right = element_text(color = "black", angle = 90, vjust = 0.5),
+      axis.line = element_blank(),
+      axis.ticks = element_blank(),
+      axis.text = element_blank(),
+      axis.title = element_blank(),
+      legend.position = "none"
+    ),
+    scale_y_continuous(expand = c(0, 0), position = "right"),
+    scale_x_continuous(expand = c(0, 0)),
+    coord_cartesian(clip = "off"),
+    scale_fill_manual(values = fill.color)
+  )
+}
+
+#' Theme for geom_base with Amino Acid.
+#'
+#' @param margin.len Top and bottom margin.
+#' @param fill.color Fill color.
+#'
+#' @return List of layers.
+#' @importFrom ggplot2 theme_classic theme element_blank element_text margin
+#' scale_y_continuous scale_x_continuous coord_cartesian scale_fill_manual
+theme_aa <- function(margin.len, fill.color) {
+  list(
+    theme_classic(),
+    theme(
+      axis.title.y.right = element_text(color = "black", angle = 90, vjust = 0.5),
+      axis.line = element_blank(),
+      axis.ticks = element_blank(),
+      axis.text = element_blank(),
+      axis.title.x = element_blank(),
+      legend.position = "none",
+      plot.margin = margin(t = margin.len, b = margin.len)
+    ),
+    scale_y_continuous(expand = c(0, 0), position = "right"),
+    scale_x_continuous(expand = c(0, 0)),
+    coord_cartesian(clip = "off"),
+    scale_fill_manual(values = fill.color)
+  )
+}
 
 # theme for geom_gene
 #' Theme for geom_gene.

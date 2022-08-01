@@ -12,6 +12,8 @@ LoadTrackFile(
   meta.file = "",
   bamcoverage.path = NULL,
   norm.method = c("RPKM", "CPM", "BPM", "RPGC", "None"),
+  single.nuc = FALSE,
+  single.nuc.region = NULL,
   bin.size = 10,
   bc.extra.para = NULL
 )
@@ -33,6 +35,10 @@ determined by \code{meta.file}.Default: NULL.}
 
 \item{norm.method}{Methods to normalize the number of reads per bin, chosen from "RPKM", "CPM", "BPM", "RPGC", "None".
 Default: RPKM.}
+
+\item{single.nuc}{Logical value, whether to visualize at single nucleotide level. Default: FALSE.}
+
+\item{single.nuc.region}{Region for \code{single.nuc}. Default: NULL}
 
 \item{bin.size}{Size of the bins, in bases. Default: 50.}
 

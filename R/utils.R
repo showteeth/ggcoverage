@@ -32,6 +32,19 @@ CeilingNumber <- function(x, digits = 2) {
   return(x.final)
 }
 
+# create aa plot dataframe with padding offset
+AAPadding <- function(len, offset = 0, aa.seq) {
+  aa.seq.full <- rep(aa.seq, each = 3)
+  aa.seq.full.len <- length(aa.seq.full)
+  aa.padding.len <- len - aa.seq.full.len - offset
+  final.aa.seq <- c(rep("B", offset), aa.seq.full, rep("B", aa.padding.len))
+  aa.anno.seq <- unlist(strsplit(x = gsub(pattern = "(.*)", replacement = "X\\1X", x = aa.seq), split = ""))
+  aa.anno.seq <- gsub(pattern = "X", replacement = "", x = aa.anno.seq)
+  final.anno.seq <- c(rep("", offset), aa.anno.seq, rep("", aa.padding.len))
+  final.aa.df <- data.frame(aa = final.aa.seq, anno = final.anno.seq)
+  return(final.aa.df)
+}
+
 # get gene and transcript group
 # divide genes to non-overlap groups
 # GetGeneGroup = function(gene.gr, fc = "queryHits",sc= "subjectHits", overlap.gene.gap=1){
