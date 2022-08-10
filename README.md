@@ -16,7 +16,7 @@ coverage. It contains three main parts:
 -   **Create genome coverage plot**
 -   **Add annotations**: `ggcoverage` supports six different
     annotations:
-    -   **Base and amino acid annotaion**: Visualize genome coverage at
+    -   **base and amino acid annotaion**: Visualize genome coverage at
         single-nucleotide level with bases and amino acids.
     -   **GC annotation**: Visualize genome coverage with GC content
     -   **gene annotation**: Visualize genome coverage across whole gene
@@ -28,7 +28,7 @@ coverage. It contains three main parts:
         identified
 
 `ggcoverage` utilizes `ggplot2` plotting system, so its usage is
-ggplot2-style!
+**ggplot2-style**!
 
 ## Installation
 
@@ -275,6 +275,62 @@ head(track.df)
 #> 5     chr4 62474239 62474240     6 tumorA tumorA
 #> 6     chr4 62474240 62474241     6 tumorA tumorA
 ```
+
+#### Default color scheme
+
+For base and amino acid annotation, we have following default color
+schemes, you can change with `nuc.color` and `aa.color` parameters.
+
+Default color scheme for base annotation is `Clustal-style`, more
+popular color schemes is available
+[here](https://www.biostars.org/p/171056/).
+
+``` r
+# color scheme
+nuc.color = c("A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d")
+# create plot
+graphics::par(mar = c(1, 5, 1, 1))
+graphics::image(
+  1:length(nuc.color), 1, as.matrix(1:length(nuc.color)),
+  col = nuc.color,
+  xlab = "", ylab = "", xaxt = "n", yaxt = "n", bty = "n"
+)
+graphics::text(1:length(nuc.color), 1, names(nuc.color))
+graphics::mtext(
+  text = "Base", adj = 1, las = 1,
+  side = 2
+)
+```
+
+<img src="man/figures/README-base_color_scheme-1.png" width="100%" style="display: block; margin: auto;" />
+
+Default color scheme for amino acid annotation is from [Residual
+colours: a proposal for
+aminochromography](https://academic.oup.com/peds/article/10/7/743/1593029?login=false):
+
+``` r
+aa.color = c(
+  "D" = "#FF0000", "S" = "#FF2400", "T" = "#E34234", "G" = "#FF8000", "P" = "#F28500",
+  "C" = "#FFFF00", "A" = "#FDFF00", "V" = "#E3FF00", "I" = "#C0FF00", "L" = "#89318C",
+  "M" = "#00FF00", "F" = "#50C878", "Y" = "#30D5C8", "W" = "#00FFFF", "H" = "#0F2CB3",
+  "R" = "#0000FF", "K" = "#4b0082", "N" = "#800080", "Q" = "#FF00FF", "E" = "#8F00FF",
+  "*" = "#FFC0CB", " " = "#FFFFFF", " " = "#FFFFFF", " " = "#FFFFFF", " " = "#FFFFFF"
+)
+
+graphics::par(mar = c(1, 5, 1, 1))
+graphics::image(
+  1:5, 1:5, matrix(1:length(aa.color),nrow=5),
+  col = rev(aa.color),
+  xlab = "", ylab = "", xaxt = "n", yaxt = "n", bty = "n"
+)
+graphics::text(expand.grid(1:5,1:5), names(rev(aa.color)))
+graphics::mtext(
+  text = "Amino acids", adj = 1, las = 1,
+  side = 2
+)
+```
+
+<img src="man/figures/README-aa_color_scheme-1.png" width="100%" style="display: block; margin: auto;" />
 
 #### Add base and amino acid annotation
 

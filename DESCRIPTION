@@ -46,5 +46,6 @@ Suggests:
     knitr,
     BiocStyle,
     htmltools,
-    BSgenome.Hsapiens.UCSC.hg19
+    BSgenome.Hsapiens.UCSC.hg19,
+    graphics
 VignetteBuilder: knitr
