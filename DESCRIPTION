@@ -10,7 +10,7 @@ Authors@R:
 Maintainer: Yabing Song <songyb0519@gmail.com>
 Description: The goal of 'ggcoverage' is to simplify the process of visualizing genome coverage. It contains functions to 
     load data from 'BAM', 'BigWig' or 'BedGraph' files, create genome coverage plot, add various annotations to 
-    the coverage plot, including base and amino acid annotaion, GC annotation, gene annotation, transcript annotation, ideogram annotation and peak annotation.
+    the coverage plot, including base and amino acid annotation, GC annotation, gene annotation, transcript annotation, ideogram annotation and peak annotation.
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.1.1

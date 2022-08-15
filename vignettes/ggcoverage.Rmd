@@ -9,7 +9,7 @@ author:
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('ggcoverage')`"
 abstract: >
-  The goal of `ggcoverage` is to simplify the process of visualizing genome coverage. It contains functions to load data from BAM, BigWig or BedGraph files, create genome coverage plot, add various annotation to the coverage plot, including base and amino acid annotaion, GC annotation, gene annotation, transcript annotation, ideogram annotation and peak annotation.
+  The goal of `ggcoverage` is to simplify the process of visualizing genome coverage. It contains functions to load data from BAM, BigWig or BedGraph files, create genome coverage plot, add various annotation to the coverage plot, including base and amino acid annotation, GC annotation, gene annotation, transcript annotation, ideogram annotation and peak annotation.
 output: 
   BiocStyle::html_document:
     toc_depth: 4

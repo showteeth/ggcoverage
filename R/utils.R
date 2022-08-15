@@ -210,7 +210,7 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
       if (!inherits(tryres, "try-error")) {
         rtracklayer::tableName(query) <- "cytoBand"
         df <- rtracklayer::getTable(query)
-        gr <- GRanges(
+        gr <- GenomicRanges::GRanges(
           seqnames = df$chrom,
           IRanges(start = df$chromStart, end = df$chromEnd)
         )

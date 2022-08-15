@@ -59,7 +59,10 @@
 #'   meta.info = sample.meta, single.nuc = TRUE,
 #'   single.nuc.region = "chr4:62474235-62474295"
 #' )
-#' ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc = TRUE, rect.color = "white") +
+#' ggcoverage(
+#'   data = track.df, color = "grey", range.position = "out",
+#'   single.nuc = TRUE, rect.color = "white"
+#' ) +
 #'   geom_base(
 #'     bam.file = bam.file,
 #'     bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19

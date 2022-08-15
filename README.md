@@ -16,7 +16,7 @@ coverage. It contains three main parts:
 -   **Create genome coverage plot**
 -   **Add annotations**: `ggcoverage` supports six different
     annotations:
-    -   **base and amino acid annotaion**: Visualize genome coverage at
+    -   **base and amino acid annotation**: Visualize genome coverage at
         single-nucleotide level with bases and amino acids.
     -   **GC annotation**: Visualize genome coverage with GC content
     -   **gene annotation**: Visualize genome coverage across whole gene

@@ -13,7 +13,6 @@
 #' @param plot.height The relative height of ideogram annotation to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
-#' @importFrom biovizBase getIdeogram
 #' @importFrom magrittr %>%
 #' @importFrom ggbio layout_karyogram
 #' @importFrom ggplot2 ggplot_add ggplot geom_rect aes_string geom_polygon theme_classic theme element_blank
@@ -22,7 +21,7 @@
 #' @importFrom methods extends
 #' @importFrom utils menu
 #' @importFrom GenomeInfoDb seqlengths seqlengths<- seqnames
-#' @importFrom GenomicRanges trim
+#' @importFrom GenomicRanges trim GRanges
 #' @importFrom S4Vectors values<-
 #' @export
 #'
@@ -87,7 +86,7 @@ ggplot_add.ideogram <- function(object, plot, object_name) {
   plot.height <- object$plot.height
 
   # get genome and chr ideogram
-  genome.info <- getIdeogram(genome = genome, subchr = plot.chr, cytobands = TRUE)
+  genome.info <- suppressWarnings(getIdeogram(genome = genome, subchr = plot.chr, cytobands = TRUE))
   genome.info.df <- genome.info %>% as.data.frame()
   # get genome length
   genome.length <- genome.info.df[nrow(genome.info.df), "end"]

@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 * **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph files from various NGS data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, et al.
 * **Create genome coverage plot**
 * **Add annotations**: `ggcoverage` supports six different annotations:
-  * **base and amino acid annotaion**: Visualize genome coverage at single-nucleotide level with bases and amino acids.
+  * **base and amino acid annotation**: Visualize genome coverage at single-nucleotide level with bases and amino acids.
   * **GC annotation**: Visualize genome coverage with GC content
   * **gene annotation**: Visualize genome coverage across whole gene
   * **transcription annotation**: Visualize genome coverage across different transcripts
