@@ -1,0 +1,7 @@
+destination: docs
+
+url: https://showteeth.github.io/ggcoverage/
+
+template:
+  bootstrap: 5
+  bootswatch: cosmo
