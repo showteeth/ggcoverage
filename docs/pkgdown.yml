@@ -1,0 +1,7 @@
+pandoc: '2.12'
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  ggcoverage: ggcoverage.html
+last_built: 2022-09-03T09:33Z
+
