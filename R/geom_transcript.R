@@ -30,22 +30,22 @@
 #' @export
 #'
 #' @examples
-#' library(ggcoverage)
-#' library(utils)
-#' library(rtracklayer)
-#' meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-#' sample.meta <- utils::read.csv(meta.file)
+#' # library(ggcoverage)
+#' # library(utils)
+#' # library(rtracklayer)
+#' # meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#' # sample.meta <- utils::read.csv(meta.file)
 #' # track folder
-#' track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+#' # track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
 #' # load bigwig file
-#' track.df <- LoadTrackFile(
-#'   track.folder = track.folder, format = "bw",
-#'   meta.info = sample.meta
-#' )
-#' gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-#' gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
-#' basic.coverage <- ggcoverage(data = track.df, color = "auto", range.position = "out")
-#' basic.coverage + geom_transcript(gtf.gr = gtf.gr, label.vjust = 1.5)
+#' # track.df <- LoadTrackFile(
+#' #   track.folder = track.folder, format = "bw",
+#' #   meta.info = sample.meta
+#' # )
+#' # gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
+#' # basic.coverage <- ggcoverage(data = track.df, color = "auto", range.position = "out")
+#' # basic.coverage + geom_transcript(gtf.gr = gtf.gr, label.vjust = 1.5)
 geom_transcript <- function(gtf.gr, gene.name = "HNRNPC", overlap.tx.gap = 0.1, tx.size = 1,
                             utr.size = 2, exon.size = 4, arrow.size = 1, color.by = "strand",
                             fill.color = c("-" = "darkblue", "+" = "darkgreen"),

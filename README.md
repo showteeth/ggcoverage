@@ -5,6 +5,10 @@
 
 <img src = "man/figures/ggcoverage.png" align = "right" width = "200"/>
 
+[![CRAN](https://www.r-pkg.org/badges/version/ggcoverage?color=orange)](https://cran.r-project.org/package=ggcoverage)
+![License](https://img.shields.io/badge/license-MIT-green)
+[![CODE_SIZE](https://img.shields.io/github/languages/code-size/showteeth/ggcoverage.svg)](https://github.com/showteeth/ggcoverage)
+
 ## Introduction
 
 The goal of `ggcoverage` is simplify the process of visualizing genome
@@ -44,6 +48,8 @@ install.package("ggcoverage")
 # install.package("remotes")   #In case you have not installed it.
 remotes::install_github("showteeth/ggcoverage")
 ```
+
+In general, it is **recommended** to install from [Github repository](https://github.com/showteeth/ggcoverage) (update more timely).
 
 Once `ggcoverage` is installed, it can be loaded by the following
 command.

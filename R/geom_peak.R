@@ -15,31 +15,31 @@
 #' @export
 #'
 #' @examples
-#' library(ggcoverage)
-#' library(rtracklayer)
-#' sample.meta <- data.frame(
-#'   SampleName = c("Chr18_MCF7_ER_1", "Chr18_MCF7_ER_2", "Chr18_MCF7_ER_3", "Chr18_MCF7_input"),
-#'   Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),
-#'   Group = c("IP", "IP", "IP", "Input")
-#' )
+#' # library(ggcoverage)
+#' # library(rtracklayer)
+#' # sample.meta <- data.frame(
+#' #   SampleName = c("Chr18_MCF7_ER_1", "Chr18_MCF7_ER_2", "Chr18_MCF7_ER_3", "Chr18_MCF7_input"),
+#' #   Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),
+#' #   Group = c("IP", "IP", "IP", "Input")
+#' # )
 #' # track folder
-#' track.folder <- system.file("extdata", "ChIP-seq", package = "ggcoverage")
+#' # track.folder <- system.file("extdata", "ChIP-seq", package = "ggcoverage")
 #' # load bigwig file
-#' track.df <- LoadTrackFile(
-#'   track.folder = track.folder, format = "bw",
-#'   meta.info = sample.meta
-#' )
-#' gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-#' gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
+#' # track.df <- LoadTrackFile(
+#' #   track.folder = track.folder, format = "bw",
+#' #   meta.info = sample.meta
+#' # )
+#' # gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
 #' # create mark region
-#' mark.region <- data.frame(start = c(76822533), end = c(76823743), label = c("Promoter"))
-#' basic.coverage <- ggcoverage(
-#'   data = track.df, color = "auto", region = "chr18:76822285-76900000",
-#'   mark.region = mark.region, show.mark.label = FALSE
-#' )
+#' # mark.region <- data.frame(start = c(76822533), end = c(76823743), label = c("Promoter"))
+#' # basic.coverage <- ggcoverage(
+#' #   data = track.df, color = "auto", region = "chr18:76822285-76900000",
+#' #   mark.region = mark.region, show.mark.label = FALSE
+#' # )
 #' # get consensus peak file
-#' peak.file <- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
-#' basic.coverage + geom_gene(gtf.gr = gtf.gr) + geom_peak(bed.file = peak.file)
+#' # peak.file <- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
+#' # basic.coverage + geom_gene(gtf.gr = gtf.gr) + geom_peak(bed.file = peak.file)
 geom_peak <- function(bed.file, peak.color = "black", peak.size = 5,
                       plot.space = 0.1, plot.height = 0.1) {
   structure(list(

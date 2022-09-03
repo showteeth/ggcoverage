@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 
 <img src = "man/figures/ggcoverage.png" align = "right" width = "200"/>
 
+[![CRAN](https://www.r-pkg.org/badges/version/ggcoverage?color=orange)](https://cran.r-project.org/package=ggcoverage)
+![License](https://img.shields.io/badge/license-MIT-green)
+[![CODE_SIZE](https://img.shields.io/github/languages/code-size/showteeth/ggcoverage.svg)](https://github.com/showteeth/ggcoverage)
+
 ## Introduction
   The goal of `ggcoverage` is simplify the process of visualizing genome coverage. It contains three main parts:
 
@@ -46,6 +50,8 @@ install.package("ggcoverage")
 # install.package("remotes")   #In case you have not installed it.
 remotes::install_github("showteeth/ggcoverage")
 ```
+
+In general, it is **recommended** to install from [Github repository](https://github.com/showteeth/ggcoverage) (update more timely).
 
 Once `ggcoverage` is installed, it can be loaded by the following command.
 
@@ -195,6 +201,7 @@ Default color scheme for base annotation is `Clustal-style`, more popular color 
 ```{r base_color_scheme, warning=FALSE, fig.height = 2, fig.width = 6, fig.align = "center"}
 # color scheme
 nuc.color = c("A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d")
+opar <- graphics::par() 
 # create plot
 graphics::par(mar = c(1, 5, 1, 1))
 graphics::image(
@@ -207,6 +214,9 @@ graphics::mtext(
   text = "Base", adj = 1, las = 1,
   side = 2
 )
+
+# reset par default
+graphics::par(opar)
 ```
 
 Default color scheme for amino acid annotation is from [Residual colours: a proposal for aminochromography](https://academic.oup.com/peds/article/10/7/743/1593029?login=false):
@@ -230,6 +240,9 @@ graphics::mtext(
   text = "Amino acids", adj = 1, las = 1,
   side = 2
 )
+
+# reset par default
+graphics::par(opar)
 ```
 
 #### Add base and amino acid annotation

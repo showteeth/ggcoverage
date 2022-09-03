@@ -51,6 +51,8 @@ install.package("ggcoverage")
 remotes::install_github("showteeth/ggcoverage")
 ```
 
+In general, it is **recommended** to install from [Github repository](https://github.com/showteeth/ggcoverage) (update more timely).
+
 Once `ggcoverage` is installed, it can be loaded by the following command.
 
 ```{r library, message=FALSE, warning=FALSE}
@@ -67,7 +69,7 @@ library("ggcoverage")
 * **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph files from various NGS data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, et al.
 * **Create genome coverage plot**
 * **Add annotations**: `ggcoverage` supports six different annotations:
-  * **Base and amino acid annotaion**: Visualize genome coverage at single-nucleotide level with bases and amino acids.
+  * **Base and amino acid annotation**: Visualize genome coverage at single-nucleotide level with bases and amino acids.
   * **GC annotation**: Visualize genome coverage with GC content
   * **gene annotation**: Visualize genome coverage across whole gene
   * **transcription annotation**: Visualize genome coverage across different transcripts
@@ -120,48 +122,72 @@ gtf.gr = rtracklayer::import.gff(con = gtf.file, format = 'gtf')
 -------------
 
 ## Basic coverage
-```{r basic_coverage, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage, eval=FALSE}
 basic.coverage = ggcoverage(data = track.df, color = "auto", 
                             mark.region = mark.region, range.position = "out")
 basic.coverage
 ```
 
+```{r basic_coverage_plot, echo=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-basic_coverage-1.png")
+```
+
 You can also change Y axis style:
-```{r basic_coverage_2, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_2, eval=FALSE}
 basic.coverage = ggcoverage(data = track.df, color = "auto", 
                             mark.region = mark.region, range.position = "in")
 basic.coverage
 ```
 
+```{r basic_coverage_2_plot, echo=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-basic_coverage_2-1.png")
+```
+
 -------------
 
 ## Add gene annotation
-```{r gene_coverage, warning=FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+```{r gene_coverage, eval=FALSE}
 basic.coverage + 
   geom_gene(gtf.gr=gtf.gr)
+```
+
+```{r gene_coverage_plot, echo=FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-gene_coverage-1.png")
 ```
 
 -------------
 
 ## Add transcript annotation
-```{r transcript_coverage, warning=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
+```{r transcript_coverage, eval=FALSE}
 basic.coverage + 
   geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5)
+```
+
+```{r transcript_coverage_plot, echo=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-transcript_coverage-1.png")
 ```
 
 -------------
 
 ## Add ideogram
-```{r ideogram_coverage_1, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r ideogram_coverage_1, eval=FALSE}
 basic.coverage +
   geom_gene(gtf.gr=gtf.gr) +
   geom_ideogram(genome = "hg19",plot.space = 0)
 ```
 
-```{r ideogram_coverage_2, warning=FALSE, fig.height = 14, fig.width = 12, fig.align = "center"}
+```{r ideogram_coverage_1_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-ideogram_coverage_1-1.png")
+```
+
+```{r ideogram_coverage_2, eval=FALSE}
 basic.coverage +
   geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5) +
   geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+```{r ideogram_coverage_2_plot, echo=FALSE, fig.height = 14, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-ideogram_coverage_2-1.png")
 ```
 
 -------------
@@ -180,16 +206,20 @@ head(track.df)
 ```
 
 ### Basic coverage
-```{r basic_coverage_dna, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_dna, eval=FALSE}
 basic.coverage = ggcoverage(data = track.df,color = NULL, mark.region = NULL,
                             region = 'chr4:61750000-62,700,000', range.position = "out")
 basic.coverage
 ```
 
+```{r basic_coverage_dna_plot, echo=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-basic_coverage_dna-1.png")
+```
+
 ### Add annotations
 Add **GC**, **ideogram** and **gene** annotations.
 
-```{r gc_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r gc_coverage, eval=FALSE}
 # load genome data
 library("BSgenome.Hsapiens.UCSC.hg19")
 # create plot
@@ -197,6 +227,10 @@ basic.coverage +
   geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
   geom_gene(gtf.gr=gtf.gr) +
   geom_ideogram(genome = "hg19")
+```
+
+```{r gc_coverage_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-gc_coverage-1.png")
 ```
 
 ---------------------
@@ -227,6 +261,7 @@ Default color scheme for base annotation is `Clustal-style`, more popular color 
 ```{r base_color_scheme, warning=FALSE, fig.height = 2, fig.width = 6, fig.align = "center"}
 # color scheme
 nuc.color = c("A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d")
+opar <- graphics::par() 
 # create plot
 graphics::par(mar = c(1, 5, 1, 1))
 graphics::image(
@@ -239,6 +274,9 @@ graphics::mtext(
   text = "Base", adj = 1, las = 1,
   side = 2
 )
+
+# reset par default
+graphics::par(opar)
 ```
 
 Default color scheme for amino acid annotation is from [Residual colours: a proposal for aminochromography](https://academic.oup.com/peds/article/10/7/743/1593029?login=false):
@@ -262,14 +300,21 @@ graphics::mtext(
   text = "Amino acids", adj = 1, las = 1,
   side = 2
 )
+
+# reset par default
+graphics::par(opar)
 ```
 
 ### Add base and amino acid annotation
-```{r base_aa_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r base_aa_coverage, eval=FALSE}
 ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=T, rect.color = "white") +
   geom_base(bam.file = bam.file,
             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
   geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+```{r base_aa_coverage_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-base_aa_coverage-1.png")
 ```
 
 ---------------------
@@ -310,10 +355,14 @@ mark.region
 -------------
 
 ## Basic coverage
-```{r basic_coverage_chip, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_chip, eval=FALSE}
 basic.coverage = ggcoverage(data = track.df, color = "auto", region = "chr18:76822285-76900000", 
                             mark.region=mark.region, show.mark.label = FALSE)
 basic.coverage
+```
+
+```{r basic_coverage_chip_plot, echo=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-basic_coverage_chip-1.png")
 ```
 
 -------------
@@ -321,7 +370,7 @@ basic.coverage
 ## Add annotations
 Add **gene**, **ideogram** and **peak** annotations. To create peak annotation, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC), you can also use DEbChIP's `GetConsensusPeak` (`MSPC`'s wrapper) to do this.
 
-```{r peak_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r peak_coverage, eval=FALSE}
 # get consensus peak file
 peak.file = system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
 
@@ -329,6 +378,10 @@ basic.coverage +
   geom_gene(gtf.gr=gtf.gr) +
   geom_peak(bed.file = peak.file) +
   geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+```{r peak_coverage_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-peak_coverage-1.png")
 ```
 
 ---------------------

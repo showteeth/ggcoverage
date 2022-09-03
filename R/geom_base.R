@@ -44,29 +44,29 @@
 #' @export
 #'
 #' @examples
-#' library(ggcoverage)
-#' library("BSgenome.Hsapiens.UCSC.hg19")
+#' # library(ggcoverage)
+#' # library("BSgenome.Hsapiens.UCSC.hg19")
 #' # get sample metadata
-#' sample.meta <- data.frame(
-#'   SampleName = c("tumorA.chr4.selected"),
-#'   Type = c("tumorA"), Group = c("tumorA")
-#' )
+#' # sample.meta <- data.frame(
+#' #   SampleName = c("tumorA.chr4.selected"),
+#' #   Type = c("tumorA"), Group = c("tumorA")
+#' # )
 #' # get bam file
-#' bam.file <- system.file("extdata", "DNA-seq", "tumorA.chr4.selected.bam", package = "ggcoverage")
+#' # bam.file <- system.file("extdata", "DNA-seq", "tumorA.chr4.selected.bam", package = "ggcoverage")
 #' # load bam file
-#' track.df <- LoadTrackFile(
-#'   track.file = bam.file,
-#'   meta.info = sample.meta, single.nuc = TRUE,
-#'   single.nuc.region = "chr4:62474235-62474295"
-#' )
-#' ggcoverage(
-#'   data = track.df, color = "grey", range.position = "out",
-#'   single.nuc = TRUE, rect.color = "white"
-#' ) +
-#'   geom_base(
-#'     bam.file = bam.file,
-#'     bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19
-#'   )
+#' # track.df <- LoadTrackFile(
+#' #   track.file = bam.file,
+#' #   meta.info = sample.meta, single.nuc = TRUE,
+#' #   single.nuc.region = "chr4:62474235-62474295"
+#' # )
+#' # ggcoverage(
+#' #   data = track.df, color = "grey", range.position = "out",
+#' #   single.nuc = TRUE, rect.color = "white"
+#' # ) +
+#' #   geom_base(
+#' #     bam.file = bam.file,
+#' #     bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19
+#' #   )
 geom_base <- function(bam.file, fa.file = NULL, bs.fa.seq = NULL, chr.split = "[[:space:]]",
                       nuc.offset = -0.1, nuc.size = 4, nuc.padding = 0.05, nuc.padding.r = 0,
                       nuc.color = c("A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d"),

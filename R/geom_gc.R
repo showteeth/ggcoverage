@@ -21,20 +21,20 @@
 #' @export
 #'
 #' @examples
-#' library(ggcoverage)
-#' library(utils)
-#' library(rtracklayer)
-#' library("BSgenome.Hsapiens.UCSC.hg19")
+#' # library(ggcoverage)
+#' # library(utils)
+#' # library(rtracklayer)
+#' # library("BSgenome.Hsapiens.UCSC.hg19")
 #' # track folder
-#' track.file <- system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")
-#' track.df <- utils::read.table(track.file, header = TRUE)
-#' gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-#' gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
-#' basic.coverage <- ggcoverage(
-#'   data = track.df, color = NULL, mark.region = NULL,
-#'   region = "chr4:61750000-62,700,000", range.position = "out"
-#' )
-#' basic.coverage + geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
+#' # track.file <- system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")
+#' # track.df <- utils::read.table(track.file, header = TRUE)
+#' # gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
+#' # basic.coverage <- ggcoverage(
+#' #   data = track.df, color = NULL, mark.region = NULL,
+#' #   region = "chr4:61750000-62,700,000", range.position = "out"
+#' # )
+#' # basic.coverage + geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
 geom_gc <- function(fa.file = NULL, bs.fa.seq = NULL, chr.split = "[[:space:]]", guide.line = NULL,
                     line.color = "black", guide.line.color = "red", guide.line.type = "dashed",
                     plot.space = 0.1, plot.height = 0.2) {
