@@ -294,7 +294,7 @@ basic.coverage
 ```
 
 ### Add annotations
-Add **gene**, **ideogram** and **peak** annotations. To create peak annotation, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC), you can also use DEbChIP's `GetConsensusPeak` (`MSPC`'s wrapper) to do this.
+Add **gene**, **ideogram** and **peak** annotations. To create peak annotation, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC).
 
 ```{r peak_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 # get consensus peak file
