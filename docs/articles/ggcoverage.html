@@ -77,7 +77,7 @@
       School of Life Sciences, Tsinghua University<br><a class="author_email" href="mailto:#"></a><a href="mailto:songyb18@mails.tsinghua.edu.cn" class="email">songyb18@mails.tsinghua.edu.cn</a>
       </address>
                   
-            <h4 class="date">3 九月 2022</h4>
+            <h4 class="date">6 九月 2022</h4>
       
       
       <div class="hidden name"><code>ggcoverage.Rmd</code></div>
@@ -451,7 +451,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="add-annotations-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#add-annotations-1" class="anchor"></a>Add annotations</h2>
-<p>Add <strong>gene</strong>, <strong>ideogram</strong> and <strong>peak</strong> annotations. To create peak annotation, we first <strong>get consensus peaks</strong> with <a href="https://github.com/Genometric/MSPC">MSPC</a>, you can also use DEbChIP’s <code>GetConsensusPeak</code> (<code>MSPC</code>’s wrapper) to do this.</p>
+<p>Add <strong>gene</strong>, <strong>ideogram</strong> and <strong>peak</strong> annotations. To create peak annotation, we first <strong>get consensus peaks</strong> with <a href="https://github.com/Genometric/MSPC">MSPC</a>.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get consensus peak file</span>
 <span class="va">peak.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ChIP-seq"</span>, <span class="st">"consensus.peak"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>

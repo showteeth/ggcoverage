@@ -425,7 +425,7 @@
 <div id="add-annotations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#add-annotations" class="anchor"></a>Add annotations</h3>
-<p>Add <strong>gene</strong>, <strong>ideogram</strong> and <strong>peak</strong> annotations. To create peak annotation, we first <strong>get consensus peaks</strong> with <a href="https://github.com/Genometric/MSPC">MSPC</a>, you can also use DEbChIP’s <code>GetConsensusPeak</code> (<code>MSPC</code>’s wrapper) to do this.</p>
+<p>Add <strong>gene</strong>, <strong>ideogram</strong> and <strong>peak</strong> annotations. To create peak annotation, we first <strong>get consensus peaks</strong> with <a href="https://github.com/Genometric/MSPC">MSPC</a>.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get consensus peak file</span>
 <span class="va">peak.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ChIP-seq"</span>, <span class="st">"consensus.peak"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
