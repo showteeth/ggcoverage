@@ -1,7 +1,7 @@
 Package: ggcoverage
 Type: Package
 Title: Visualize Genome Coverage with Various Annotations
-Version: 0.7.0
+Version: 0.7.2
 Authors@R: 
     person(given = "Yabing",
            family = "Song",
@@ -14,6 +14,7 @@ Description: The goal of 'ggcoverage' is to simplify the process of visualizing 
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.1.1
+biocViews:
 Imports: 
     dplyr,
     GenomicRanges,

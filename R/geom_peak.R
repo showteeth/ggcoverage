@@ -1,6 +1,7 @@
 #' Add Peak Annotation to Coverage Plot.
 #'
-#' @param bed.file The path to bed file.
+#' @param bed.file The path to consensus peaks file. Default: NULL.
+#' @param peak.df The dataframe contains consensus peaks. Default: NULL.
 #' @param peak.color Peak color. Default: black.
 #' @param peak.size The line size of peak. Default: 5.
 #' @param plot.space Top and bottom margin. Default: 0.1.
@@ -40,10 +41,10 @@
 #' # get consensus peak file
 #' # peak.file <- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
 #' # basic.coverage + geom_gene(gtf.gr = gtf.gr) + geom_peak(bed.file = peak.file)
-geom_peak <- function(bed.file, peak.color = "black", peak.size = 5,
+geom_peak <- function(bed.file = NULL, peak.df = NULL, peak.color = "black", peak.size = 5,
                       plot.space = 0.1, plot.height = 0.1) {
   structure(list(
-    bed.file = bed.file, peak.color = peak.color, peak.size = peak.size,
+    bed.file = bed.file, peak.df = peak.df, peak.color = peak.color, peak.size = peak.size,
     plot.space = plot.space, plot.height = plot.height
   ),
   class = "peak"
@@ -61,13 +62,18 @@ ggplot_add.peak <- function(object, plot, object_name) {
 
   # get parameters
   bed.file <- object$bed.file
+  peak.df <- object$peak.df
   peak.color <- object$peak.color
   peak.size <- object$peak.size
   plot.space <- object$plot.space
   plot.height <- object$plot.height
 
-  # prepare bed file
-  bed.info <- utils::read.table(file = bed.file, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  # prepare peak dataframe
+  if (!is.null(bed.file)) {
+    bed.info <- utils::read.table(file = bed.file, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+  } else if (!is.null(peak.df)) {
+    bed.info <- peak.df
+  }
   bed.info <- bed.info[c(1, 2, 3)]
   colnames(bed.info) <- c("seqnames", "start", "end")
   # convert to 1-based

@@ -367,16 +367,32 @@ knitr::include_graphics("../man/figures/README-basic_coverage_chip-1.png")
 
 -------------
 
-## Add annotations
-Add **gene**, **ideogram** and **peak** annotations. To create peak annotation, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC).
+## Get consensus peaks
+Before create peak annotation, we first **get consensus peaks** from replicates with [MSPC](https://github.com/Genometric/MSPC).
+```{r consensus_peaks}
+# load peak file
+peak.file <- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
+# get consensus peak (do nothing when there is only one file)
+# notice: this step requires MSPC, specific the installation path with mspc.path
+peak.df <- GetConsensusPeak(peak.file = peak.file)
+```
 
+
+## Add annotations
+Add **gene**, **ideogram** and **peak** annotations:
 ```{r peak_coverage, eval=FALSE}
 # get consensus peak file
 peak.file = system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
-
+# create with peak file
 basic.coverage +
   geom_gene(gtf.gr=gtf.gr) +
   geom_peak(bed.file = peak.file) +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+
+# create with peak dataframe
+basic.coverage +
+  geom_gene(gtf.gr=gtf.gr) +
+  geom_peak(peak.df = peak.df) +
   geom_ideogram(genome = "hg19",plot.space = 0)
 ```
 

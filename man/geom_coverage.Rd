@@ -61,18 +61,18 @@ Layers of ggplot2.
 Layer for Coverage Plot.
 }
 \examples{
-library(ggcoverage)
-library(utils)
-library(ggplot2)
-meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-sample.meta <- utils::read.csv(meta.file)
+# library(ggcoverage)
+# library(utils)
+# library(ggplot2)
+# meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+# sample.meta <- utils::read.csv(meta.file)
 # track folder
-track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+# track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
 # load bigwig file
-track.df <- LoadTrackFile(
-  track.folder = track.folder, format = "bw",
-  meta.info = sample.meta
-)
-ggplot() +
-  geom_coverage(data = track.df, color = "auto", mark.region = NULL)
+# track.df <- LoadTrackFile(
+#   track.folder = track.folder, format = "bw",
+#   meta.info = sample.meta
+# )
+# ggplot() +
+#   geom_coverage(data = track.df, color = "auto", mark.region = NULL)
 }

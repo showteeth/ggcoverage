@@ -1,5 +1,14 @@
 # ggcoverage 0.7.0
 ## New features
+* Added `GetConsensusPeak` to get consensus peak from replicates with MSPC.
+
+## Minor changes
+* Added `peak.df` for `geom_peak` to support dataframe as input.
+
+-------------
+
+# ggcoverage 0.7.0
+## New features
 * Added `geom_base` to annotate genome coverage with base and amino acids.
 
 ## Minor changes
