@@ -1,4 +1,4 @@
-# ggcoverage 0.7.0
+# ggcoverage 0.7.2
 ## New features
 * Added `GetConsensusPeak` to get consensus peak from replicates with MSPC.
 
