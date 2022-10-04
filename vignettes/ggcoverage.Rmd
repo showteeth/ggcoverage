@@ -307,7 +307,7 @@ graphics::par(opar)
 
 ### Add base and amino acid annotation
 ```{r base_aa_coverage, eval=FALSE}
-ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=T, rect.color = "white") +
+ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=TRUE, rect.color = "white") +
   geom_base(bam.file = bam.file,
             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
   geom_ideogram(genome = "hg19",plot.space = 0)

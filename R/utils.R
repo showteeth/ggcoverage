@@ -249,3 +249,24 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
   }
   res
 }
+
+# used in geom_base
+PrepareRect <- function(df, y.center = -0.2) {
+  valid.df <- df[df$aa == "B" | df$anno != "", ]
+  rect.li <- lapply(1:nrow(valid.df), function(x) {
+    row.info <- valid.df[x, ]
+    if (row.info$aa == "B") {
+      c(row.info$Pos - 0.5, row.info$Pos + 0.5, row.info$aa)
+    } else if (row.info$anno != "") {
+      c(row.info$Pos - 1.5, row.info$Pos + 1.5, row.info$aa)
+    }
+  })
+  rect.df <- as.data.frame(t(as.data.frame(rect.li)))
+  colnames(rect.df) <- c("xmin", "xmax", "aa")
+  rownames(rect.df) <- NULL
+  rect.df$xmin <- as.numeric(rect.df$xmin)
+  rect.df$xmax <- as.numeric(rect.df$xmax)
+  rect.df$ymin <- y.center - 0.1
+  rect.df$ymax <- y.center + 0.1
+  return(rect.df)
+}

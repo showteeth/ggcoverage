@@ -4,12 +4,10 @@
 \alias{theme_coverage}
 \title{Theme for geom_coverage.}
 \usage{
-theme_coverage(space = 0.2, x.range)
+theme_coverage(space = 0.2)
 }
 \arguments{
 \item{space}{The space between facets. Default: 0.2.}
-
-\item{x.range}{X axis ranges.}
 }
 \value{
 List of layers.

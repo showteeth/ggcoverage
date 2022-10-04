@@ -4,6 +4,7 @@
 #' @param mapping Set of aesthetic mappings created by \code{aes} or \code{aes_}. Default: NULL.
 #' @param color Track color. Default: NULL (select automatically).
 #' @param rect.color The color of every bin. Default: NA.
+#' @param single.nuc Logical value, whether to visualize at single nucleotide level (use bar plot). Default: FALSE.
 #' @param facet.key Sample type key to create coverage plot. Default: Type.
 #' @param facet.order The order of coverage plot. Default: NULL.
 #' @param facet.color The color of sample text. Default: NULL (select automatically).
@@ -45,8 +46,8 @@
 #' # )
 #' # ggplot() +
 #' #   geom_coverage(data = track.df, color = "auto", mark.region = NULL)
-geom_coverage <- function(data, mapping = NULL,
-                          color = NULL, rect.color = NA, facet.key = "Type", facet.order = NULL, facet.color = NULL,
+geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
+                          single.nuc = FALSE, facet.key = "Type", facet.order = NULL, facet.color = NULL,
                           group.key = "Group", range.size = 3, range.position = c("in", "out"),
                           mark.region = NULL, mark.color = "grey", mark.alpha = 0.5,
                           show.mark.label = TRUE, mark.label.size = 4) {
@@ -56,7 +57,6 @@ geom_coverage <- function(data, mapping = NULL,
   # get mapping and color
   if (is.null(mapping)) {
     if (!is.null(color)) {
-      mapping <- aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "score", fill = "Type")
       if (length(color) != length(unique(data$Type))) {
         warning("The color you provided is not as long as Type column in data, select automatically!")
         # sample group with same color
@@ -73,8 +73,12 @@ geom_coverage <- function(data, mapping = NULL,
       }
       sacle_fill_cols <- scale_fill_manual(values = fill.color)
     } else {
-      mapping <- aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "score")
       sacle_fill_cols <- NULL
+    }
+    if (!single.nuc) {
+      mapping <- aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "score", fill = "Type")
+    } else {
+      mapping <- aes_string(x = "start", y = "score", fill = "Type")
     }
   } else {
     if ("fill" %in% names(mapping)) {
@@ -112,7 +116,14 @@ geom_coverage <- function(data, mapping = NULL,
 
   # facet formula
   facet.formula <- as.formula(paste0("~ ", facet.key))
-  region.rect <- geom_rect(data = data, mapping = mapping, show.legend = F, colour = rect.color)
+  if (!single.nuc) {
+    region.rect <- geom_rect(data = data, mapping = mapping, show.legend = F, colour = rect.color)
+  } else {
+    region.rect <- geom_bar(
+      data = data, mapping = mapping, show.legend = F, colour = rect.color,
+      stat = "identity"
+    )
+  }
   region.facet <- facet_wrap2(
     facets = facet.formula, ncol = 1, scales = "free_y", strip.position = "right",
     strip = strip_themed(background_y = elem_list_rect(

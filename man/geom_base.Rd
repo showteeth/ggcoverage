@@ -27,6 +27,7 @@ geom_base(
     M = "#00FF00", F = "#50C878", Y = "#30D5C8", W = "#00FFFF", H = "#0F2CB3", R =
     "#0000FF", K = "#4b0082", N = "#800080", Q = "#FF00FF", E = "#8F00FF", `*` =
     "#FFC0CB"),
+  aa.border.color = "white",
   aa.size = 4,
   aa.margin = 2,
   aa.height = 0.4,
@@ -75,6 +76,8 @@ Parameter of \code{\link{translate}}. Default: X.}
 translated to Gly in the standard genetic code. Parameter of \code{\link{translate}}. Default: FALSE.}
 
 \item{aa.color}{Color scheme for amino acids.}
+
+\item{aa.border.color}{The border color of amino acid. Default: white.}
 
 \item{aa.size}{The size of amino acid text. Default: 4.}
 

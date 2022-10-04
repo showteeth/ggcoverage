@@ -66,7 +66,13 @@ geom_gene <- function(gtf.gr, overlap.gene.gap = 0.1, gene.size = 1,
 #' @export
 ggplot_add.gene <- function(object, plot, object_name) {
   # get plot data
-  track.data <- plot$layers[[1]]$data
+  # track.data <- plot$layers[[1]]$data
+  # get plot data, plot data should contain bins
+  if ("patchwork" %in% class(plot)) {
+    track.data <- plot[[1]]$layers[[1]]$data
+  } else {
+    track.data <- plot$layers[[1]]$data
+  }
   # prepare plot range
   plot.range.chr <- track.data[1, "seqnames"]
   plot.range.start <- track.data[1, "start"]

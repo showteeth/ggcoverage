@@ -54,11 +54,19 @@ geom_peak <- function(bed.file = NULL, peak.df = NULL, peak.color = "black", pea
 #' @export
 ggplot_add.peak <- function(object, plot, object_name) {
   # get plot data
-  plot.data <- plot$layers[[1]]$data
+  # plot.data <- plot$layers[[1]]$data
+  # get plot data, plot data should contain bins
+  if ("patchwork" %in% class(plot)) {
+    plot.data <- plot[[1]]$layers[[1]]$data
+  } else {
+    plot.data <- plot$layers[[1]]$data
+  }
   # prepare plot range
   plot.chr <- as.character(plot.data[1, "seqnames"])
-  plot.region.start <- plot$coordinates$limits$x[1]
-  plot.region.end <- plot$coordinates$limits$x[2]
+  # plot.region.start <- plot$coordinates$limits$x[1]
+  # plot.region.end <- plot$coordinates$limits$x[2]
+  plot.region.start <- plot.data[1, "start"]
+  plot.region.end <- plot.data[nrow(plot.data), "end"]
 
   # get parameters
   bed.file <- object$bed.file

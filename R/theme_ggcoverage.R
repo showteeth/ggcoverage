@@ -2,7 +2,6 @@
 #' Theme for geom_coverage.
 #'
 #' @param space The space between facets. Default: 0.2.
-#' @param x.range X axis ranges.
 #'
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme unit element_blank annotate rel scale_y_continuous expansion
@@ -10,7 +9,7 @@
 #' @importFrom scales comma
 #' @export
 #'
-theme_coverage <- function(space = 0.2, x.range) {
+theme_coverage <- function(space = 0.2) {
   list(
     theme_classic(),
     theme(
@@ -22,8 +21,7 @@ theme_coverage <- function(space = 0.2, x.range) {
     ),
     annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
     scale_y_continuous(expand = expansion(mult = c(0))),
-    scale_x_continuous(labels = scales::comma, expand = c(0, 0)),
-    coord_cartesian(xlim = x.range)
+    scale_x_continuous(labels = scales::comma, expand = c(0, 0))
   )
 }
 
@@ -31,7 +29,6 @@ theme_coverage <- function(space = 0.2, x.range) {
 #' Theme for geom_coverage.
 #'
 #' @param space The space between facets. Default: 0.2.
-#' @param x.range X axis ranges.
 #'
 #' @return List of layers.
 #' @importFrom ggplot2 scale_y_continuous expansion theme_classic theme unit element_blank annotate rel
@@ -39,7 +36,7 @@ theme_coverage <- function(space = 0.2, x.range) {
 #' @importFrom scales comma
 #' @export
 #'
-theme_coverage2 <- function(space = 0.2, x.range) {
+theme_coverage2 <- function(space = 0.2) {
   list(
     scale_y_continuous(
       limits = ~ c(0, CeilingNumber(max(.x))),
@@ -52,8 +49,7 @@ theme_coverage2 <- function(space = 0.2, x.range) {
       axis.title = element_blank()
     ),
     annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
-    scale_x_continuous(labels = scales::comma, expand = c(0, 0)),
-    coord_cartesian(xlim = x.range)
+    scale_x_continuous(labels = scales::comma, expand = c(0, 0))
   )
 }
 

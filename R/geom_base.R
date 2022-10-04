@@ -23,6 +23,7 @@
 #' @param ambiguous If TRUE, ambiguous bases are taken into account so that for instance GGN is
 #' translated to Gly in the standard genetic code. Parameter of \code{\link{translate}}. Default: FALSE.
 #' @param aa.color Color scheme for amino acids.
+#' @param aa.border.color The border color of amino acid. Default: white.
 #' @param aa.size The size of amino acid text. Default: 4.
 #' @param aa.margin Top and bottom margin of amino acids. Default: 2.
 #' @param aa.height The relative height of amino acid to base frequency plot. Default: 0.4.
@@ -78,14 +79,14 @@ geom_base <- function(bam.file, fa.file = NULL, bs.fa.seq = NULL, chr.split = "[
                         "M" = "#00FF00", "F" = "#50C878", "Y" = "#30D5C8", "W" = "#00FFFF", "H" = "#0F2CB3",
                         "R" = "#0000FF", "K" = "#4b0082", "N" = "#800080", "Q" = "#FF00FF", "E" = "#8F00FF",
                         "*" = "#FFC0CB"
-                      ), aa.size = 4, aa.margin = 2, aa.height = 0.4,
+                      ), aa.border.color = "white", aa.size = 4, aa.margin = 2, aa.height = 0.4,
                       plot.space = 2.5, plot.height = 0.5) {
   structure(list(
     bam.file = bam.file, fa.file = fa.file, bs.fa.seq = bs.fa.seq, chr.split = chr.split,
     nuc.offset = nuc.offset, nuc.size = nuc.size, nuc.padding = nuc.padding, nuc.padding.r = nuc.padding.r,
     nuc.color = nuc.color, guide.line = guide.line, guide.line.color = guide.line.color, guide.line.type = guide.line.type,
     show.aa = show.aa, sens = sens, numcode = numcode, NAstring = NAstring, ambiguous = ambiguous,
-    aa.color = aa.color, aa.size = aa.size, aa.margin = aa.margin, aa.height = aa.height,
+    aa.color = aa.color, aa.border.color = aa.border.color, aa.size = aa.size, aa.margin = aa.margin, aa.height = aa.height,
     plot.space = plot.space, plot.height = plot.height
   ),
   class = "base"
@@ -95,11 +96,16 @@ geom_base <- function(bam.file, fa.file = NULL, bs.fa.seq = NULL, chr.split = "[
 #' @export
 ggplot_add.base <- function(object, plot, object_name) {
   # get plot data, plot data should contain bins
-  plot.data <- plot$layers[[1]]$data
+  if ("patchwork" %in% class(plot)) {
+    plot.data <- plot[[1]]$layers[[1]]$data
+  } else {
+    plot.data <- plot$layers[[1]]$data
+  }
   # prepare plot range
   plot.chr <- as.character(plot.data[1, "seqnames"])
-  plot.region.start <- plot$coordinates$limits$x[1]
-  plot.region.end <- plot$coordinates$limits$x[2]
+  plot.region.start <- plot.data[1, "start"]
+  # notice that this is start, because the use of geom_bar instead of geom_rect
+  plot.region.end <- plot.data[nrow(plot.data), "start"]
   region <- GenomicRanges::GRanges(plot.chr, IRanges::IRanges(plot.region.start, plot.region.end))
 
   # get parameters
@@ -121,6 +127,7 @@ ggplot_add.base <- function(object, plot, object_name) {
   NAstring <- object$NAstring
   ambiguous <- object$ambiguous
   aa.color <- object$aa.color
+  aa.border.color <- object$aa.border.color
   aa.size <- object$aa.size
   aa.margin <- object$aa.margin
   aa.height <- object$aa.height
@@ -175,18 +182,7 @@ ggplot_add.base <- function(object, plot, object_name) {
     geom_bar(
       data = pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq", fill = "Base"),
       position = "fill", stat = "identity", color = "white"
-    ) +
-    geom_label(
-      data = pos.nuc.freq, aes_string(
-        x = "Pos", y = "Offset",
-        label = "Ref", fill = "Ref"
-      ),
-      show.legend = FALSE, size = nuc.size,
-      label.padding = unit(nuc.padding, "lines"),
-      label.r = unit(nuc.padding.r, "lines")
-    ) +
-    labs(y = "Base") +
-    geom_hline(yintercept = guide.line, color = guide.line.color, linetype = guide.line.type)
+    )
 
   if (show.aa) {
     # translate
@@ -213,31 +209,76 @@ ggplot_add.base <- function(object, plot, object_name) {
     region.aa.2.df$y <- -0.6
     # get base plot
     base.plot <- base.plot +
-      theme_base2(fill.color = nuc.color)
+      theme_base2(fill.color = nuc.color) +
+      geom_label(
+        data = pos.nuc.freq, aes_string(
+          x = "Pos", y = "Offset",
+          label = "Ref", fill = "Ref"
+        ),
+        show.legend = FALSE, size = nuc.size,
+        label.padding = unit(nuc.padding, "lines"),
+        label.r = unit(nuc.padding.r, "lines")
+      ) +
+      labs(y = "Base") +
+      geom_hline(yintercept = guide.line, color = guide.line.color, linetype = guide.line.type)
     # create aa plot
+    options(digits = nchar(max(region.aa.0.df$Pos)) + 1)
+    # get rect dataframe used to plot
+    region.aa.0.rect <- PrepareRect(df = region.aa.0.df, y.center = -0.2)
+    region.aa.1.rect <- PrepareRect(df = region.aa.1.df, y.center = -0.4)
+    region.aa.2.rect <- PrepareRect(df = region.aa.2.df, y.center = -0.6)
+    # aa.plot <- ggplot() +
+    #   geom_tile(
+    #     data = region.aa.0.df, aes_string(x = "Pos", y = "y", fill = "aa"),
+    #     colour = NA, height = 0.2
+    #   ) +
+    #   geom_tile(
+    #     data = region.aa.1.df, aes_string(x = "Pos", y = "y", fill = "aa"),
+    #     colour = NA, height = 0.2
+    #   ) +
+    #   geom_tile(
+    #     data = region.aa.2.df, aes_string(x = "Pos", y = "y", fill = "aa"),
+    #     colour = NA, height = 0.2
+    #   ) +
+    #   labs(y = "AA") +
+    #   geom_text(data = region.aa.0.df, aes_string(x = "Pos", y = "y", label = "anno"), size = aa.size) +
+    #   geom_text(data = region.aa.1.df, aes_string(x = "Pos", y = "y", label = "anno"), size = aa.size) +
+    #   geom_text(data = region.aa.2.df, aes_string(x = "Pos", y = "y", label = "anno"), size = aa.size) +
+    #   theme_aa(margin.len = aa.margin, fill.color = aa.color)
     aa.plot <- ggplot() +
-      geom_tile(
-        data = region.aa.0.df, aes_string(x = "Pos", y = "y", fill = "aa"),
-        colour = NA, height = 0.2
-      ) +
-      geom_tile(
-        data = region.aa.1.df, aes_string(x = "Pos", y = "y", fill = "aa"),
-        colour = NA, height = 0.2
-      ) +
-      geom_tile(
-        data = region.aa.2.df, aes_string(x = "Pos", y = "y", fill = "aa"),
-        colour = NA, height = 0.2
-      ) +
+      geom_rect(data = region.aa.0.rect, aes_string(
+        xmin = "xmin", xmax = "xmax",
+        ymin = "ymin", ymax = "ymax", fill = "aa"
+      ), color = aa.border.color) +
+      geom_rect(data = region.aa.1.rect, aes_string(
+        xmin = "xmin", xmax = "xmax",
+        ymin = "ymin", ymax = "ymax", fill = "aa"
+      ), color = aa.border.color) +
+      geom_rect(data = region.aa.2.rect, aes_string(
+        xmin = "xmin", xmax = "xmax",
+        ymin = "ymin", ymax = "ymax", fill = "aa"
+      ), color = aa.border.color) +
       labs(y = "AA") +
-      geom_text(data = region.aa.0.df, aes_string(x = "Pos", y = "y", label = "anno"), size = aa.size) +
-      geom_text(data = region.aa.1.df, aes_string(x = "Pos", y = "y", label = "anno"), size = aa.size) +
-      geom_text(data = region.aa.2.df, aes_string(x = "Pos", y = "y", label = "anno"), size = aa.size) +
+      geom_text(data = region.aa.0.df, aes_string(x = "Pos", y = "y", label = "anno")) +
+      geom_text(data = region.aa.1.df, aes_string(x = "Pos", y = "y", label = "anno")) +
+      geom_text(data = region.aa.2.df, aes_string(x = "Pos", y = "y", label = "anno")) +
       theme_aa(margin.len = aa.margin, fill.color = aa.color)
     final.plot <- patchwork::wrap_plots(base.plot, aa.plot, ncol = 1, heights = c(1, aa.height))
   } else {
     # create plot without amino acid
     final.plot <- base.plot +
-      theme_base(margin.len = plot.space, fill.color = nuc.color)
+      theme_base(margin.len = plot.space, fill.color = nuc.color) +
+      geom_label(
+        data = pos.nuc.freq, aes_string(
+          x = "Pos", y = "Offset",
+          label = "Ref", fill = "Ref"
+        ),
+        show.legend = FALSE, size = nuc.size,
+        label.padding = unit(nuc.padding, "lines"),
+        label.r = unit(nuc.padding.r, "lines")
+      ) +
+      labs(y = "Base") +
+      geom_hline(yintercept = guide.line, color = guide.line.color, linetype = guide.line.type)
   }
 
   # assemble plot

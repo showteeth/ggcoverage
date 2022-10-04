@@ -9,6 +9,7 @@ geom_coverage(
   mapping = NULL,
   color = NULL,
   rect.color = NA,
+  single.nuc = FALSE,
   facet.key = "Type",
   facet.order = NULL,
   facet.color = NULL,
@@ -30,6 +31,8 @@ geom_coverage(
 \item{color}{Track color. Default: NULL (select automatically).}
 
 \item{rect.color}{The color of every bin. Default: NA.}
+
+\item{single.nuc}{Logical value, whether to visualize at single nucleotide level (use bar plot). Default: FALSE.}
 
 \item{facet.key}{Sample type key to create coverage plot. Default: Type.}
 

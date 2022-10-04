@@ -1,3 +1,14 @@
+# ggcoverage 0.8.0
+## Major changes
+* Changed the plot type of coverage when visualizing at single-nucleotide level (`geom_bar` instead of `geom_rect`)
+* Changed the plot type of amino acids (`geom_rect` instead of `geom_tile`)
+* Changed x axis range
+
+## Minor changes
+* Fixed bugs in `geom_base`.
+
+-------------
+
 # ggcoverage 0.7.2
 ## New features
 * Added `GetConsensusPeak` to get consensus peak from replicates with MSPC.
