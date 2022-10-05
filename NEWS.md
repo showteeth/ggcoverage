@@ -3,6 +3,8 @@
 * Changed the plot type of coverage when visualizing at single-nucleotide level (`geom_bar` instead of `geom_rect`)
 * Changed the plot type of amino acids (`geom_rect` instead of `geom_tile`)
 * Changed x axis range
+* Added `GetPlotData` to obtain raw plot data
+* Added a new vignette to customize the plot
 
 ## Minor changes
 * Fixed bugs in `geom_base`.
