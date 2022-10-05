@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcoverage</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -88,6 +88,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/CustomizeThePlot.html">Customize The Plot</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -112,20 +124,64 @@
       
     </div>
 
-    <div id="ggcoverage-070" class="section level1">
-<h1 class="page-header" data-toc-text="0.7.0">
-<a href="#ggcoverage-070" class="anchor"></a>ggcoverage 0.7.0<small> 2022-08-18 </small>
+    <div id="ggcoverage-080" class="section level1">
+<h1 class="page-header" data-toc-text="0.8.0">
+<a href="#ggcoverage-080" class="anchor"></a>ggcoverage 0.8.0<small> Unreleased </small>
 </h1>
-<div id="new-features" class="section level2">
+<div id="major-changes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>New features</h2>
+<a href="#major-changes" class="anchor"></a>Major changes</h2>
 <ul>
-<li>Added <code>geom_base</code> to annotate genome coverage with base and amino acids.</li>
+<li>Changed the plot type of coverage when visualizing at single-nucleotide level (<code>geom_bar</code> instead of <code>geom_rect</code>)</li>
+<li>Changed the plot type of amino acids (<code>geom_rect</code> instead of <code>geom_tile</code>)</li>
+<li>Changed x axis range</li>
+<li>Added <code>GetPlotData</code> to obtain raw plot data</li>
+<li>Added a new vignette to customize the plot</li>
 </ul>
 </div>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>Fixed bugs in <code>geom_base</code>.</li>
+</ul>
+<hr>
+</div>
+</div>
+    <div id="ggcoverage-072" class="section level1">
+<h1 class="page-header" data-toc-text="0.7.2">
+<a href="#ggcoverage-072" class="anchor"></a>ggcoverage 0.7.2<small> Unreleased </small>
+</h1>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New features</h2>
+<ul>
+<li>Added <code>GetConsensusPeak</code> to get consensus peak from replicates with MSPC.</li>
+</ul>
+</div>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>Added <code>peak.df</code> for <code>geom_peak</code> to support dataframe as input.</li>
+</ul>
+<hr>
+</div>
+</div>
+    <div id="ggcoverage-070" class="section level1">
+<h1 class="page-header" data-toc-text="0.7.0">
+<a href="#ggcoverage-070" class="anchor"></a>ggcoverage 0.7.0<small> 2022-08-18 </small>
+</h1>
+<div id="new-features-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features-1" class="anchor"></a>New features</h2>
+<ul>
+<li>Added <code>geom_base</code> to annotate genome coverage with base and amino acids.</li>
+</ul>
+</div>
+<div id="minor-changes-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code>LoadTrackFile</code> supported visualization at single-nucleotide level.</li>
@@ -139,9 +195,9 @@
 <h1 class="page-header" data-toc-text="0.6.0">
 <a href="#ggcoverage-060" class="anchor"></a>ggcoverage 0.6.0<small> Unreleased </small>
 </h1>
-<div id="new-features-1" class="section level2">
+<div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>New features</h2>
+<a href="#new-features-2" class="anchor"></a>New features</h2>
 <ul>
 <li>Added <code>geom_gc</code> to annotate genome coverage with GC content.</li>
 </ul>
@@ -152,9 +208,9 @@
 <h1 class="page-header" data-toc-text="0.5.0">
 <a href="#ggcoverage-050" class="anchor"></a>ggcoverage 0.5.0<small> Unreleased </small>
 </h1>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-3" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Fixed bug in <code>getIdeogram</code>.</li>
 </ul>
@@ -165,9 +221,9 @@
 <h1 class="page-header" data-toc-text="0.4.0">
 <a href="#ggcoverage-040" class="anchor"></a>ggcoverage 0.4.0<small> Unreleased </small>
 </h1>
-<div id="new-features-2" class="section level2">
+<div id="new-features-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-2" class="anchor"></a>New features</h2>
+<a href="#new-features-3" class="anchor"></a>New features</h2>
 <ul>
 <li>Added <code>geom_peak</code> to enhance its usage in ChIP-seq or ATAC-seq data.</li>
 <li>Changed Y axis theme.</li>
@@ -179,16 +235,16 @@
 <h1 class="page-header" data-toc-text="0.3.0">
 <a href="#ggcoverage-030" class="anchor"></a>ggcoverage 0.3.0<small> Unreleased </small>
 </h1>
-<div id="new-features-3" class="section level2">
+<div id="new-features-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-3" class="anchor"></a>New features</h2>
+<a href="#new-features-4" class="anchor"></a>New features</h2>
 <ul>
 <li>Added <code>geom_transcript</code>, <code>geom_ideogram</code>.</li>
 </ul>
 </div>
-<div id="minor-changes-2" class="section level2">
+<div id="minor-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-4" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Fixed bug in <code>GetGeneGroup</code>.</li>
 </ul>
@@ -199,9 +255,9 @@
 <h1 class="page-header" data-toc-text="0.2.0">
 <a href="#ggcoverage-020" class="anchor"></a>ggcoverage 0.2.0<small> Unreleased </small>
 </h1>
-<div id="new-features-4" class="section level2">
+<div id="new-features-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-4" class="anchor"></a>New features</h2>
+<a href="#new-features-5" class="anchor"></a>New features</h2>
 <ul>
 <li>Added <code>geom_gene</code>, <code>geom_ideogram</code>.</li>
 </ul>
@@ -212,9 +268,9 @@
 <h1 class="page-header" data-toc-text="0.1.0">
 <a href="#ggcoverage-010" class="anchor"></a>ggcoverage 0.1.0<small> Unreleased </small>
 </h1>
-<div id="new-features-5" class="section level2">
+<div id="new-features-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-5" class="anchor"></a>New features</h2>
+<a href="#new-features-6" class="anchor"></a>New features</h2>
 <ul>
 <li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
 <li>Added <code>ggcoverage</code>, <code>geom_coverage</code>, <code>LoadTrack</code> and <code>FormatInput</code>.</li>

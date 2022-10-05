@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcoverage</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -89,6 +89,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/CustomizeThePlot.html">Customize The Plot</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -119,7 +131,8 @@
     </div>
 
     <pre class="usage"><span class='fu'>geom_peak</span><span class='op'>(</span>
-  <span class='va'>bed.file</span>,
+  bed.file <span class='op'>=</span> <span class='cn'>NULL</span>,
+  peak.df <span class='op'>=</span> <span class='cn'>NULL</span>,
   peak.color <span class='op'>=</span> <span class='st'>"black"</span>,
   peak.size <span class='op'>=</span> <span class='fl'>5</span>,
   plot.space <span class='op'>=</span> <span class='fl'>0.1</span>,
@@ -131,7 +144,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>bed.file</th>
-      <td><p>The path to bed file.</p></td>
+      <td><p>The path to consensus peaks file. Default: NULL.</p></td>
+    </tr>
+    <tr>
+      <th>peak.df</th>
+      <td><p>The dataframe contains consensus peaks. Default: NULL.</p></td>
     </tr>
     <tr>
       <th>peak.color</th>
@@ -156,32 +173,32 @@
     <p>Plot.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>ggcoverage</span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>rtracklayer</span><span class='op'>)</span>
-<span class='va'>sample.meta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
-  SampleName <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Chr18_MCF7_ER_1"</span>, <span class='st'>"Chr18_MCF7_ER_2"</span>, <span class='st'>"Chr18_MCF7_ER_3"</span>, <span class='st'>"Chr18_MCF7_input"</span><span class='op'>)</span>,
-  Type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MCF7_ER_1"</span>, <span class='st'>"MCF7_ER_2"</span>, <span class='st'>"MCF7_ER_3"</span>, <span class='st'>"MCF7_input"</span><span class='op'>)</span>,
-  Group <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"IP"</span>, <span class='st'>"IP"</span>, <span class='st'>"IP"</span>, <span class='st'>"Input"</span><span class='op'>)</span>
-<span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># library(ggcoverage)</span>
+<span class='co'># library(rtracklayer)</span>
+<span class='co'># sample.meta &lt;- data.frame(</span>
+<span class='co'>#   SampleName = c("Chr18_MCF7_ER_1", "Chr18_MCF7_ER_2", "Chr18_MCF7_ER_3", "Chr18_MCF7_input"),</span>
+<span class='co'>#   Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),</span>
+<span class='co'>#   Group = c("IP", "IP", "IP", "Input")</span>
+<span class='co'># )</span>
 <span class='co'># track folder</span>
-<span class='va'>track.folder</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"ChIP-seq"</span>, package <span class='op'>=</span> <span class='st'>"ggcoverage"</span><span class='op'>)</span>
+<span class='co'># track.folder &lt;- system.file("extdata", "ChIP-seq", package = "ggcoverage")</span>
 <span class='co'># load bigwig file</span>
-<span class='va'>track.df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='LoadTrackFile.html'>LoadTrackFile</a></span><span class='op'>(</span>
-  track.folder <span class='op'>=</span> <span class='va'>track.folder</span>, format <span class='op'>=</span> <span class='st'>"bw"</span>,
-  meta.info <span class='op'>=</span> <span class='va'>sample.meta</span>
-<span class='op'>)</span>
-<span class='va'>gtf.file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"used_hg19.gtf"</span>, package <span class='op'>=</span> <span class='st'>"ggcoverage"</span><span class='op'>)</span>
-<span class='va'>gtf.gr</span> <span class='op'>&lt;-</span> <span class='fu'>rtracklayer</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/rtracklayer/man/GFFFile-class.html'>import.gff</a></span><span class='op'>(</span>con <span class='op'>=</span> <span class='va'>gtf.file</span>, format <span class='op'>=</span> <span class='st'>"gtf"</span><span class='op'>)</span>
+<span class='co'># track.df &lt;- LoadTrackFile(</span>
+<span class='co'>#   track.folder = track.folder, format = "bw",</span>
+<span class='co'>#   meta.info = sample.meta</span>
+<span class='co'># )</span>
+<span class='co'># gtf.file &lt;- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")</span>
+<span class='co'># gtf.gr &lt;- rtracklayer::import.gff(con = gtf.file, format = "gtf")</span>
 <span class='co'># create mark region</span>
-<span class='va'>mark.region</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>76822533</span><span class='op'>)</span>, end <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>76823743</span><span class='op'>)</span>, label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Promoter"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>basic.coverage</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ggcoverage.html'>ggcoverage</a></span><span class='op'>(</span>
-  data <span class='op'>=</span> <span class='va'>track.df</span>, color <span class='op'>=</span> <span class='st'>"auto"</span>, region <span class='op'>=</span> <span class='st'>"chr18:76822285-76900000"</span>,
-  mark.region <span class='op'>=</span> <span class='va'>mark.region</span>, show.mark.label <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The color you provided is not as long as Type column in data, select automatically!</span></div><div class='input'><span class='co'># get consensus peak file</span>
-<span class='va'>peak.file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"ChIP-seq"</span>, <span class='st'>"consensus.peak"</span>, package <span class='op'>=</span> <span class='st'>"ggcoverage"</span><span class='op'>)</span>
-<span class='va'>basic.coverage</span> <span class='op'>+</span> <span class='fu'><a href='geom_gene.html'>geom_gene</a></span><span class='op'>(</span>gtf.gr <span class='op'>=</span> <span class='va'>gtf.gr</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>geom_peak</span><span class='op'>(</span>bed.file <span class='op'>=</span> <span class='va'>peak.file</span><span class='op'>)</span>
-</div><div class='img'><img src='geom_peak-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='co'># mark.region &lt;- data.frame(start = c(76822533), end = c(76823743), label = c("Promoter"))</span>
+<span class='co'># basic.coverage &lt;- ggcoverage(</span>
+<span class='co'>#   data = track.df, color = "auto", region = "chr18:76822285-76900000",</span>
+<span class='co'>#   mark.region = mark.region, show.mark.label = FALSE</span>
+<span class='co'># )</span>
+<span class='co'># get consensus peak file</span>
+<span class='co'># peak.file &lt;- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")</span>
+<span class='co'># basic.coverage + geom_gene(gtf.gr = gtf.gr) + geom_peak(bed.file = peak.file)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

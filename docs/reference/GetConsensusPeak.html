@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Theme for geom_base without margin. — theme_base2 • ggcoverage</title>
+<title>Get Consensus Peak from Replicates with MSPC. — GetConsensusPeak • ggcoverage</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Theme for geom_base without margin. — theme_base2" />
-<meta property="og:description" content="Theme for geom_base without margin." />
+<meta property="og:title" content="Get Consensus Peak from Replicates with MSPC. — GetConsensusPeak" />
+<meta property="og:description" content="Get Consensus Peak from Replicates with MSPC." />
 
 
 
@@ -121,30 +121,90 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Theme for geom_base without margin.</h1>
+    <h1>Get Consensus Peak from Replicates with MSPC.</h1>
     
-    <div class="hidden name"><code>theme_base2.Rd</code></div>
+    <div class="hidden name"><code>GetConsensusPeak.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Theme for geom_base without margin.</p>
+    <p>Get Consensus Peak from Replicates with MSPC.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>theme_base2</span><span class='op'>(</span><span class='va'>fill.color</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>GetConsensusPeak</span><span class='op'>(</span>
+  <span class='va'>peak.file</span>,
+  peak.folder <span class='op'>=</span> <span class='cn'>NULL</span>,
+  mspc.path <span class='op'>=</span> <span class='cn'>NULL</span>,
+  rep.type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"bio"</span>, <span class='st'>"tec"</span><span class='op'>)</span>,
+  stringency.threshold <span class='op'>=</span> <span class='fl'>1e-08</span>,
+  weak.threshold <span class='op'>=</span> <span class='fl'>1e-04</span>,
+  gamma <span class='op'>=</span> <span class='fl'>1e-08</span>,
+  alpha <span class='op'>=</span> <span class='fl'>0.05</span>,
+  min.overlap.num <span class='op'>=</span> <span class='fl'>1</span>,
+  multiple.intersections <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Lowest"</span>, <span class='st'>"Highest"</span><span class='op'>)</span>,
+  parallelism.degree <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>fill.color</th>
-      <td><p>Fill color.</p></td>
+      <th>peak.file</th>
+      <td><p>Peak files (two or more file: get consensus peak; one file: read directly)
+obtained from peak caller, eg: MACS2 (without header).</p></td>
+    </tr>
+    <tr>
+      <th>peak.folder</th>
+      <td><p>The folder contains peak files. Default: NULL.</p></td>
+    </tr>
+    <tr>
+      <th>mspc.path</th>
+      <td><p>MSPC path. Default: NULL (conduct automatic detection).</p></td>
+    </tr>
+    <tr>
+      <th>rep.type</th>
+      <td><p>Replicate type, chosen from bio (biological) and tec (technical).</p></td>
+    </tr>
+    <tr>
+      <th>stringency.threshold</th>
+      <td><p>Set a threshold on p-values, where peaks with p-value lower than this threshold, are considered stringent. Default: 1e-8.</p></td>
+    </tr>
+    <tr>
+      <th>weak.threshold</th>
+      <td><p>Set a threshold on p-values, such that peaks with p-value between this and stringency threshold, are considered weak peaks. Default: 1e-4.</p></td>
+    </tr>
+    <tr>
+      <th>gamma</th>
+      <td><p>Set the combined stringency threshold. Peaks with combined p-value below this threshold are confirmed. Default: 1e-8.</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>Set the threshold for Benjamini-Hochberg multiple testing correction. Default: 0.05.</p></td>
+    </tr>
+    <tr>
+      <th>min.overlap.num</th>
+      <td><p>Set the minimum number of overlapping peaks required before MSPC combines their p-value. Default: 1.</p></td>
+    </tr>
+    <tr>
+      <th>multiple.intersections</th>
+      <td><p>When multiple peaks from a sample overlap with a given peak,
+this argument defines which of the peaks to be considered: the one with lowest p-value, or the one with highest p-value?
+Chosen from Lowest and Highest. Default: Lowest.</p></td>
+    </tr>
+    <tr>
+      <th>parallelism.degree</th>
+      <td><p>Set the number of parallel threads MSPC can utilize simultaneously when processing data. Default: 1.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of layers.</p>
+    <p>A dataframe contains all consensus peak.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># library(ggcoverage)</span>
+<span class='co'># peak.file &lt;- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")</span>
+<span class='co'># peak.df &lt;- GetConsensusPeak(peak.file = peak.file)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

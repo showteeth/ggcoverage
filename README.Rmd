@@ -60,6 +60,12 @@ library("rtracklayer")
 library("ggcoverage")
 ```
 
+## Manual
+`ggcoverage` provides two [vignettes](https://showteeth.github.io/ggcoverage/): 
+
+* **detailed manual**: step-by-step usage
+* **customize the plot**: customize the plot and add additional layer
+
 
 ## RNA-seq data
 ### Load the data
@@ -157,7 +163,7 @@ head(track.df)
 
 #### Basic coverage
 ```{r basic_coverage_dna, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df,color = NULL, mark.region = NULL,
+basic.coverage = ggcoverage(data = track.df,color = "grey", mark.region = NULL,
                             region = 'chr4:61750000-62,700,000', range.position = "out")
 basic.coverage
 ```

@@ -7,6 +7,12 @@
     <loc>https://showteeth.github.io/ggcoverage//reference/FormatTrack.html</loc>
   </url>
   <url>
+    <loc>https://showteeth.github.io/ggcoverage//reference/GetConsensusPeak.html</loc>
+  </url>
+  <url>
+    <loc>https://showteeth.github.io/ggcoverage//reference/GetPlotData.html</loc>
+  </url>
+  <url>
     <loc>https://showteeth.github.io/ggcoverage//reference/LoadTrackFile.html</loc>
   </url>
   <url>
@@ -62,6 +68,9 @@
   </url>
   <url>
     <loc>https://showteeth.github.io/ggcoverage//reference/theme_transcript.html</loc>
+  </url>
+  <url>
+    <loc>https://showteeth.github.io/ggcoverage//articles/CustomizeThePlot.html</loc>
   </url>
   <url>
     <loc>https://showteeth.github.io/ggcoverage//articles/ggcoverage.html</loc>

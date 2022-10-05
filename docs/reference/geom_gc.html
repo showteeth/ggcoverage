@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcoverage</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -89,6 +89,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/CustomizeThePlot.html">Customize The Plot</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -176,21 +188,21 @@
     <p>Plot.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>ggcoverage</span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>utils</span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>rtracklayer</span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'>"BSgenome.Hsapiens.UCSC.hg19"</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># library(ggcoverage)</span>
+<span class='co'># library(utils)</span>
+<span class='co'># library(rtracklayer)</span>
+<span class='co'># library("BSgenome.Hsapiens.UCSC.hg19")</span>
 <span class='co'># track folder</span>
-<span class='va'>track.file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"DNA-seq"</span>, <span class='st'>"CNV_example.txt"</span>, package <span class='op'>=</span> <span class='st'>"ggcoverage"</span><span class='op'>)</span>
-<span class='va'>track.df</span> <span class='op'>&lt;-</span> <span class='fu'>utils</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span><span class='va'>track.file</span>, header <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='va'>gtf.file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"used_hg19.gtf"</span>, package <span class='op'>=</span> <span class='st'>"ggcoverage"</span><span class='op'>)</span>
-<span class='va'>gtf.gr</span> <span class='op'>&lt;-</span> <span class='fu'>rtracklayer</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/rtracklayer/man/GFFFile-class.html'>import.gff</a></span><span class='op'>(</span>con <span class='op'>=</span> <span class='va'>gtf.file</span>, format <span class='op'>=</span> <span class='st'>"gtf"</span><span class='op'>)</span>
-<span class='va'>basic.coverage</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ggcoverage.html'>ggcoverage</a></span><span class='op'>(</span>
-  data <span class='op'>=</span> <span class='va'>track.df</span>, color <span class='op'>=</span> <span class='cn'>NULL</span>, mark.region <span class='op'>=</span> <span class='cn'>NULL</span>,
-  region <span class='op'>=</span> <span class='st'>"chr4:61750000-62,700,000"</span>, range.position <span class='op'>=</span> <span class='st'>"out"</span>
-<span class='op'>)</span>
-<span class='va'>basic.coverage</span> <span class='op'>+</span> <span class='fu'>geom_gc</span><span class='op'>(</span>bs.fa.seq <span class='op'>=</span> <span class='va'>BSgenome.Hsapiens.UCSC.hg19</span><span class='op'>)</span>
-</div><div class='img'><img src='geom_gc-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='co'># track.file &lt;- system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")</span>
+<span class='co'># track.df &lt;- utils::read.table(track.file, header = TRUE)</span>
+<span class='co'># gtf.file &lt;- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")</span>
+<span class='co'># gtf.gr &lt;- rtracklayer::import.gff(con = gtf.file, format = "gtf")</span>
+<span class='co'># basic.coverage &lt;- ggcoverage(</span>
+<span class='co'>#   data = track.df, color = NULL, mark.region = NULL,</span>
+<span class='co'>#   region = "chr4:61750000-62,700,000", range.position = "out"</span>
+<span class='co'># )</span>
+<span class='co'># basic.coverage + geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

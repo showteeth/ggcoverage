@@ -7,7 +7,7 @@
 
 [![CRAN](https://www.r-pkg.org/badges/version/ggcoverage?color=orange)](https://cran.r-project.org/package=ggcoverage)
 ![License](https://img.shields.io/badge/license-MIT-green)
-[![CODE_SIZE](https://img.shields.io/github/languages/code-size/showteeth/ggcoverage.svg)](https://github.com/showteeth/ggcoverage)
+[![CODE\_SIZE](https://img.shields.io/github/languages/code-size/showteeth/ggcoverage.svg)](https://github.com/showteeth/ggcoverage)
 
 ## Introduction
 
@@ -49,7 +49,9 @@ install.package("ggcoverage")
 remotes::install_github("showteeth/ggcoverage")
 ```
 
-In general, it is **recommended** to install from [Github repository](https://github.com/showteeth/ggcoverage) (update more timely).
+In general, it is **recommended** to install from [Github
+repository](https://github.com/showteeth/ggcoverage) (update more
+timely).
 
 Once `ggcoverage` is installed, it can be loaded by the following
 command.
@@ -58,6 +60,14 @@ command.
 library("rtracklayer")
 library("ggcoverage")
 ```
+
+## Manual
+
+`ggcoverage` provides two
+[vignettes](https://showteeth.github.io/ggcoverage/):
+
+-   **detailed manual**: step-by-step usage
+-   **customize the plot**: customize the plot and add additional layer
 
 ## RNA-seq data
 
@@ -219,7 +229,7 @@ head(track.df)
 #### Basic coverage
 
 ``` r
-basic.coverage = ggcoverage(data = track.df,color = NULL, mark.region = NULL,
+basic.coverage = ggcoverage(data = track.df,color = "grey", mark.region = NULL,
                             region = 'chr4:61750000-62,700,000', range.position = "out")
 basic.coverage
 ```
@@ -294,6 +304,7 @@ popular color schemes is available
 ``` r
 # color scheme
 nuc.color = c("A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d")
+opar <- graphics::par() 
 # create plot
 graphics::par(mar = c(1, 5, 1, 1))
 graphics::image(
@@ -309,6 +320,11 @@ graphics::mtext(
 ```
 
 <img src="man/figures/README-base_color_scheme-1.png" width="100%" style="display: block; margin: auto;" />
+
+``` r
+# reset par default
+graphics::par(opar)
+```
 
 Default color scheme for amino acid annotation is from [Residual
 colours: a proposal for
@@ -337,6 +353,11 @@ graphics::mtext(
 ```
 
 <img src="man/figures/README-aa_color_scheme-1.png" width="100%" style="display: block; margin: auto;" />
+
+``` r
+# reset par default
+graphics::par(opar)
+```
 
 #### Add base and amino acid annotation
 
@@ -387,13 +408,13 @@ track.df = LoadTrackFile(track.folder = track.folder, format = "bw",
                          meta.info = sample.meta)
 # check data
 head(track.df)
-#>   seqnames    start      end   score      Type Group
-#> 1    chr18 76799701 76800000 439.316 MCF7_ER_1    IP
-#> 2    chr18 76800001 76800300 658.974 MCF7_ER_1    IP
-#> 3    chr18 76800301 76800600 219.658 MCF7_ER_1    IP
-#> 4    chr18 76800601 76800900 658.974 MCF7_ER_1    IP
-#> 5    chr18 76800901 76801200   0.000 MCF7_ER_1    IP
-#> 6    chr18 76801201 76801500 219.658 MCF7_ER_1    IP
+#>   seqnames    start      end      score      Type Group
+#> 1    chr18 76799701 76800000 439.316010 MCF7_ER_1    IP
+#> 2    chr18 76800001 76800300 658.973999 MCF7_ER_1    IP
+#> 3    chr18 76800301 76800600 219.658005 MCF7_ER_1    IP
+#> 4    chr18 76800601 76800900 658.973999 MCF7_ER_1    IP
+#> 5    chr18 76800901 76801200   0.000000 MCF7_ER_1    IP
+#> 6    chr18 76801201 76801500 219.658005 MCF7_ER_1    IP
 ```
 
 Prepare mark region:
