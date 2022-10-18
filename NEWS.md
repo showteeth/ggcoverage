@@ -1,3 +1,9 @@
+# ggcoverage 0.8.1
+## Minor changes
+* Fixed bugs in `ggcoverage`.
+
+-------------
+
 # ggcoverage 0.8.0
 ## Major changes
 * Changed the plot type of coverage when visualizing at single-nucleotide level (`geom_bar` instead of `geom_rect`)
