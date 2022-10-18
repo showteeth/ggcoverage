@@ -83,7 +83,7 @@ ggcoverage <- function(data, region = "chr14:21,677,306-21,737,601", gtf.gr = NU
   coverage.plot <- ggplot() +
     geom_coverage(
       data = data, mapping = mapping, color = color, rect.color = rect.color,
-      single.nuc = single.nuc, facet.key = facet.key, facet.order = facet.color, facet.color = facet.color,
+      single.nuc = single.nuc, facet.key = facet.key, facet.order = facet.order, facet.color = facet.color,
       group.key = group.key, range.size = range.size, range.position = range.position,
       mark.region = mark.region, mark.color = mark.color, mark.alpha = mark.alpha, show.mark.label = show.mark.label,
       mark.label.size = mark.label.size
