@@ -61,8 +61,10 @@ ggplot_add.gc <- function(object, plot, object_name) {
   plot.chr <- as.character(plot.data[1, "seqnames"])
   # plot.region.start <- plot$coordinates$limits$x[1]
   # plot.region.end <- plot$coordinates$limits$x[2]
-  plot.region.start <- plot.data[1, "start"]
-  plot.region.end <- plot.data[nrow(plot.data), "end"]
+  # plot.region.start <- plot.data[1, "start"]
+  plot.region.start <- min(plot.data[, "start"])
+  # plot.region.end <- plot.data[nrow(plot.data), "end"]
+  plot.region.end <- max(plot.data[, "end"])
   # filter with first sample
   plot.data <- plot.data %>% dplyr::filter(Type == plot.data$Type[1])
 

@@ -62,11 +62,14 @@ ggplot_add.peak <- function(object, plot, object_name) {
     plot.data <- plot$layers[[1]]$data
   }
   # prepare plot range
+  # the plot region are not normal, so start is minimum value
   plot.chr <- as.character(plot.data[1, "seqnames"])
   # plot.region.start <- plot$coordinates$limits$x[1]
   # plot.region.end <- plot$coordinates$limits$x[2]
-  plot.region.start <- plot.data[1, "start"]
-  plot.region.end <- plot.data[nrow(plot.data), "end"]
+  # plot.region.start <- plot.data[1, "start"]
+  plot.region.start <- min(plot.data[, "start"])
+  # plot.region.end <- plot.data[nrow(plot.data), "end"]
+  plot.region.end <- max(plot.data[, "end"])
 
   # get parameters
   bed.file <- object$bed.file

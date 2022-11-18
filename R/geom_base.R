@@ -103,9 +103,11 @@ ggplot_add.base <- function(object, plot, object_name) {
   }
   # prepare plot range
   plot.chr <- as.character(plot.data[1, "seqnames"])
-  plot.region.start <- plot.data[1, "start"]
+  # plot.region.start <- plot.data[1, "start"]
+  plot.region.start <- min(plot.data[, "start"])
   # notice that this is start, because the use of geom_bar instead of geom_rect
-  plot.region.end <- plot.data[nrow(plot.data), "start"]
+  # plot.region.end <- plot.data[nrow(plot.data), "start"]
+  plot.region.end <- max(plot.data[, "start"])
   region <- GenomicRanges::GRanges(plot.chr, IRanges::IRanges(plot.region.start, plot.region.end))
 
   # get parameters

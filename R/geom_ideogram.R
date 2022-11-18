@@ -62,8 +62,10 @@ ggplot_add.ideogram <- function(object, plot, object_name) {
     plot.data <- plot$layers[[1]]$data
   }
   plot.chr <- as.character(plot.data[1, "seqnames"])
-  plot.region.start <- plot.data[1, "start"]
-  plot.region.end <- plot.data[nrow(plot.data), "end"]
+  # plot.region.start <- plot.data[1, "start"]
+  plot.region.start <- min(plot.data[, "start"])
+  # plot.region.end <- plot.data[nrow(plot.data), "end"]
+  plot.region.end <- max(plot.data[, "end"])
 
   # get parameters
   genome <- object$genome

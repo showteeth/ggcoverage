@@ -129,7 +129,8 @@ mark.region
 #> 3 21737590 21737650    M3
 ```
 
-Load GTF file:
+### Load GTF
+To add **gene annotation**, the gtf file should contain **gene_type** and **gene_name** attributes in **column 9**; to add **transcript annotation**, the gtf file should contain **transcript_name** attribute in **column 9**.
 
 ``` r
 gtf.file = system.file("extdata", "used_hg19.gtf", package = "ggcoverage")

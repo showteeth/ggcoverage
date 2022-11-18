@@ -73,9 +73,13 @@ ggplot_add.transcript <- function(object, plot, object_name) {
     track.data <- plot$layers[[1]]$data
   }
   # prepare plot range
+  # the plot region are not normal, so start is minimum value
   plot.range.chr <- track.data[1, "seqnames"]
-  plot.range.start <- track.data[1, "start"]
-  plot.range.end <- track.data[nrow(track.data), "end"]
+  # plot.range.start <- track.data[1, "start"]
+  plot.range.start <- min(track.data[, "start"])
+  # plot.range.end <- track.data[nrow(track.data), "end"]
+  plot.range.end <- max(track.data[, "end"])
+
   plot.range.gr <- GenomicRanges::GRanges(
     seqnames = plot.range.chr,
     ranges = IRanges::IRanges(plot.range.start, plot.range.end)
@@ -101,6 +105,12 @@ ggplot_add.transcript <- function(object, plot, object_name) {
 
   # filter gene in region
   gtf.df.used <- IRanges::subsetByOverlaps(x = gtf.gr, ranges = plot.range.gr) %>% as.data.frame()
+  # check information
+  used.gtf.columns <- c("seqnames", "start", "end", "strand", "type", "transcript_name")
+  if (!all(used.gtf.columns %in% colnames(gtf.df.used))) {
+    used.unique <- setdiff(used.gtf.columns, colnames(gtf.df.used))
+    stop(paste0(paste0(used.unique, collapse = ", "), " is not in provided GTF file!"))
+  }
   # select used features
   gene.tx.df <- gtf.df.used %>%
     dplyr::filter(gene_name == gene.name) %>%

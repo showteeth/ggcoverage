@@ -76,8 +76,8 @@ ggcoverage <- function(data, region = "chr14:21,677,306-21,737,601", gtf.gr = NU
       gene.name = gene.name, gene.name.type = gene.name.type
     )
   }
-  plot.range.start <- data[1, "start"]
-  plot.range.end <- data[nrow(data), "end"]
+  # plot.range.start <- min(data[, "start"])
+  # plot.range.end <- max(data[, "end"])
 
   # create plot
   coverage.plot <- ggplot() +
