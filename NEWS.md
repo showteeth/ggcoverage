@@ -1,3 +1,12 @@
+# ggcoverage 0.9.0
+## Major changes
+* Supporting gtf file from Ensembl
+
+## Minor changes
+* Fixed bugs in getting gene group.
+
+-------------
+
 # ggcoverage 0.8.1
 ## Minor changes
 * Fixed bugs in `ggcoverage`.

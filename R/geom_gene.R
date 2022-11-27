@@ -107,15 +107,23 @@ ggplot_add.gene <- function(object, plot, object_name) {
   # gtf.gr <- rtracklayer::import.gff(gtf.file,format = 'gtf')
   gtf.df.used <- IRanges::subsetByOverlaps(x = gtf.gr, ranges = plot.range.gr) %>% as.data.frame()
   # check information
-  used.gtf.columns <- c("seqnames", "start", "end", "strand", "type", "gene_type", "gene_name")
-  if (!all(used.gtf.columns %in% colnames(gtf.df.used))) {
-    used.unique <- setdiff(used.gtf.columns, colnames(gtf.df.used))
+  used.gtf.columns <- c("seqnames", "start", "end", "strand", "type", "gene_name")
+  gene.type.names <- c("gene_type", "gene_biotype")
+  if (all(used.gtf.columns %in% colnames(gtf.df.used))) {
+    used.gene.type.name <- intersect(gene.type.names, colnames(gtf.df.used))
+    if (length(used.gene.type.name) < 1) {
+      stop("gene_type/gene_biotype is not in provided GTF file!")
+    } else {
+      # select used features
+      gene.info.used <- gtf.df.used %>%
+        dplyr::filter(type %in% c("gene", "exon", "UTR")) %>%
+        dplyr::select(c("seqnames", "start", "end", "strand", "type", used.gene.type.name, "gene_name"))
+    }
+    colnames(gene.info.used) <- c("seqnames", "start", "end", "strand", "type", "gene_type", "gene_name")
+  } else {
+    used.unique <- setdiff(c(used.gtf.columns, gene.type.names), colnames(gtf.df.used))
     stop(paste0(paste0(used.unique, collapse = ", "), " is not in provided GTF file!"))
   }
-  # select used features
-  gene.info.used <- gtf.df.used %>%
-    dplyr::filter(type %in% c("gene", "exon", "UTR")) %>%
-    dplyr::select(c("seqnames", "start", "end", "strand", "type", "gene_type", "gene_name"))
   # modify region
   gene.info.used[gene.info.used$start <= plot.range.start, "start"] <- plot.range.start
   gene.info.used[gene.info.used$end >= plot.range.end, "end"] <- plot.range.end
@@ -140,13 +148,17 @@ ggplot_add.gene <- function(object, plot, object_name) {
   gene.info.used.exon <- gene.info.used %>% dplyr::filter(type == "exon")
   gene.info.used.exon$start <- as.numeric(gene.info.used.exon$start)
   gene.info.used.exon$end <- as.numeric(gene.info.used.exon$end)
-
+  # get utr region
+  gene.info.used.utr <- gene.info.used %>% dplyr::filter(type == "UTR")
+  gene.info.used.utr$start <- as.numeric(gene.info.used.utr$start)
+  gene.info.used.utr$end <- as.numeric(gene.info.used.utr$end)
+  # change UTR
+  if (nrow(gene.info.used.utr) == 0) {
+    warning("No UTR detected in provided GTF!")
+    show.utr <- FALSE
+  }
   # create plot without arrow
   if (show.utr) {
-    # get utr region
-    gene.info.used.utr <- gene.info.used %>% dplyr::filter(type == "UTR")
-    gene.info.used.utr$start <- as.numeric(gene.info.used.utr$start)
-    gene.info.used.utr$end <- as.numeric(gene.info.used.utr$end)
     # substract UTR from exon
     gene.exon.utr <- SplitExonUTR(exon.df = gene.info.used.exon, utr.df = gene.info.used.utr)
     gene.info.used.exon <- gene.exon.utr$exon

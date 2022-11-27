@@ -167,19 +167,27 @@ ggplot_add.transcript <- function(object, plot, object_name) {
       ),
       show.legend = FALSE,
       size = tx.size
-    ) +
-    geom_segment(
-      data = gene.tx.df.utr,
-      mapping = aes_string(
-        x = "start",
-        y = "group",
-        xend = "end",
-        yend = "group",
-        color = "strand"
-      ),
-      show.legend = FALSE,
-      size = utr.size
-    ) +
+    )
+
+  # deal with missing UTR
+  if (is.null(gene.tx.df.utr)) {
+    warning("No UTR detected in provided GTF!")
+  } else {
+    tx.plot <- tx.plot +
+      geom_segment(
+        data = gene.tx.df.utr,
+        mapping = aes_string(
+          x = "start",
+          y = "group",
+          xend = "end",
+          yend = "group",
+          color = "strand"
+        ),
+        show.legend = FALSE,
+        size = utr.size
+      )
+  }
+  tx.plot <- tx.plot +
     geom_segment(
       data = gene.tx.df.exon,
       mapping = aes_string(

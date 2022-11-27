@@ -1,7 +1,7 @@
 Package: ggcoverage
 Type: Package
 Title: Visualize Genome Coverage with Various Annotations
-Version: 0.8.1
+Version: 0.9.0
 Authors@R: 
     person(given = "Yabing",
            family = "Song",
