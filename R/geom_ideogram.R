@@ -85,7 +85,7 @@ ggplot_add.ideogram <- function(object, plot, object_name) {
   # get genome length
   genome.length <- genome.info.df[nrow(genome.info.df), "end"]
 
-  # create basci plot
+  # create basic plot
   ideogram.plot <- ggplot() +
     ggbio::layout_karyogram(genome.info, cytobands = TRUE, geom = NULL, rect.height = 10)
 

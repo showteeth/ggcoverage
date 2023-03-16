@@ -1,3 +1,9 @@
+# ggcoverage 1.0.0
+## Major changes
+* Supporting Hi-C visualization (`geom_tad`).
+
+-------------
+
 # ggcoverage 0.9.0
 ## Major changes
 * Supporting gtf file from Ensembl
