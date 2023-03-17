@@ -35,7 +35,7 @@ geom_tad(
 
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
-\item{plot.height}{The relative height of gene annotation to coverage plot. Default: 1.}
+\item{plot.height}{The relative height of contact map to coverage plot. Default: 1.}
 
 \item{top}{Logical value, whether to place this plot on the coverage plot. Default: TRUE.}
 

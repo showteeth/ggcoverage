@@ -341,3 +341,81 @@ theme_tad <- function(x.range, margin.len, show.rect) {
     )
   }
 }
+
+#' Theme for geom_link.
+#'
+#' @param x.range X axis ranges.
+#' @param margin.len Top and bottom margin.
+#' @param show.rect Logical value, whether to add rect border to the plot.
+#'
+#' @return List of layers.
+#' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
+#' scale_x_continuous scale_y_continuous coord_cartesian expansion
+theme_link <- function(x.range, margin.len, show.rect) {
+  if (show.rect) {
+    list(
+      theme_classic(),
+      theme(
+        axis.line.x = element_blank(),
+        axis.line.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y.right = element_text(color = "black", angle = 90, vjust = 0.5),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.title = element_blank(),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1),
+        plot.margin = margin(t = margin.len, b = margin.len)
+      ),
+      scale_y_continuous(expand = expansion(add = c(0.5, 0))),
+      scale_x_continuous(expand = c(0, 0)),
+      coord_cartesian(xlim = x.range)
+    )
+  } else {
+    list(
+      theme_classic(),
+      theme(
+        axis.line.x = element_blank(),
+        axis.line.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y.right = element_text(color = "black", angle = 90, vjust = 0.5),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.title = element_blank(),
+        plot.margin = margin(t = margin.len, b = margin.len)
+      ),
+      scale_y_continuous(expand = expansion(add = c(0.5, 0))),
+      scale_x_continuous(expand = c(0, 0)),
+      coord_cartesian(xlim = x.range)
+    )
+  }
+}
+
+#' Theme for geom_cnv.
+#'
+#' @param x.range X axis ranges.
+#' @param margin.len Top and bottom margin.
+#'
+#' @return List of layers.
+#' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
+#' scale_x_continuous coord_cartesian
+theme_cnv <- function(x.range, margin.len) {
+  list(
+    theme_classic(),
+    theme(
+      axis.line.x = element_blank(),
+      axis.title.y.right = element_text(color = "black", angle = 90, vjust = 0.5),
+      axis.text.x = element_blank(),
+      axis.title.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      panel.border = element_rect(colour = "black", fill = NA, size = 1),
+      legend.title = element_blank(),
+      plot.margin = margin(t = margin.len, b = margin.len)
+    ),
+    scale_x_continuous(expand = c(0, 0)),
+    coord_cartesian(xlim = x.range)
+  )
+}

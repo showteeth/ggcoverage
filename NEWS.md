@@ -1,6 +1,8 @@
 # ggcoverage 1.0.0
 ## Major changes
 * Supporting Hi-C visualization (`geom_tad`).
+* Supporting genome region interaction visualization (`geom_link`).
+* Supporting CNV visualization (`geom_cnv`).
 
 -------------
 

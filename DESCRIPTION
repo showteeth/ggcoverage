@@ -41,7 +41,8 @@ Imports:
     GenomicAlignments,
     reshape2,
     seqinr,
-    GenomeMatrix
+    GenomeMatrix,
+    ggforce
 Suggests: 
     rmarkdown,
     knitr,

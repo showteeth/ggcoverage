@@ -8,7 +8,7 @@
 #' @param color.palette A vector of colors. Overwrites the palette for \code{color.ramp}. Default: NULL.
 #' @param smooth.func An optional smoothing function for the matrix. Default: NULL.
 #' @param plot.space Top and bottom margin. Default: 0.1.
-#' @param plot.height The relative height of gene annotation to coverage plot. Default: 1.
+#' @param plot.height The relative height of contact map to coverage plot. Default: 1.
 #' @param top Logical value, whether to place this plot on the coverage plot. Default: TRUE.
 #' @param show.rect Logical value, whether to add rect border to the plot. Default: FALSE.
 #'
