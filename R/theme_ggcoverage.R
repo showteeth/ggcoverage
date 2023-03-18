@@ -316,7 +316,7 @@ theme_tad <- function(x.range, margin.len, show.rect) {
         panel.border = element_rect(colour = "black", fill = NA, size = 1),
         plot.margin = margin(t = margin.len, b = margin.len)
       ),
-      scale_y_continuous(expand = c(0, 0)),
+      scale_y_continuous(expand = c(0, 0), position = "right"),
       scale_x_continuous(expand = c(0, 0)),
       coord_cartesian(xlim = x.range)
     )
@@ -368,7 +368,7 @@ theme_link <- function(x.range, margin.len, show.rect) {
         panel.border = element_rect(colour = "black", fill = NA, size = 1),
         plot.margin = margin(t = margin.len, b = margin.len)
       ),
-      scale_y_continuous(expand = expansion(add = c(0.5, 0))),
+      scale_y_continuous(expand = expansion(add = c(0.5, 0)), position = "right"),
       scale_x_continuous(expand = c(0, 0)),
       coord_cartesian(xlim = x.range)
     )
@@ -416,6 +416,7 @@ theme_cnv <- function(x.range, margin.len) {
       plot.margin = margin(t = margin.len, b = margin.len)
     ),
     scale_x_continuous(expand = c(0, 0)),
+    scale_y_continuous(position = "right"),
     coord_cartesian(xlim = x.range)
   )
 }

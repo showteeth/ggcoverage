@@ -13,6 +13,13 @@ geom_ideogram(
   shadow.color = "grey",
   shadow.alpha = 0.7,
   shadow.line.size = 1,
+  highlight.centromere = FALSE,
+  highlight.color = "green",
+  highlight.alpha = 0.7,
+  highlight.line.size = 1,
+  highlight.shadow.color = "black",
+  highlight.shadow.alpha = 0.7,
+  highlight.shadow.line.size = 1,
   plot.space = 0.1,
   plot.height = 0.1
 )
@@ -29,11 +36,25 @@ If missing, will invoke a menu for users to choose from. Default: hg19.}
 
 \item{add.shadow}{Logical value, whether to add shadow polygon. Default: TRUE.}
 
-\item{shadow.color}{The color to fill shadow polygon. Default: grey.}
+\item{shadow.color}{The color to fill shadow polygon. Default: "grey".}
 
 \item{shadow.alpha}{The alpha of shadow polygon. Default: 0.7.}
 
 \item{shadow.line.size}{The line size of shadow polygon. Default: 1.}
+
+\item{highlight.centromere}{Logical value, whether to highlight centromere region. Default: FALSE.}
+
+\item{highlight.color}{The color to mark centromere region on ideogram. Default: "green".}
+
+\item{highlight.alpha}{The alpha to mark centromere region on ideogram. Default: 0.7.}
+
+\item{highlight.line.size}{The line size to mark centromere region on ideogram. Default: 1.}
+
+\item{highlight.shadow.color}{The color to fill centromere shadow polygon. Default: "black".}
+
+\item{highlight.shadow.alpha}{The alpha of centromere shadow polygon. Default: 0.7.}
+
+\item{highlight.shadow.line.size}{The line size of centromere shadow polygon. Default: 1.}
 
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
