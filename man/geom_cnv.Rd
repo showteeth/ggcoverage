@@ -45,3 +45,22 @@ Plot.
 \description{
 Add CNV Annotation to Coverage Plot.
 }
+\examples{
+# library(ggcoverage)
+# library(utils)
+# library("BSgenome.Hsapiens.UCSC.hg19")
+# # prepare files
+# cnv.file <- system.file("extdata", "DNA-seq", "SRR054616_copynumber.txt", package = "ggcoverage")
+# track.file <- system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
+# # read CNV
+# cnv.df = read.table(file = cnv.file, sep = "\t", header = TRUE)
+# # load track
+# track.df = LoadTrackFile(track.file = track.file, format = "bw")
+# track.df$seqnames = paste0("chr", track.df$seqnames)
+# # plot
+# ggcoverage(data = track.df, color = "grey", region = "chr4:1-160000000",
+#            mark.region = NULL, range.position = "out") +
+#   geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
+#   geom_cnv(cnv.df = cnv.df, bin.col = 3, cn.col = 4) +
+#   geom_ideogram(genome = "hg19",plot.space = 0, highlight.centromere = TRUE)
+}

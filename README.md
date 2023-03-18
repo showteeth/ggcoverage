@@ -130,7 +130,11 @@ mark.region
 ```
 
 ### Load GTF
-To add **gene annotation**, the gtf file should contain **gene_type** and **gene_name** attributes in **column 9**; to add **transcript annotation**, the gtf file should contain **transcript_name** attribute in **column 9**.
+
+To add **gene annotation**, the gtf file should contain **gene\_type**
+and **gene\_name** attributes in **column 9**; to add **transcript
+annotation**, the gtf file should contain **transcript\_name** attribute
+in **column 9**.
 
 ``` r
 gtf.file = system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
@@ -205,7 +209,9 @@ basic.coverage +
 
 ### CNV
 
-#### Load the data
+#### Example 1
+
+##### Load the data
 
 The DNA-seq data used here are from [Copy number work
 flow](http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html),
@@ -227,7 +233,7 @@ head(track.df)
 #> 6     chr4 61748001 61749000    24 tumor tumor
 ```
 
-#### Basic coverage
+##### Basic coverage
 
 ``` r
 basic.coverage = ggcoverage(data = track.df,color = "grey", mark.region = NULL,
@@ -237,7 +243,7 @@ basic.coverage
 
 <img src="man/figures/README-basic_coverage_dna-1.png" width="100%" style="display: block; margin: auto;" />
 
-#### Add GC annotations
+##### Add GC annotations
 
 Add **GC**, **ideogram** and **gene** annotaions.
 
@@ -264,6 +270,82 @@ basic.coverage +
 ```
 
 <img src="man/figures/README-gc_coverage-1.png" width="100%" style="display: block; margin: auto;" />
+
+#### Example 2
+
+##### Load the data
+
+The DNA-seq data used here are from [Genome-wide copy number analysis of
+single cells](https://www.nature.com/articles/nprot.2012.039), and the
+accession number is
+[SRR054616](https://trace.ncbi.nlm.nih.gov/Traces/index.html?run=SRR054616).
+
+``` r
+# track file
+track.file <- system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
+# load track
+track.df = LoadTrackFile(track.file = track.file, format = "bw")
+#> Sample without metadata!
+# add chr prefix
+track.df$seqnames = paste0("chr", track.df$seqnames)
+# check data
+head(track.df)
+#>   seqnames  start    end score         Type        Group
+#> 1     chr1      1  50000     0 SRR054616.bw SRR054616.bw
+#> 2     chr1  50001 100000     3 SRR054616.bw SRR054616.bw
+#> 3     chr1 100001 150000     4 SRR054616.bw SRR054616.bw
+#> 4     chr1 150001 200000     0 SRR054616.bw SRR054616.bw
+#> 5     chr1 200001 250000     6 SRR054616.bw SRR054616.bw
+#> 6     chr1 250001 300000     2 SRR054616.bw SRR054616.bw
+```
+
+##### Basic coverage
+
+``` r
+basic.coverage = ggcoverage(data = track.df, color = "grey", region = "chr4:1-160000000",
+                            mark.region = NULL, range.position = "out")
+basic.coverage
+```
+
+<img src="man/figures/README-cnv_basic_coverage_dna-1.png" width="100%" />
+
+##### Load CNV file
+
+``` r
+# prepare files
+cnv.file <- system.file("extdata", "DNA-seq", "SRR054616_copynumber.txt", package = "ggcoverage")
+# read CNV
+cnv.df = read.table(file = cnv.file, sep = "\t", header = TRUE)
+# check data
+head(cnv.df)
+#>   chrom chrompos  cn.ratio copy.number
+#> 1  chr4        1 11.518554           5
+#> 2  chr4    90501  5.648878           5
+#> 3  chr4   145220  4.031609           5
+#> 4  chr4   209519  5.005852           5
+#> 5  chr4   268944  4.874096           5
+#> 6  chr4   330272  4.605368           5
+```
+
+##### Add annotations
+
+Add **GC**, **ideogram** and **CNV** annotations.
+
+``` r
+# load genome data
+library("BSgenome.Hsapiens.UCSC.hg19")
+# create plot
+basic.coverage +
+  geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
+  geom_cnv(cnv.df = cnv.df, bin.col = 3, cn.col = 4) +
+  geom_ideogram(genome = "hg19",plot.space = 0, highlight.centromere = TRUE)
+#> Loading ideogram...
+#> Loading ranges...
+#> Scale for 'x' is already present. Adding another scale for 'x', which will
+#> replace the existing scale.
+```
+
+<img src="man/figures/README-cnv_gc_coverage-1.png" width="100%" />
 
 ### Single-nucleotide level
 

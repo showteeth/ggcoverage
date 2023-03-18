@@ -4,6 +4,9 @@
 * Supporting genome region interaction visualization (`geom_link`).
 * Supporting CNV visualization (`geom_cnv`).
 
+## Minor changes
+* `geom_ideogram` supporting the highlight of centromere.
+
 -------------
 
 # ggcoverage 0.9.0

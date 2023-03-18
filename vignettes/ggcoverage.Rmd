@@ -199,7 +199,8 @@ knitr::include_graphics("../man/figures/README-ideogram_coverage_2-1.png")
 
 # DNA-seq data
 ## CNV
-### Load the data
+### Example 1
+#### Load the data
 The DNA-seq data used here are from [Copy number work flow](http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html), we select tumor sample, and get bin counts with `cn.mops::getReadCountsFromBAM` with `WL` 1000.
 
 ```{r load_bin_counts}
@@ -210,7 +211,7 @@ track.df = read.table(track.file, header = TRUE)
 head(track.df)
 ```
 
-### Basic coverage
+#### Basic coverage
 ```{r basic_coverage_dna, eval=FALSE}
 basic.coverage = ggcoverage(data = track.df,color = NULL, mark.region = NULL,
                             region = 'chr4:61750000-62,700,000', range.position = "out")
@@ -221,7 +222,7 @@ basic.coverage
 knitr::include_graphics("../man/figures/README-basic_coverage_dna-1.png")
 ```
 
-### Add annotations
+#### Add annotations
 Add **GC**, **ideogram** and **gene** annotations.
 
 ```{r gc_coverage, eval=FALSE}
@@ -236,6 +237,60 @@ basic.coverage +
 
 ```{r gc_coverage_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 knitr::include_graphics("../man/figures/README-gc_coverage-1.png")
+```
+
+
+### Example 2
+#### Load the data
+The DNA-seq data used here are from [Genome-wide copy number analysis of single cells](https://www.nature.com/articles/nprot.2012.039), and the accession number is [SRR054616](https://trace.ncbi.nlm.nih.gov/Traces/index.html?run=SRR054616).
+
+```{r cnv_load_track_file}
+# track file
+track.file <- system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
+# load track
+track.df = LoadTrackFile(track.file = track.file, format = "bw")
+# add chr prefix
+track.df$seqnames = paste0("chr", track.df$seqnames)
+# check data
+head(track.df)
+```
+
+#### Basic coverage
+```{r cnv_basic_coverage_dna, eval=FALSE}
+basic.coverage = ggcoverage(data = track.df, color = "grey", region = "chr4:1-160000000",
+                            mark.region = NULL, range.position = "out")
+basic.coverage
+```
+
+```{r cnv_basic_coverage_dna_plot, echo=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-cnv_basic_coverage_dna-1.png")
+```
+
+#### Load CNV file
+```{r cnv_load_cnv}
+# prepare files
+cnv.file <- system.file("extdata", "DNA-seq", "SRR054616_copynumber.txt", package = "ggcoverage")
+# read CNV
+cnv.df = read.table(file = cnv.file, sep = "\t", header = TRUE)
+# check data
+head(cnv.df)
+```
+
+#### Add annotations
+Add **GC**, **ideogram** and **CNV** annotations.
+
+```{r cnv_gc_coverage, eval=FALSE}
+# load genome data
+library("BSgenome.Hsapiens.UCSC.hg19")
+# create plot
+basic.coverage +
+  geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
+  geom_cnv(cnv.df = cnv.df, bin.col = 3, cn.col = 4) +
+  geom_ideogram(genome = "hg19",plot.space = 0, highlight.centromere = TRUE)
+```
+
+```{r cnv_gc_coverage_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-cnv_gc_coverage-1.png")
 ```
 
 ---------------------
