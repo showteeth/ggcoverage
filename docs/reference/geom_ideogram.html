@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcoverage</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -139,6 +139,13 @@
   shadow.color <span class='op'>=</span> <span class='st'>"grey"</span>,
   shadow.alpha <span class='op'>=</span> <span class='fl'>0.7</span>,
   shadow.line.size <span class='op'>=</span> <span class='fl'>1</span>,
+  highlight.centromere <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  highlight.color <span class='op'>=</span> <span class='st'>"green"</span>,
+  highlight.alpha <span class='op'>=</span> <span class='fl'>0.7</span>,
+  highlight.line.size <span class='op'>=</span> <span class='fl'>1</span>,
+  highlight.shadow.color <span class='op'>=</span> <span class='st'>"black"</span>,
+  highlight.shadow.alpha <span class='op'>=</span> <span class='fl'>0.7</span>,
+  highlight.shadow.line.size <span class='op'>=</span> <span class='fl'>1</span>,
   plot.space <span class='op'>=</span> <span class='fl'>0.1</span>,
   plot.height <span class='op'>=</span> <span class='fl'>0.1</span>
 <span class='op'>)</span></pre>
@@ -169,7 +176,7 @@ If missing, will invoke a menu for users to choose from. Default: hg19.</p></td>
     </tr>
     <tr>
       <th>shadow.color</th>
-      <td><p>The color to fill shadow polygon. Default: grey.</p></td>
+      <td><p>The color to fill shadow polygon. Default: "grey".</p></td>
     </tr>
     <tr>
       <th>shadow.alpha</th>
@@ -178,6 +185,34 @@ If missing, will invoke a menu for users to choose from. Default: hg19.</p></td>
     <tr>
       <th>shadow.line.size</th>
       <td><p>The line size of shadow polygon. Default: 1.</p></td>
+    </tr>
+    <tr>
+      <th>highlight.centromere</th>
+      <td><p>Logical value, whether to highlight centromere region. Default: FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>highlight.color</th>
+      <td><p>The color to mark centromere region on ideogram. Default: "green".</p></td>
+    </tr>
+    <tr>
+      <th>highlight.alpha</th>
+      <td><p>The alpha to mark centromere region on ideogram. Default: 0.7.</p></td>
+    </tr>
+    <tr>
+      <th>highlight.line.size</th>
+      <td><p>The line size to mark centromere region on ideogram. Default: 1.</p></td>
+    </tr>
+    <tr>
+      <th>highlight.shadow.color</th>
+      <td><p>The color to fill centromere shadow polygon. Default: "black".</p></td>
+    </tr>
+    <tr>
+      <th>highlight.shadow.alpha</th>
+      <td><p>The alpha of centromere shadow polygon. Default: 0.7.</p></td>
+    </tr>
+    <tr>
+      <th>highlight.shadow.line.size</th>
+      <td><p>The line size of centromere shadow polygon. Default: 1.</p></td>
     </tr>
     <tr>
       <th>plot.space</th>

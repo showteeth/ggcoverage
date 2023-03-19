@@ -42,7 +42,8 @@ Imports:
     reshape2,
     seqinr,
     GenomeMatrix,
-    ggforce
+    ggforce,
+    HiCBricks
 Suggests: 
     rmarkdown,
     knitr,

@@ -23,13 +23,18 @@ coverage. It contains three main parts:
     -   **base and amino acid annotation**: Visualize genome coverage at
         single-nucleotide level with bases and amino acids.
     -   **GC annotation**: Visualize genome coverage with GC content
-    -   **gene annotation**: Visualize genome coverage across whole gene
+    -   **CNV annotation**: Visualize genome coverage with copy number
+        variation (CNV)
+    -   **gene annotation**: Visualize genome coverage across genes
     -   **transcription annotation**: Visualize genome coverage across
         different transcripts
     -   **ideogram annotation**: Visualize the region showing on whole
         chromosome
     -   **peak annotation**: Visualize genome coverage and peak
         identified
+    -   **contact map annotation**: Visualize genome coverage with Hi-C
+        contact map
+    -   **link annotation**: Visualize genome coverage with contacts
 
 `ggcoverage` utilizes `ggplot2` plotting system, so its usage is
 **ggplot2-style**!
@@ -544,6 +549,112 @@ basic.coverage +
 ```
 
 <img src="man/figures/README-peak_coverage-1.png" width="100%" style="display: block; margin: auto;" />
+
+## Hi-C data
+
+The Hi-C data are from [pyGenomeTracks: reproducible plots for
+multivariate genomic
+datasets](https://academic.oup.com/bioinformatics/article/37/3/422/5879987?login=false).
+
+The Hi-C matrix visualization is implemented by
+[HiCBricks](https://github.com/koustav-pal/HiCBricks).
+
+### Load track data
+
+``` r
+library(ggcoverage)
+library(GenomicRanges)
+# prepare track dataframe
+track.file = system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
+track.df = LoadTrackFile(track.file = track.file, format = "bw")
+#> Sample without metadata!
+track.df$score = ifelse(track.df$score <0, 0, track.df$score)
+# check the data
+head(track.df)
+#>   seqnames start end        score        Type       Group
+#> 1    chr2L   163 197 0.0588951111 H3K36me3.bw H3K36me3.bw
+#> 2    chr2L   203 237 0.0600935593 H3K36me3.bw H3K36me3.bw
+#> 3    chr2L   247 279 0.0613960847 H3K36me3.bw H3K36me3.bw
+#> 4    chr2L   281 315 0.0626407191 H3K36me3.bw H3K36me3.bw
+#> 5    chr2L   431 465 0.0775992721 H3K36me3.bw H3K36me3.bw
+#> 6    chr2L   621 655 0.1499668956 H3K36me3.bw H3K36me3.bw
+```
+
+### Load Hi-C data
+
+Matrix:
+
+``` r
+## matrix
+hic.mat.file = system.file("extdata", "HiC", "HiC_mat.txt", package = "ggcoverage")
+hic.mat = read.table(file = hic.mat.file, sep = "\t")
+hic.mat = as.matrix(hic.mat)
+```
+
+Bin table:
+
+``` r
+## bin
+hic.bin.file = system.file("extdata", "HiC", "HiC_bin.txt", package = "ggcoverage")
+hic.bin = read.table(file = hic.bin.file, sep = "\t")
+colnames(hic.bin) = c("chr", "start", "end")
+hic.bin.gr = GenomicRanges::makeGRangesFromDataFrame(df = hic.bin)
+## transfrom func
+FailSafe_log10 <- function(x){
+  x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
+  return(log10(x+1))
+}
+```
+
+Data transfromation method:
+
+``` r
+## transfrom func
+FailSafe_log10 <- function(x){
+  x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
+  return(log10(x+1))
+}
+```
+
+### Load link
+
+``` r
+# prepare arcs
+link.file = system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage")
+```
+
+### Basic coverage
+
+``` r
+basic.coverage = ggcoverage(data = track.df, color = "grey", region = "chr2L:8050000-8300000",
+                            mark.region = NULL, range.position = "out", extend = 0)
+basic.coverage
+```
+
+<img src="man/figures/README-basic_coverage_hic-1.png" width="100%" style="display: block; margin: auto;" />
+
+### Add annotations
+
+Add **link**, **contact map**annotations:
+
+``` r
+basic.coverage +
+  geom_tad(matrix = hic.mat, granges = hic.bin.gr, value.cut = 0.99,
+           color.palette = "viridis", transform.fun = FailSafe_log10,
+           top = FALSE, show.rect = TRUE) +
+  geom_link(link.file = link.file, file.type = "bedpe", show.rect = TRUE)
+#> Read 534 lines after Skipping 0 lines
+#> Inserting Data at location: 1
+#> Data length: 534
+#> Loaded 2315864 bytes of data...
+#> Read 534 records...
+#> Scale for 'y' is already present. Adding another scale for 'y', which will
+#> replace the existing scale.
+#> Scale for 'x' is already present. Adding another scale for 'x', which will
+#> replace the existing scale.
+```
+
+<img src="man/figures/README-hic_coverage-1.png" width="100%" style="display: block; margin: auto;" />
 
 ## Code of Conduct
 

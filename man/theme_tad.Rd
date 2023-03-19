@@ -4,11 +4,9 @@
 \alias{theme_tad}
 \title{Theme for geom_tad.}
 \usage{
-theme_tad(x.range, margin.len, show.rect)
+theme_tad(margin.len, show.rect)
 }
 \arguments{
-\item{x.range}{X axis ranges.}
-
 \item{margin.len}{Top and bottom margin.}
 
 \item{show.rect}{Logical value, whether to add rect border to the plot.}

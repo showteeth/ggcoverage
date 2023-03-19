@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggcoverage</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -100,13 +100,19 @@
 <li>
 <strong>GC annotation</strong>: Visualize genome coverage with GC content</li>
 <li>
-<strong>gene annotation</strong>: Visualize genome coverage across whole gene</li>
+<strong>CNV annotation</strong>: Visualize genome coverage with copy number variation (CNV)</li>
+<li>
+<strong>gene annotation</strong>: Visualize genome coverage across genes</li>
 <li>
 <strong>transcription annotation</strong>: Visualize genome coverage across different transcripts</li>
 <li>
 <strong>ideogram annotation</strong>: Visualize the region showing on whole chromosome</li>
 <li>
 <strong>peak annotation</strong>: Visualize genome coverage and peak identified</li>
+<li>
+<strong>contact map annotation</strong>: Visualize genome coverage with Hi-C contact map</li>
+<li>
+<strong>link annotation</strong>: Visualize genome coverage with contacts</li>
 </ul>
 </li>
 </ul>
@@ -134,8 +140,10 @@
 <a href="#manual" class="anchor"></a>Manual</h2>
 <p><code>ggcoverage</code> provides two <a href="https://showteeth.github.io/ggcoverage/">vignettes</a>:</p>
 <ul>
-<li>detailed manual: step-by-step usage</li>
-<li>customize the plot: customize the plot and add additional layer</li>
+<li>
+<strong>detailed manual</strong>: step-by-step usage</li>
+<li>
+<strong>customize the plot</strong>: customize the plot and add additional layer</li>
 </ul>
 </div>
 <div id="rna-seq-data" class="section level2">
@@ -184,7 +192,11 @@
 <span class="co">#&gt; 1 21678900 21679900    M1</span>
 <span class="co">#&gt; 2 21732001 21732400    M2</span>
 <span class="co">#&gt; 3 21737590 21737650    M3</span></code></pre></div>
-<p>Load GTF file:</p>
+</div>
+<div id="load-gtf" class="section level3">
+<h3 class="hasAnchor">
+<a href="#load-gtf" class="anchor"></a>Load GTF</h3>
+<p>To add <strong>gene annotation</strong>, the gtf file should contain <strong>gene_type</strong> and <strong>gene_name</strong> attributes in <strong>column 9</strong>; to add <strong>transcript annotation</strong>, the gtf file should contain <strong>transcript_name</strong> attribute in <strong>column 9</strong>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gtf.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"used_hg19.gtf"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="va">gtf.gr</span> <span class="op">=</span> <span class="fu">rtracklayer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rtracklayer/man/GFFFile-class.html">import.gff</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">gtf.file</span>, format <span class="op">=</span> <span class="st">'gtf'</span><span class="op">)</span></code></pre></div>
@@ -249,9 +261,12 @@
 <div id="cnv" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cnv" class="anchor"></a>CNV</h3>
-<div id="load-the-data-1" class="section level4">
+<div id="example-1" class="section level4">
 <h4 class="hasAnchor">
-<a href="#load-the-data-1" class="anchor"></a>Load the data</h4>
+<a href="#example-1" class="anchor"></a>Example 1</h4>
+<div id="load-the-data-1" class="section level5">
+<h5 class="hasAnchor">
+<a href="#load-the-data-1" class="anchor"></a>Load the data</h5>
 <p>The DNA-seq data used here are from <a href="http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html">Copy number work flow</a>, we select tumor sample, and get bin counts with <code><a href="https://rdrr.io/pkg/cn.mops/man/getReadCountsFromBAM.html">cn.mops::getReadCountsFromBAM</a></code> with <code>WL</code> 1000.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># track file</span>
@@ -267,18 +282,18 @@
 <span class="co">#&gt; 5     chr4 61747001 61748000    25 tumor tumor</span>
 <span class="co">#&gt; 6     chr4 61748001 61749000    24 tumor tumor</span></code></pre></div>
 </div>
-<div id="basic-coverage-1" class="section level4">
-<h4 class="hasAnchor">
-<a href="#basic-coverage-1" class="anchor"></a>Basic coverage</h4>
+<div id="basic-coverage-1" class="section level5">
+<h5 class="hasAnchor">
+<a href="#basic-coverage-1" class="anchor"></a>Basic coverage</h5>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>,color <span class="op">=</span> <span class="st">"grey"</span>, mark.region <span class="op">=</span> <span class="cn">NULL</span>,
                             region <span class="op">=</span> <span class="st">'chr4:61750000-62,700,000'</span>, range.position <span class="op">=</span> <span class="st">"out"</span><span class="op">)</span>
 <span class="va">basic.coverage</span></code></pre></div>
 <p><img src="reference/figures/README-basic_coverage_dna-1.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
-<div id="add-gc-annotations" class="section level4">
-<h4 class="hasAnchor">
-<a href="#add-gc-annotations" class="anchor"></a>Add GC annotations</h4>
+<div id="add-gc-annotations" class="section level5">
+<h5 class="hasAnchor">
+<a href="#add-gc-annotations" class="anchor"></a>Add GC annotations</h5>
 <p>Add <strong>GC</strong>, <strong>ideogram</strong> and <strong>gene</strong> annotaions.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load genome data</span>
@@ -303,13 +318,85 @@
 <p><img src="reference/figures/README-gc_coverage-1.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 </div>
+<div id="example-2" class="section level4">
+<h4 class="hasAnchor">
+<a href="#example-2" class="anchor"></a>Example 2</h4>
+<div id="load-the-data-2" class="section level5">
+<h5 class="hasAnchor">
+<a href="#load-the-data-2" class="anchor"></a>Load the data</h5>
+<p>The DNA-seq data used here are from <a href="https://www.nature.com/articles/nprot.2012.039">Genome-wide copy number analysis of single cells</a>, and the accession number is <a href="https://trace.ncbi.nlm.nih.gov/Traces/index.html?run=SRR054616">SRR054616</a>.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># track file</span>
+<span class="va">track.file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"DNA-seq"</span>, <span class="st">"SRR054616.bw"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
+<span class="co"># load track</span>
+<span class="va">track.df</span> <span class="op">=</span> <span class="fu"><a href="reference/LoadTrackFile.html">LoadTrackFile</a></span><span class="op">(</span>track.file <span class="op">=</span> <span class="va">track.file</span>, format <span class="op">=</span> <span class="st">"bw"</span><span class="op">)</span>
+<span class="co">#&gt; Sample without metadata!</span>
+<span class="co"># add chr prefix</span>
+<span class="va">track.df</span><span class="op">$</span><span class="va">seqnames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"chr"</span>, <span class="va">track.df</span><span class="op">$</span><span class="va">seqnames</span><span class="op">)</span>
+<span class="co"># check data</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">track.df</span><span class="op">)</span>
+<span class="co">#&gt;   seqnames  start    end score         Type        Group</span>
+<span class="co">#&gt; 1     chr1      1  50000     0 SRR054616.bw SRR054616.bw</span>
+<span class="co">#&gt; 2     chr1  50001 100000     3 SRR054616.bw SRR054616.bw</span>
+<span class="co">#&gt; 3     chr1 100001 150000     4 SRR054616.bw SRR054616.bw</span>
+<span class="co">#&gt; 4     chr1 150001 200000     0 SRR054616.bw SRR054616.bw</span>
+<span class="co">#&gt; 5     chr1 200001 250000     6 SRR054616.bw SRR054616.bw</span>
+<span class="co">#&gt; 6     chr1 250001 300000     2 SRR054616.bw SRR054616.bw</span></code></pre></div>
+</div>
+<div id="basic-coverage-2" class="section level5">
+<h5 class="hasAnchor">
+<a href="#basic-coverage-2" class="anchor"></a>Basic coverage</h5>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"grey"</span>, region <span class="op">=</span> <span class="st">"chr4:1-160000000"</span>,
+                            mark.region <span class="op">=</span> <span class="cn">NULL</span>, range.position <span class="op">=</span> <span class="st">"out"</span><span class="op">)</span>
+<span class="va">basic.coverage</span></code></pre></div>
+<p><img src="reference/figures/README-cnv_basic_coverage_dna-1.png" width="100%"></p>
+</div>
+<div id="load-cnv-file" class="section level5">
+<h5 class="hasAnchor">
+<a href="#load-cnv-file" class="anchor"></a>Load CNV file</h5>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># prepare files</span>
+<span class="va">cnv.file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"DNA-seq"</span>, <span class="st">"SRR054616_copynumber.txt"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
+<span class="co"># read CNV</span>
+<span class="va">cnv.df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">cnv.file</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co"># check data</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">cnv.df</span><span class="op">)</span>
+<span class="co">#&gt;   chrom chrompos  cn.ratio copy.number</span>
+<span class="co">#&gt; 1  chr4        1 11.518554           5</span>
+<span class="co">#&gt; 2  chr4    90501  5.648878           5</span>
+<span class="co">#&gt; 3  chr4   145220  4.031609           5</span>
+<span class="co">#&gt; 4  chr4   209519  5.005852           5</span>
+<span class="co">#&gt; 5  chr4   268944  4.874096           5</span>
+<span class="co">#&gt; 6  chr4   330272  4.605368           5</span></code></pre></div>
+</div>
+<div id="add-annotations" class="section level5">
+<h5 class="hasAnchor">
+<a href="#add-annotations" class="anchor"></a>Add annotations</h5>
+<p>Add <strong>GC</strong>, <strong>ideogram</strong> and <strong>CNV</strong> annotations.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># load genome data</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"BSgenome.Hsapiens.UCSC.hg19"</span><span class="op">)</span>
+<span class="co"># create plot</span>
+<span class="va">basic.coverage</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/geom_gc.html">geom_gc</a></span><span class="op">(</span>bs.fa.seq<span class="op">=</span><span class="va">BSgenome.Hsapiens.UCSC.hg19</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/geom_cnv.html">geom_cnv</a></span><span class="op">(</span>cnv.df <span class="op">=</span> <span class="va">cnv.df</span>, bin.col <span class="op">=</span> <span class="fl">3</span>, cn.col <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/geom_ideogram.html">geom_ideogram</a></span><span class="op">(</span>genome <span class="op">=</span> <span class="st">"hg19"</span>,plot.space <span class="op">=</span> <span class="fl">0</span>, highlight.centromere <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; Loading ideogram...</span>
+<span class="co">#&gt; Loading ranges...</span>
+<span class="co">#&gt; Scale for 'x' is already present. Adding another scale for 'x', which will</span>
+<span class="co">#&gt; replace the existing scale.</span></code></pre></div>
+<p><img src="reference/figures/README-cnv_gc_coverage-1.png" width="100%"></p>
+</div>
+</div>
+</div>
 <div id="single-nucleotide-level" class="section level3">
 <h3 class="hasAnchor">
 <a href="#single-nucleotide-level" class="anchor"></a>Single-nucleotide level</h3>
-<div id="load-the-data-2" class="section level4">
+<div id="load-the-data-3" class="section level4">
 <h4 class="hasAnchor">
-<a href="#load-the-data-2" class="anchor"></a>Load the data</h4>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<a href="#load-the-data-3" class="anchor"></a>Load the data</h4>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># prepare sample metadata</span>
 <span class="va">sample.meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   SampleName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"tumorA.chr4.selected"</span><span class="op">)</span>,
@@ -337,7 +424,7 @@
 <a href="#default-color-scheme" class="anchor"></a>Default color scheme</h4>
 <p>For base and amino acid annotation, we have following default color schemes, you can change with <code>nuc.color</code> and <code>aa.color</code> parameters.</p>
 <p>Default color scheme for base annotation is <code>Clustal-style</code>, more popular color schemes is available <a href="https://www.biostars.org/p/171056/">here</a>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># color scheme</span>
 <span class="va">nuc.color</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="st">"#ff2b08"</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="st">"#009aff"</span>, <span class="st">"G"</span> <span class="op">=</span> <span class="st">"#ffb507"</span>, <span class="st">"T"</span> <span class="op">=</span> <span class="st">"#00bc0d"</span><span class="op">)</span>
 <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="op">)</span> 
@@ -354,11 +441,11 @@
   side <span class="op">=</span> <span class="fl">2</span>
 <span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-base_color_scheme-1.png" width="100%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># reset par default</span>
 <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span></code></pre></div>
 <p>Default color scheme for amino acid annotation is from <a href="https://academic.oup.com/peds/article/10/7/743/1593029?login=false">Residual colours: a proposal for aminochromography</a>:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">aa.color</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="st">"D"</span> <span class="op">=</span> <span class="st">"#FF0000"</span>, <span class="st">"S"</span> <span class="op">=</span> <span class="st">"#FF2400"</span>, <span class="st">"T"</span> <span class="op">=</span> <span class="st">"#E34234"</span>, <span class="st">"G"</span> <span class="op">=</span> <span class="st">"#FF8000"</span>, <span class="st">"P"</span> <span class="op">=</span> <span class="st">"#F28500"</span>,
   <span class="st">"C"</span> <span class="op">=</span> <span class="st">"#FFFF00"</span>, <span class="st">"A"</span> <span class="op">=</span> <span class="st">"#FDFF00"</span>, <span class="st">"V"</span> <span class="op">=</span> <span class="st">"#E3FF00"</span>, <span class="st">"I"</span> <span class="op">=</span> <span class="st">"#C0FF00"</span>, <span class="st">"L"</span> <span class="op">=</span> <span class="st">"#89318C"</span>,
@@ -379,14 +466,14 @@
   side <span class="op">=</span> <span class="fl">2</span>
 <span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-aa_color_scheme-1.png" width="100%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># reset par default</span>
 <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="add-base-and-amino-acid-annotation" class="section level4">
 <h4 class="hasAnchor">
 <a href="#add-base-and-amino-acid-annotation" class="anchor"></a>Add base and amino acid annotation</h4>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"grey"</span>, range.position <span class="op">=</span> <span class="st">"out"</span>, single.nuc<span class="op">=</span><span class="cn">T</span>, rect.color <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="reference/geom_base.html">geom_base</a></span><span class="op">(</span>bam.file <span class="op">=</span> <span class="va">bam.file</span>,
             bs.fa.seq <span class="op">=</span> <span class="va">BSgenome.Hsapiens.UCSC.hg19</span><span class="op">)</span> <span class="op">+</span>
@@ -404,7 +491,7 @@
 <a href="#chip-seq-data" class="anchor"></a>ChIP-seq data</h2>
 <p>The ChIP-seq data used here are from <a href="https://bioconductor.org/packages/release/bioc/html/DiffBind.html">DiffBind</a>, I select four sample to use as example: Chr18_MCF7_input, Chr18_MCF7_ER_1, Chr18_MCF7_ER_3, Chr18_MCF7_ER_2, and all bam files are converted to bigwig file with <a href="https://deeptools.readthedocs.io/en/develop/">deeptools</a>.</p>
 <p>Create metadata:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load metadata</span>
 <span class="va">sample.meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>SampleName<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Chr18_MCF7_ER_1'</span>,<span class="st">'Chr18_MCF7_ER_2'</span>,<span class="st">'Chr18_MCF7_ER_3'</span>,<span class="st">'Chr18_MCF7_input'</span><span class="op">)</span>,
                          Type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MCF7_ER_1"</span>,<span class="st">"MCF7_ER_2"</span>,<span class="st">"MCF7_ER_3"</span>,<span class="st">"MCF7_input"</span><span class="op">)</span>,
@@ -416,7 +503,7 @@
 <span class="co">#&gt; 3  Chr18_MCF7_ER_3  MCF7_ER_3    IP</span>
 <span class="co">#&gt; 4 Chr18_MCF7_input MCF7_input Input</span></code></pre></div>
 <p>Load track files:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># track folder</span>
 <span class="va">track.folder</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ChIP-seq"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="co"># load bigwig file</span>
@@ -432,7 +519,7 @@
 <span class="co">#&gt; 5    chr18 76800901 76801200   0.000000 MCF7_ER_1    IP</span>
 <span class="co">#&gt; 6    chr18 76801201 76801500 219.658005 MCF7_ER_1    IP</span></code></pre></div>
 <p>Prepare mark region:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create mark region</span>
 <span class="va">mark.region</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>start<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">76822533</span><span class="op">)</span>,
                        end<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">76823743</span><span class="op">)</span>,
@@ -441,20 +528,20 @@
 <span class="va">mark.region</span>
 <span class="co">#&gt;      start      end    label</span>
 <span class="co">#&gt; 1 76822533 76823743 Promoter</span></code></pre></div>
-<div id="basic-coverage-2" class="section level3">
+<div id="basic-coverage-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#basic-coverage-2" class="anchor"></a>Basic coverage</h3>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<a href="#basic-coverage-3" class="anchor"></a>Basic coverage</h3>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"auto"</span>, region <span class="op">=</span> <span class="st">"chr18:76822285-76900000"</span>, 
                             mark.region<span class="op">=</span><span class="va">mark.region</span>, show.mark.label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">basic.coverage</span></code></pre></div>
 <p><img src="reference/figures/README-basic_coverage_chip-1.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
-<div id="add-annotations" class="section level3">
+<div id="add-annotations-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#add-annotations" class="anchor"></a>Add annotations</h3>
+<a href="#add-annotations-1" class="anchor"></a>Add annotations</h3>
 <p>Add <strong>gene</strong>, <strong>ideogram</strong> and <strong>peak</strong> annotations. To create peak annotation, we first <strong>get consensus peaks</strong> with <a href="https://github.com/Genometric/MSPC">MSPC</a>.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get consensus peak file</span>
 <span class="va">peak.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ChIP-seq"</span>, <span class="st">"consensus.peak"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 
@@ -467,6 +554,99 @@
 <span class="co">#&gt; Scale for 'x' is already present. Adding another scale for 'x', which will</span>
 <span class="co">#&gt; replace the existing scale.</span></code></pre></div>
 <p><img src="reference/figures/README-peak_coverage-1.png" width="100%" style="display: block; margin: auto;"></p>
+</div>
+</div>
+<div id="hi-c-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#hi-c-data" class="anchor"></a>Hi-C data</h2>
+<p>The Hi-C data are from <a href="https://academic.oup.com/bioinformatics/article/37/3/422/5879987?login=false">pyGenomeTracks: reproducible plots for multivariate genomic datasets</a>.</p>
+<p>The Hi-C matrix visualization is implemented by <a href="https://github.com/koustav-pal/HiCBricks">HiCBricks</a>.</p>
+<div id="load-track-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#load-track-data" class="anchor"></a>Load track data</h3>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">ggcoverage</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/GenomicRanges">GenomicRanges</a></span><span class="op">)</span>
+<span class="co"># prepare track dataframe</span>
+<span class="va">track.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"HiC"</span>, <span class="st">"H3K36me3.bw"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
+<span class="va">track.df</span> <span class="op">=</span> <span class="fu"><a href="reference/LoadTrackFile.html">LoadTrackFile</a></span><span class="op">(</span>track.file <span class="op">=</span> <span class="va">track.file</span>, format <span class="op">=</span> <span class="st">"bw"</span><span class="op">)</span>
+<span class="co">#&gt; Sample without metadata!</span>
+<span class="va">track.df</span><span class="op">$</span><span class="va">score</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">track.df</span><span class="op">$</span><span class="va">score</span> <span class="op">&lt;</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="va">track.df</span><span class="op">$</span><span class="va">score</span><span class="op">)</span>
+<span class="co"># check the data</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">track.df</span><span class="op">)</span>
+<span class="co">#&gt;   seqnames start end        score        Type       Group</span>
+<span class="co">#&gt; 1    chr2L   163 197 0.0588951111 H3K36me3.bw H3K36me3.bw</span>
+<span class="co">#&gt; 2    chr2L   203 237 0.0600935593 H3K36me3.bw H3K36me3.bw</span>
+<span class="co">#&gt; 3    chr2L   247 279 0.0613960847 H3K36me3.bw H3K36me3.bw</span>
+<span class="co">#&gt; 4    chr2L   281 315 0.0626407191 H3K36me3.bw H3K36me3.bw</span>
+<span class="co">#&gt; 5    chr2L   431 465 0.0775992721 H3K36me3.bw H3K36me3.bw</span>
+<span class="co">#&gt; 6    chr2L   621 655 0.1499668956 H3K36me3.bw H3K36me3.bw</span></code></pre></div>
+</div>
+<div id="load-hi-c-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#load-hi-c-data" class="anchor"></a>Load Hi-C data</h3>
+<p>Matrix:</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## matrix</span>
+<span class="va">hic.mat.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"HiC"</span>, <span class="st">"HiC_mat.txt"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
+<span class="va">hic.mat</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">hic.mat.file</span>, sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span>
+<span class="va">hic.mat</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">hic.mat</span><span class="op">)</span></code></pre></div>
+<p>Bin table:</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## bin</span>
+<span class="va">hic.bin.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"HiC"</span>, <span class="st">"HiC_bin.txt"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
+<span class="va">hic.bin</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">hic.bin.file</span>, sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">hic.bin</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chr"</span>, <span class="st">"start"</span>, <span class="st">"end"</span><span class="op">)</span>
+<span class="va">hic.bin.gr</span> <span class="op">=</span> <span class="fu">GenomicRanges</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GenomicRanges/man/makeGRangesFromDataFrame.html">makeGRangesFromDataFrame</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">hic.bin</span><span class="op">)</span>
+<span class="co">## transfrom func</span>
+<span class="va">FailSafe_log10</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.nan</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.infinite</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="va">x</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<p>Data transfromation method:</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## transfrom func</span>
+<span class="va">FailSafe_log10</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.nan</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.infinite</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="va">x</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div id="load-link" class="section level3">
+<h3 class="hasAnchor">
+<a href="#load-link" class="anchor"></a>Load link</h3>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># prepare arcs</span>
+<span class="va">link.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"HiC"</span>, <span class="st">"HiC_link.bedpe"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="basic-coverage-4" class="section level3">
+<h3 class="hasAnchor">
+<a href="#basic-coverage-4" class="anchor"></a>Basic coverage</h3>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"grey"</span>, region <span class="op">=</span> <span class="st">"chr2L:8050000-8300000"</span>,
+                            mark.region <span class="op">=</span> <span class="cn">NULL</span>, range.position <span class="op">=</span> <span class="st">"out"</span>, extend <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+<span class="va">basic.coverage</span></code></pre></div>
+<p><img src="reference/figures/README-basic_coverage_hic-1.png" width="100%" style="display: block; margin: auto;"></p>
+</div>
+<div id="add-annotations-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#add-annotations-2" class="anchor"></a>Add annotations</h3>
+<p>Add <strong>link</strong>, <strong>contact map</strong>annotations:</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/geom_tad.html">geom_tad</a></span><span class="op">(</span>matrix <span class="op">=</span> <span class="va">hic.mat</span>, granges <span class="op">=</span> <span class="va">hic.bin.gr</span>, value.cut <span class="op">=</span> <span class="fl">0.99</span>,
+           color.palette <span class="op">=</span> <span class="st">"viridis"</span>, transform.fun <span class="op">=</span> <span class="va">FailSafe_log10</span>,
+           top <span class="op">=</span> <span class="cn">FALSE</span>, show.rect <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/geom_link.html">geom_link</a></span><span class="op">(</span>link.file <span class="op">=</span> <span class="va">link.file</span>, file.type <span class="op">=</span> <span class="st">"bedpe"</span>, show.rect <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; Read 534 lines after Skipping 0 lines</span>
+<span class="co">#&gt; Inserting Data at location: 1</span>
+<span class="co">#&gt; Data length: 534</span>
+<span class="co">#&gt; Loaded 2315864 bytes of data...</span>
+<span class="co">#&gt; Read 534 records...</span>
+<span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
+<span class="co">#&gt; replace the existing scale.</span>
+<span class="co">#&gt; Scale for 'x' is already present. Adding another scale for 'x', which will</span>
+<span class="co">#&gt; replace the existing scale.</span></code></pre></div>
+<p><img src="reference/figures/README-hic_coverage-1.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="code-of-conduct" class="section level2">

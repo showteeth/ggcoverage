@@ -9,7 +9,7 @@ author:
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('ggcoverage')`"
 abstract: >
-  The goal of `ggcoverage` is to simplify the process of visualizing genome coverage. It contains functions to load data from BAM, BigWig or BedGraph files, create genome coverage plot, add various annotation to the coverage plot, including base and amino acid annotation, GC annotation, gene annotation, transcript annotation, ideogram annotation and peak annotation.
+  The goal of `ggcoverage` is to simplify the process of visualizing genome coverage. It contains functions to load data from BAM, BigWig or BedGraph files, create genome coverage plot, add various annotation to the coverage plot, including base and amino acid annotation, GC annotation, CNV annotation, gene annotation, transcript annotation, ideogram annotation, peak annotation, HiC contact map and contact link annotation.
 output: 
   BiocStyle::html_document:
     toc_depth: 4
@@ -71,11 +71,14 @@ library("ggcoverage")
 * **Add annotations**: `ggcoverage` supports six different annotations:
   * **Base and amino acid annotation**: Visualize genome coverage at single-nucleotide level with bases and amino acids.
   * **GC annotation**: Visualize genome coverage with GC content
+  * **CNV annotation**: Visualize genome coverage with copy number variation (CNV)
   * **gene annotation**: Visualize genome coverage across whole gene
   * **transcription annotation**: Visualize genome coverage across different transcripts
   * **ideogram annotation**: Visualize the region showing on whole chromosome
   * **peak annotation**: Visualize genome coverage and peak identified
-
+  * **contact map annotation**: Visualize genome coverage with Hi-C contact map
+  * **link annotation**: Visualize genome coverage with contacts
+  
 `ggcoverage` utilizes `ggplot2` plotting system, so its usage is **ggplot2-style**!
 
 -------------
@@ -458,6 +461,92 @@ basic.coverage +
 
 ```{r peak_coverage_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 knitr::include_graphics("../man/figures/README-peak_coverage-1.png")
+```
+
+---------------------
+
+# Hi-C data
+The Hi-C data are from [pyGenomeTracks: reproducible plots for multivariate genomic datasets](https://academic.oup.com/bioinformatics/article/37/3/422/5879987?login=false).
+
+The Hi-C matrix visualization is implemented by [HiCBricks](https://github.com/koustav-pal/HiCBricks).
+
+## Load track data
+```{r hic_track}
+library(ggcoverage)
+library(GenomicRanges)
+# prepare track dataframe
+track.file = system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
+track.df = LoadTrackFile(track.file = track.file, format = "bw")
+track.df$score = ifelse(track.df$score <0, 0, track.df$score)
+# check the data
+head(track.df)
+```
+
+## Load Hi-C data
+Matrix:
+
+```{r hic_load_hic_matrix}
+## matrix
+hic.mat.file = system.file("extdata", "HiC", "HiC_mat.txt", package = "ggcoverage")
+hic.mat = read.table(file = hic.mat.file, sep = "\t")
+hic.mat = as.matrix(hic.mat)
+```
+
+Bin table:
+
+```{r hic_load_hic_bin}
+## bin
+hic.bin.file = system.file("extdata", "HiC", "HiC_bin.txt", package = "ggcoverage")
+hic.bin = read.table(file = hic.bin.file, sep = "\t")
+colnames(hic.bin) = c("chr", "start", "end")
+hic.bin.gr = GenomicRanges::makeGRangesFromDataFrame(df = hic.bin)
+## transfrom func
+FailSafe_log10 <- function(x){
+  x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
+  return(log10(x+1))
+}
+```
+
+Data transfromation method:
+
+```{r hic_load_hic_transformation}
+## transfrom func
+FailSafe_log10 <- function(x){
+  x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
+  return(log10(x+1))
+}
+```
+
+## Load link
+```{r hic_load_link}
+# prepare arcs
+link.file = system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage")
+```
+
+## Basic coverage
+```{r basic_coverage_hic, eval=FALSE}
+basic.coverage = ggcoverage(data = track.df, color = "grey", region = "chr2L:8050000-8300000",
+                            mark.region = NULL, range.position = "out", extend = 0)
+basic.coverage
+```
+
+```{r basic_coverage_hic_plot, echo=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-basic_coverage_hic-1.png")
+```
+
+## Add annotations
+Add **link**, **contact map**annotations:
+
+```{r hic_coverage, eval=FALSE}
+basic.coverage +
+  geom_tad(matrix = hic.mat, granges = hic.bin.gr, value.cut = 0.99,
+           color.palette = "viridis", transform.fun = FailSafe_log10,
+           top = FALSE, show.rect = TRUE) +
+  geom_link(link.file = link.file, file.type = "bedpe", show.rect = TRUE)
+```
+
+```{r hic_coverage_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-hic_coverage-1.png")
 ```
 
 ---------------------

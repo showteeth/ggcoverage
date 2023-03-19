@@ -7,11 +7,9 @@
 geom_tad(
   matrix,
   granges,
-  zlim = NULL,
-  color.bias = 1,
-  color.ramp = "YlOrRd",
   color.palette = NULL,
-  smooth.func = NULL,
+  value.cut = NULL,
+  transform.fun = NULL,
   plot.space = 0.1,
   plot.height = 1,
   top = TRUE,
@@ -23,15 +21,14 @@ geom_tad(
 
 \item{granges}{The rownames and colnames information of matrix.}
 
-\item{zlim}{The maximum value of color to plot. Larger values will be truncated to this value.}
+\item{color.palette}{One of the RColorbrewer or viridis colour palettes.
+Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.}
 
-\item{color.bias}{Bias parameter for color palette, it is the same as \code{bias} parameter of \code{\link{colorRampPalette}}. Default: 1.}
+\item{value.cut}{If present, values beyond a certain quantile will be capped to that quantile.
+Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.}
 
-\item{color.ramp}{A name of a color palette, choose from rownames of \code{\link{brewer.pal.info}}. Default: YlOrRd.}
-
-\item{color.palette}{A vector of colors. Overwrites the palette for \code{color.ramp}. Default: NULL.}
-
-\item{smooth.func}{An optional smoothing function for the matrix. Default: NULL.}
+\item{transform.fun}{If any sort of transformations should be applied to the data before plotting.
+Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.}
 
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
@@ -46,23 +43,4 @@ Plot.
 }
 \description{
 Add Contact Map to Coverage Plot.
-}
-\examples{
-library(ggcoverage)
-library(HiCDataHumanIMR90)
-data(Dixon2012_IMR90, package = "HiCDataHumanIMR90")
-mat <- as.matrix(hic_imr90_40@.Data[[1]]@intdata)
-granges <- hic_imr90_40@.Data[[1]]@xgi
-# prepare coverage dataframe
-df <- data.frame(
-  seqnames = "chr1", start = seq(from = 50000000, to = 59999000, by = 1000),
-  end = seq(from = 50001000, to = 60000000, by = 1000), score = sample(1:100, 10000, replace = TRUE),
-  Type = "Example", Group = "Example"
-)
-# create plot
-ggcoverage(
-  data = df, color = "grey", region = "chr1:50000000-56000000",
-  mark.region = NULL, range.position = "out"
-) +
-  geom_tad(matrix = log2(mat + 1), granges = granges, zlim = 5, color.palette = c("blue", "red"))
 }
