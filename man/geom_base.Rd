@@ -17,6 +17,8 @@ geom_base(
   guide.line = NULL,
   guide.line.color = "red",
   guide.line.type = "dashed",
+  mark.type = "twill",
+  star.size = 1,
   show.aa = TRUE,
   sens = "F",
   numcode = 1,
@@ -60,6 +62,10 @@ geom_base(
 \item{guide.line.color}{The color of guide line. Default: "red".}
 
 \item{guide.line.type}{The line type of guide line. Default: "dashed".}
+
+\item{mark.type}{The mark type to highlight SNV position, choose from twill and star. Default: twill.}
+
+\item{star.size}{The size of star when \code{mark.type} is star. Default: 1.}
 
 \item{show.aa}{Logical value, whether to show amino acid. Default: TRUE.}
 

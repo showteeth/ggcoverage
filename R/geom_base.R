@@ -13,6 +13,8 @@
 #' @param guide.line Nucleotide frequency guide line. Default: NULL (0.5).
 #' @param guide.line.color The color of guide line. Default: "red".
 #' @param guide.line.type The line type of guide line. Default: "dashed".
+#' @param mark.type The mark type to highlight SNV position, choose from twill and star. Default: twill.
+#' @param star.size The size of star when \code{mark.type} is star. Default: 1.
 #' @param show.aa Logical value, whether to show amino acid. Default: TRUE.
 #' @param sens Sense to translate: F for forward sense and R for reverse sense.
 #' Parameter of \code{\link{translate}}. Default: F.
@@ -42,6 +44,7 @@
 #' @importFrom ggplot2 ggplot_add ggplot geom_bar geom_label unit aes_string geom_hline labs
 #' geom_tile geom_text theme_classic theme element_blank scale_fill_manual
 #' element_text element_rect margin scale_x_continuous scale_y_continuous coord_cartesian
+#' @importFrom ggpattern geom_col_pattern scale_pattern_fill_manual
 #' @export
 #'
 #' @examples
@@ -72,6 +75,7 @@ geom_base <- function(bam.file, fa.file = NULL, bs.fa.seq = NULL, chr.split = "[
                       nuc.offset = -0.1, nuc.size = 4, nuc.padding = 0.05, nuc.padding.r = 0,
                       nuc.color = c("A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d"),
                       guide.line = NULL, guide.line.color = "red", guide.line.type = "dashed",
+                      mark.type = "twill", star.size = 1,
                       show.aa = TRUE, sens = "F", numcode = 1, NAstring = "X", ambiguous = FALSE,
                       aa.color = c(
                         "D" = "#FF0000", "S" = "#FF2400", "T" = "#E34234", "G" = "#FF8000", "P" = "#F28500",
@@ -85,6 +89,7 @@ geom_base <- function(bam.file, fa.file = NULL, bs.fa.seq = NULL, chr.split = "[
     bam.file = bam.file, fa.file = fa.file, bs.fa.seq = bs.fa.seq, chr.split = chr.split,
     nuc.offset = nuc.offset, nuc.size = nuc.size, nuc.padding = nuc.padding, nuc.padding.r = nuc.padding.r,
     nuc.color = nuc.color, guide.line = guide.line, guide.line.color = guide.line.color, guide.line.type = guide.line.type,
+    mark.type = mark.type, star.size = star.size,
     show.aa = show.aa, sens = sens, numcode = numcode, NAstring = NAstring, ambiguous = ambiguous,
     aa.color = aa.color, aa.border.color = aa.border.color, aa.size = aa.size, aa.margin = aa.margin, aa.height = aa.height,
     plot.space = plot.space, plot.height = plot.height
@@ -123,6 +128,8 @@ ggplot_add.base <- function(object, plot, object_name) {
   guide.line <- object$guide.line
   guide.line.color <- object$guide.line.color
   guide.line.type <- object$guide.line.type
+  mark.type <- object$mark.type
+  star.size <- object$star.size
   show.aa <- object$show.aa
   sens <- object$sens
   numcode <- object$numcode
@@ -167,10 +174,18 @@ ggplot_add.base <- function(object, plot, object_name) {
   # add fill column
   pos.nuc.freq$Total <- rowSums(pos.nuc.freq[, c("A", "G", "C", "T")])
   pos.nuc.freq$Fill <- ifelse(pos.nuc.freq$Total == 0, 1, 0)
-  pos.nuc.freq$Total <- NULL
+  # pos.nuc.freq$Total <- NULL
   # convert wide to long dataframe
-  pos.nuc.freq.long <- reshape2::melt(pos.nuc.freq, id.vars = c("Chr", "Pos", "Ref"))
-  colnames(pos.nuc.freq.long) <- c("Chr", "Pos", "Ref", "Base", "Freq")
+  # pos.nuc.freq.long <- reshape2::melt(pos.nuc.freq, id.vars = c("Chr", "Pos", "Ref"))
+  # colnames(pos.nuc.freq.long) <- c("Chr", "Pos", "Ref", "Base", "Freq")
+  pos.nuc.freq.long <- reshape2::melt(pos.nuc.freq, id.vars = c("Chr", "Pos", "Ref", "Total"))
+  colnames(pos.nuc.freq.long) <- c("Chr", "Pos", "Ref", "Total", "Base", "Freq")
+  # get position with alt
+  alt.pos <- pos.nuc.freq.long %>%
+    dplyr::filter(Ref == Base & Total != Freq) %>%
+    dplyr::pull(Pos) %>%
+    unique()
+  alt.pos.nuc.freq.long <- pos.nuc.freq.long %>% dplyr::filter(Pos %in% c(alt.pos))
   # create label offset
   pos.nuc.freq$Offset <- nuc.offset
   # add guide line
@@ -185,6 +200,31 @@ ggplot_add.base <- function(object, plot, object_name) {
       data = pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq", fill = "Base"),
       position = "fill", stat = "identity", color = "white"
     )
+
+  # add mark
+  if (length(alt.pos) >= 1) {
+    if (mark.type == "twill") {
+      base.plot <- base.plot +
+        ggpattern::geom_col_pattern(
+          data = alt.pos.nuc.freq.long,
+          aes_string(
+            x = "Pos", y = "Freq", pattern = "Base", fill = "Base",
+            pattern_fill = "Base", pattern_angle = "Base"
+          ),
+          position = "fill", colour = "black",
+          pattern_density = 0.35, pattern_key_scale_factor = 1.3
+        ) +
+        ggpattern::scale_pattern_fill_manual(values = c(nuc.color, "white"))
+    } else if (mark.type == "star") {
+      base.plot <- base.plot +
+        geom_point(
+          data = alt.pos.nuc.freq.long, aes_string(x = "Pos", y = "1.01"),
+          shape = 8, show.legend = FALSE, size = star.size
+        )
+    }
+  } else {
+    message("No SNV detected, do not add mark!")
+  }
 
   if (show.aa) {
     # translate

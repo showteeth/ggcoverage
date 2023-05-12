@@ -1,7 +1,7 @@
 Package: ggcoverage
 Type: Package
 Title: Visualize Genome Coverage with Various Annotations
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: 
     person(given = "Yabing",
            family = "Song",
@@ -43,7 +43,8 @@ Imports:
     seqinr,
     GenomeMatrix,
     ggforce,
-    HiCBricks
+    HiCBricks,
+    ggpattern
 Suggests: 
     rmarkdown,
     knitr,

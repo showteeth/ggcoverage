@@ -304,6 +304,8 @@ graphics::par(opar)
 
 #### Add base and amino acid annotation
 ```{r base_aa_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+library(ggpattern)
+# create plot with twill mark
 ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=T, rect.color = "white") +
   geom_base(bam.file = bam.file,
             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +

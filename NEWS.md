@@ -1,3 +1,9 @@
+# ggcoverage 1.1.0
+## Major changes
+* Mark SNV with twill or star.
+
+-------------
+
 # ggcoverage 1.0.0
 ## Major changes
 * Supporting Hi-C visualization (`geom_tad` and `geom_tad2`).

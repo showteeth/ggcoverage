@@ -44,7 +44,7 @@ To install the package, start R and enter:
   
 ```{r install, eval=FALSE}
 # install via CRAN
-install.package("ggcoverage")
+install.packages("ggcoverage")
 
 # install via Github
 # install.package("remotes")   #In case you have not installed it.
@@ -370,6 +370,8 @@ graphics::par(opar)
 
 ### Add base and amino acid annotation
 ```{r base_aa_coverage, eval=FALSE}
+library(ggpattern)
+# create plot with twill mark
 ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=TRUE, rect.color = "white") +
   geom_base(bam.file = bam.file,
             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
