@@ -16,8 +16,7 @@ FormatTrack(
 \arguments{
 \item{data}{Track dataframe loaded by \code{\link{LoadTrackFile}}.}
 
-\item{region}{Region used to create coverage plot, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.
-Default: NULL.}
+\item{region}{Region used to create coverage plot, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.}
 
 \item{gtf.gr}{Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.}
 

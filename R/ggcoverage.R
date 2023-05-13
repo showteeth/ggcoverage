@@ -1,13 +1,6 @@
 #' Create Coverage Plot.
 #'
 #' @param data Coverage dataframe loaded by \code{\link{LoadTrackFile}}.
-#' @param region Region used to create coverage plot, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.
-#' Default: NULL.
-#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.
-#' @param extend Extend length of \code{region}. Default: 2000.
-#' @param gene.name The name of gene. Default: HNRNPC.
-#' @param gene.name.type Gene name type (filed of \code{gtf.gr}), chosen from gene_name and gene_id.
-#' Default: gene_name.
 #' @param single.nuc Logical value, whether to visualize at single nucleotide level. Default: FALSE.
 #' @param mapping Set of aesthetic mappings created by \code{aes} or \code{aes_}. Default: NULL.
 #' @param color Track color. Default: NULL (select automatically).
@@ -28,7 +21,6 @@
 #'
 #' @return A ggplot2 object.
 #' @importFrom magrittr %>%
-#' @importFrom dplyr filter arrange
 #' @importFrom ggplot2 ggplot aes_string scale_fill_manual geom_rect geom_text aes theme_classic theme unit
 #' element_blank annotate rel scale_y_continuous expansion scale_x_continuous coord_cartesian
 #' @importFrom scales comma
@@ -51,33 +43,17 @@
 #' # track folder
 #' # track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
 #' # load bigwig file
-#' # track.df <- LoadTrackFile(
-#' #   track.folder = track.folder, format = "bw",
-#' #   meta.info = sample.meta
-#' # )
+#' # track.df <- LoadTrackFile(track.folder = track.folder, format = "bw",region = "chr14:21,677,306-21,737,601",
+#' #                           extend = 2000, meta.info = sample.meta)
 #' # gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
 #' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
 #' # ggcoverage(data = track.df, color = "auto", range.position = "out")
-ggcoverage <- function(data, region = "chr14:21,677,306-21,737,601", gtf.gr = NULL, extend = 2000,
-                       gene.name = "HNRNPC", gene.name.type = c("gene_name", "gene_id"), single.nuc = FALSE,
-                       mapping = NULL, color = NULL, rect.color = NA, facet.key = "Type", facet.order = NULL, facet.color = NULL,
+ggcoverage <- function(data, single.nuc = FALSE, mapping = NULL, color = NULL,
+                       rect.color = NA, facet.key = "Type", facet.order = NULL, facet.color = NULL,
                        group.key = "Group", range.size = 3, range.position = c("in", "out"), plot.space = 0.2,
                        mark.region = NULL, mark.color = "grey", mark.alpha = 0.5, show.mark.label = TRUE, mark.label.size = 4) {
   # check parameters
-  gene.name.type <- match.arg(arg = gene.name.type)
   range.position <- match.arg(arg = range.position)
-
-  if (single.nuc) {
-    data <- data
-  } else {
-    # formating data
-    data <- FormatTrack(
-      data = data, region = region, gtf.gr = gtf.gr, extend = extend,
-      gene.name = gene.name, gene.name.type = gene.name.type
-    )
-  }
-  # plot.range.start <- min(data[, "start"])
-  # plot.range.end <- max(data[, "end"])
 
   # create plot
   coverage.plot <- ggplot() +

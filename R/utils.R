@@ -1,3 +1,59 @@
+# prepare GR
+PrepareRegion <- function(region = "chr14:21,677,306-21,737,601",
+                          gtf.gr = NULL, gene.name = "HNRNPC", gene.name.type = c("gene_name", "gene_id"),
+                          extend = 2000) {
+  # check parameters
+  gene.name.type <- match.arg(arg = gene.name.type)
+
+  if (!is.null(region)) {
+    region.split <- unlist(strsplit(x = region, split = ":"))
+    region.chr <- region.split[1]
+    region.se <- unlist(strsplit(x = region.split[2], split = "-"))
+    if (length(region.se) == 1) {
+      region.start <- as.numeric(gsub(pattern = ",", replacement = "", x = region.se[1]))
+      region.end <- region.start
+    } else if (length(region.se) == 2) {
+      region.start <- as.numeric(gsub(pattern = ",", replacement = "", x = region.se[1]))
+      region.end <- as.numeric(gsub(pattern = ",", replacement = "", x = region.se[2]))
+    }
+  } else if (!is.null(gtf.gr)) {
+    # get gene related gtf
+    gene.gtf.info <- gtf.gr %>%
+      as.data.frame() %>%
+      dplyr::filter(type == "gene")
+    # get specific gene
+    gene.gtf.info.used <- gene.gtf.info[gene.gtf.info[, gene.name.type] == gene.name, ]
+    # get position
+    region.chr <- as.character(gene.gtf.info.used$seqnames)
+    region.start <- gene.gtf.info.used$start
+    region.end <- gene.gtf.info.used$end
+  }
+
+  # extend region
+  if (!(is.null(extend))) {
+    # extend start
+    region.start <- region.start - extend
+    # avoid invalid start region
+    if (region.start < 1) {
+      region.start <- 1
+    }
+    region.end <- region.end + extend
+  }
+
+  if (region.start == region.end) {
+    # avoid invalid start region
+    message("The start position is same as end position, and the extension is 0. Automatically increase by 1!")
+    region.end <- region.start + 1
+  }
+
+  # prepare gr
+  gr <- GenomicRanges::GRanges(
+    seqnames = region.chr,
+    ranges = IRanges::IRanges(region.start, region.end)
+  )
+  return(gr)
+}
+
 # select color automatically
 AutoColor <- function(data, n, name, key) {
   getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(n, name))

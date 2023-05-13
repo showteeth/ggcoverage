@@ -7,7 +7,12 @@
 LoadTrackFile(
   track.file,
   track.folder = NULL,
-  format = c("bam", "wig", "bw", "bedgraph"),
+  format = c("bam", "wig", "bw", "bedgraph", "txt"),
+  region = "chr14:21,677,306-21,737,601",
+  extend = 2000,
+  gtf.gr = NULL,
+  gene.name = "HNRNPC",
+  gene.name.type = c("gene_name", "gene_id"),
   meta.info = NULL,
   meta.file = "",
   bamcoverage.path = NULL,
@@ -23,7 +28,19 @@ LoadTrackFile(
 
 \item{track.folder}{Track file folder. Default: NULL.}
 
-\item{format}{Track file format, chosen from bam, wig, bw(bigwig), bedgraph(bedGraph).}
+\item{format}{Track file format, chosen from bam, wig, bw(bigwig), bedgraph(bedGraph) and txt.}
+
+\item{region}{Region used to create coverage plot, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.
+Default: "chr14:21,677,306-21,737,601"}
+
+\item{extend}{Extend length of \code{region}. Default: 2000.}
+
+\item{gtf.gr}{Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.}
+
+\item{gene.name}{The name of gene. Default: HNRNPC.}
+
+\item{gene.name.type}{Gene name type (filed of \code{gtf.gr}), chosen from gene_name and gene_id.
+Default: gene_name.}
 
 \item{meta.info}{Track file metadata. The columns should be: SampleName (\code{track.file} without suffix),
 Type (sample with replicates information), Group (sample group). when \code{meta.file} is not NULL,
@@ -52,16 +69,14 @@ Load Track File to Dataframe.
 }
 \examples{
 library(ggcoverage)
-sample.meta <- data.frame(
-  SampleName = c("Chr18_MCF7_ER_1", "Chr18_MCF7_ER_2", "Chr18_MCF7_ER_3", "Chr18_MCF7_input"),
-  Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),
-  Group = c("IP", "IP", "IP", "Input")
-)
+library(utils)
+meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+sample.meta <- utils::read.csv(meta.file)
 # track folder
-track.folder <- system.file("extdata", "ChIP-seq", package = "ggcoverage")
+track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
 # load bigwig file
 track.df <- LoadTrackFile(
-  track.folder = track.folder, format = "bw",
-  meta.info = sample.meta
+  track.folder = track.folder, format = "bw", region = "chr14:21,677,306-21,737,601",
+  extend = 2000, meta.info = sample.meta
 )
 }

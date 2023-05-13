@@ -47,7 +47,7 @@ To install the package, start R and enter:
   
 ```{r install, eval=FALSE}
 # install via CRAN
-install.package("ggcoverage")
+install.packages("ggcoverage")
 
 # install via Github
 # install.package("remotes")   #In case you have not installed it.
@@ -61,6 +61,7 @@ Once `ggcoverage` is installed, it can be loaded by the following command.
 ```{r library, message=FALSE, warning=FALSE}
 library("rtracklayer")
 library("ggcoverage")
+library("ggpattern")
 ```
 
 ## Manual
@@ -88,6 +89,7 @@ Load track files:
 track.folder = system.file("extdata", "RNA-seq", package = "ggcoverage")
 # load bigwig file
 track.df = LoadTrackFile(track.folder = track.folder, format = "bw",
+                         region = "chr14:21,677,306-21,737,601", extend = 2000,
                          meta.info = sample.meta)
 # check data
 head(track.df)
@@ -159,9 +161,17 @@ basic.coverage +
 The DNA-seq data used here are from [Copy number work flow](http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html), we select tumor sample, and get bin counts with `cn.mops::getReadCountsFromBAM` with `WL` 1000.
 
 ```{r load_bin_counts}
+# prepare metafile
+cnv.meta.info = data.frame(
+  SampleName = c("CNV_example"),
+  Type = c("tumor"),
+  Group = c("tumor")
+)
 # track file
 track.file = system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")
-track.df = read.table(track.file, header = TRUE)
+# load txt file
+track.df = LoadTrackFile(track.file = track.file, format = "txt", region = "chr4:61750000-62,700,000",
+                         meta.info = cnv.meta.info)
 # check data
 head(track.df)
 ```
@@ -169,7 +179,7 @@ head(track.df)
 ##### Basic coverage
 ```{r basic_coverage_dna, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic.coverage = ggcoverage(data = track.df,color = "grey", mark.region = NULL,
-                            region = 'chr4:61750000-62,700,000', range.position = "out")
+                            range.position = "out")
 basic.coverage
 ```
 
@@ -194,7 +204,7 @@ The DNA-seq data used here are from [Genome-wide copy number analysis of single 
 # track file
 track.file <- system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
 # load track
-track.df = LoadTrackFile(track.file = track.file, format = "bw")
+track.df = LoadTrackFile(track.file = track.file, format = "bw", region = "4:1-160000000")
 # add chr prefix
 track.df$seqnames = paste0("chr", track.df$seqnames)
 # check data
@@ -203,7 +213,7 @@ head(track.df)
 
 ##### Basic coverage
 ```{r cnv_basic_coverage_dna}
-basic.coverage = ggcoverage(data = track.df, color = "grey", region = "chr4:1-160000000",
+basic.coverage = ggcoverage(data = track.df, color = "grey",
                             mark.region = NULL, range.position = "out")
 basic.coverage
 ```
@@ -329,7 +339,7 @@ Load track files:
 # track folder
 track.folder = system.file("extdata", "ChIP-seq", package = "ggcoverage")
 # load bigwig file
-track.df = LoadTrackFile(track.folder = track.folder, format = "bw",
+track.df = LoadTrackFile(track.folder = track.folder, format = "bw", region = "chr18:76822285-76900000",
                          meta.info = sample.meta)
 # check data
 head(track.df)
@@ -347,7 +357,7 @@ mark.region
 
 ### Basic coverage
 ```{r basic_coverage_chip, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df, color = "auto", region = "chr18:76822285-76900000", 
+basic.coverage = ggcoverage(data = track.df, color = "auto", 
                             mark.region=mark.region, show.mark.label = FALSE)
 basic.coverage
 ```
@@ -376,7 +386,8 @@ library(ggcoverage)
 library(GenomicRanges)
 # prepare track dataframe
 track.file = system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
-track.df = LoadTrackFile(track.file = track.file, format = "bw")
+track.df = LoadTrackFile(track.file = track.file, format = "bw", 
+                         region = "chr2L:8050000-8300000", extend = 0)
 track.df$score = ifelse(track.df$score <0, 0, track.df$score)
 # check the data
 head(track.df)
@@ -425,8 +436,8 @@ link.file = system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverag
 
 ### Basic coverage
 ```{r basic_coverage_hic, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df, color = "grey", region = "chr2L:8050000-8300000",
-                            mark.region = NULL, range.position = "out", extend = 0)
+basic.coverage = ggcoverage(data = track.df, color = "grey",
+                            mark.region = NULL, range.position = "out")
 basic.coverage
 ```
 

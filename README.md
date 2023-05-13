@@ -47,7 +47,7 @@ enter:
 
 ``` r
 # install via CRAN
-install.package("ggcoverage")
+install.packages("ggcoverage")
 
 # install via Github
 # install.package("remotes")   #In case you have not installed it.
@@ -64,6 +64,7 @@ command.
 ``` r
 library("rtracklayer")
 library("ggcoverage")
+library("ggpattern")
 ```
 
 ## Manual
@@ -107,16 +108,17 @@ Load track files:
 track.folder = system.file("extdata", "RNA-seq", package = "ggcoverage")
 # load bigwig file
 track.df = LoadTrackFile(track.folder = track.folder, format = "bw",
+                         region = "chr14:21,677,306-21,737,601", extend = 2000,
                          meta.info = sample.meta)
 # check data
 head(track.df)
 #>   seqnames    start      end score    Type Group
-#> 1    chr14 21572751 21630650     0 KO_rep1    KO
-#> 2    chr14 21630651 21630700     1 KO_rep1    KO
-#> 3    chr14 21630701 21630800     4 KO_rep1    KO
-#> 4    chr14 21630801 21657350     0 KO_rep1    KO
-#> 5    chr14 21657351 21657450     1 KO_rep1    KO
-#> 6    chr14 21657451 21663550     0 KO_rep1    KO
+#> 1    chr14 21675306 21675950     0 KO_rep1    KO
+#> 2    chr14 21675951 21676000     1 KO_rep1    KO
+#> 3    chr14 21676001 21676100     2 KO_rep1    KO
+#> 4    chr14 21676101 21676150     1 KO_rep1    KO
+#> 5    chr14 21676151 21677100     0 KO_rep1    KO
+#> 6    chr14 21677101 21677200     2 KO_rep1    KO
 ```
 
 Prepare mark region:
@@ -192,8 +194,8 @@ basic.coverage +
   geom_ideogram(genome = "hg19",plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
-#> Scale for 'x' is already present. Adding another scale for 'x', which will
-#> replace the existing scale.
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-ideogram_coverage_1-1.png" width="100%" style="display: block; margin: auto;" />
@@ -204,8 +206,8 @@ basic.coverage +
   geom_ideogram(genome = "hg19",plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
-#> Scale for 'x' is already present. Adding another scale for 'x', which will
-#> replace the existing scale.
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-ideogram_coverage_2-1.png" width="100%" style="display: block; margin: auto;" />
@@ -224,25 +226,33 @@ we select tumor sample, and get bin counts with
 `cn.mops::getReadCountsFromBAM` with `WL` 1000.
 
 ``` r
+# prepare metafile
+cnv.meta.info = data.frame(
+  SampleName = c("CNV_example"),
+  Type = c("tumor"),
+  Group = c("tumor")
+)
 # track file
 track.file = system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")
-track.df = read.table(track.file, header = TRUE)
+# load txt file
+track.df = LoadTrackFile(track.file = track.file, format = "txt", region = "chr4:61750000-62,700,000",
+                         meta.info = cnv.meta.info)
 # check data
 head(track.df)
 #>   seqnames    start      end score  Type Group
-#> 1     chr4 61743001 61744000    17 tumor tumor
-#> 2     chr4 61744001 61745000    14 tumor tumor
-#> 3     chr4 61745001 61746000    13 tumor tumor
-#> 4     chr4 61746001 61747000    16 tumor tumor
-#> 5     chr4 61747001 61748000    25 tumor tumor
-#> 6     chr4 61748001 61749000    24 tumor tumor
+#> 1     chr4 61748000 61748000    25 tumor tumor
+#> 2     chr4 61748001 61749000    24 tumor tumor
+#> 3     chr4 61749001 61750000    17 tumor tumor
+#> 4     chr4 61750001 61751000    23 tumor tumor
+#> 5     chr4 61751001 61752000    14 tumor tumor
+#> 6     chr4 61752001 61753000    22 tumor tumor
 ```
 
 ##### Basic coverage
 
 ``` r
 basic.coverage = ggcoverage(data = track.df,color = "grey", mark.region = NULL,
-                            region = 'chr4:61750000-62,700,000', range.position = "out")
+                            range.position = "out")
 basic.coverage
 ```
 
@@ -270,8 +280,8 @@ basic.coverage +
   geom_ideogram(genome = "hg19")
 #> Loading ideogram...
 #> Loading ranges...
-#> Scale for 'x' is already present. Adding another scale for 'x', which will
-#> replace the existing scale.
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-gc_coverage-1.png" width="100%" style="display: block; margin: auto;" />
@@ -289,25 +299,25 @@ accession number is
 # track file
 track.file <- system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
 # load track
-track.df = LoadTrackFile(track.file = track.file, format = "bw")
+track.df = LoadTrackFile(track.file = track.file, format = "bw", region = "4:1-160000000")
 #> Sample without metadata!
 # add chr prefix
 track.df$seqnames = paste0("chr", track.df$seqnames)
 # check data
 head(track.df)
 #>   seqnames  start    end score         Type        Group
-#> 1     chr1      1  50000     0 SRR054616.bw SRR054616.bw
-#> 2     chr1  50001 100000     3 SRR054616.bw SRR054616.bw
-#> 3     chr1 100001 150000     4 SRR054616.bw SRR054616.bw
-#> 4     chr1 150001 200000     0 SRR054616.bw SRR054616.bw
-#> 5     chr1 200001 250000     6 SRR054616.bw SRR054616.bw
-#> 6     chr1 250001 300000     2 SRR054616.bw SRR054616.bw
+#> 1     chr4      1  50000   197 SRR054616.bw SRR054616.bw
+#> 2     chr4  50001 100000   598 SRR054616.bw SRR054616.bw
+#> 3     chr4 100001 150000   287 SRR054616.bw SRR054616.bw
+#> 4     chr4 150001 200000   179 SRR054616.bw SRR054616.bw
+#> 5     chr4 200001 250000   282 SRR054616.bw SRR054616.bw
+#> 6     chr4 250001 300000   212 SRR054616.bw SRR054616.bw
 ```
 
 ##### Basic coverage
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "grey", region = "chr4:1-160000000",
+basic.coverage = ggcoverage(data = track.df, color = "grey",
                             mark.region = NULL, range.position = "out")
 basic.coverage
 ```
@@ -346,8 +356,8 @@ basic.coverage +
   geom_ideogram(genome = "hg19",plot.space = 0, highlight.centromere = TRUE)
 #> Loading ideogram...
 #> Loading ranges...
-#> Scale for 'x' is already present. Adding another scale for 'x', which will
-#> replace the existing scale.
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-cnv_gc_coverage-1.png" width="100%" />
@@ -450,14 +460,16 @@ graphics::par(opar)
 #### Add base and amino acid annotation
 
 ``` r
+library(ggpattern)
+# create plot with twill mark
 ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=T, rect.color = "white") +
   geom_base(bam.file = bam.file,
             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
   geom_ideogram(genome = "hg19",plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
-#> Scale for 'x' is already present. Adding another scale for 'x', which will
-#> replace the existing scale.
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-base_aa_coverage-1.png" width="100%" style="display: block; margin: auto;" />
@@ -492,17 +504,17 @@ Load track files:
 # track folder
 track.folder = system.file("extdata", "ChIP-seq", package = "ggcoverage")
 # load bigwig file
-track.df = LoadTrackFile(track.folder = track.folder, format = "bw",
+track.df = LoadTrackFile(track.folder = track.folder, format = "bw", region = "chr18:76822285-76900000",
                          meta.info = sample.meta)
 # check data
 head(track.df)
 #>   seqnames    start      end      score      Type Group
-#> 1    chr18 76799701 76800000 439.316010 MCF7_ER_1    IP
-#> 2    chr18 76800001 76800300 658.973999 MCF7_ER_1    IP
-#> 3    chr18 76800301 76800600 219.658005 MCF7_ER_1    IP
-#> 4    chr18 76800601 76800900 658.973999 MCF7_ER_1    IP
-#> 5    chr18 76800901 76801200   0.000000 MCF7_ER_1    IP
-#> 6    chr18 76801201 76801500 219.658005 MCF7_ER_1    IP
+#> 1    chr18 76820285 76820400 219.658005 MCF7_ER_1    IP
+#> 2    chr18 76820401 76820700   0.000000 MCF7_ER_1    IP
+#> 3    chr18 76820701 76821000 439.316010 MCF7_ER_1    IP
+#> 4    chr18 76821001 76821300 219.658005 MCF7_ER_1    IP
+#> 5    chr18 76821301 76821600   0.000000 MCF7_ER_1    IP
+#> 6    chr18 76821601 76821900 219.658005 MCF7_ER_1    IP
 ```
 
 Prepare mark region:
@@ -521,7 +533,7 @@ mark.region
 ### Basic coverage
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "auto", region = "chr18:76822285-76900000", 
+basic.coverage = ggcoverage(data = track.df, color = "auto", 
                             mark.region=mark.region, show.mark.label = FALSE)
 basic.coverage
 ```
@@ -544,8 +556,8 @@ basic.coverage +
   geom_ideogram(genome = "hg19",plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
-#> Scale for 'x' is already present. Adding another scale for 'x', which will
-#> replace the existing scale.
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-peak_coverage-1.png" width="100%" style="display: block; margin: auto;" />
@@ -566,18 +578,19 @@ library(ggcoverage)
 library(GenomicRanges)
 # prepare track dataframe
 track.file = system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
-track.df = LoadTrackFile(track.file = track.file, format = "bw")
+track.df = LoadTrackFile(track.file = track.file, format = "bw", 
+                         region = "chr2L:8050000-8300000", extend = 0)
 #> Sample without metadata!
 track.df$score = ifelse(track.df$score <0, 0, track.df$score)
 # check the data
 head(track.df)
-#>   seqnames start end        score        Type       Group
-#> 1    chr2L   163 197 0.0588951111 H3K36me3.bw H3K36me3.bw
-#> 2    chr2L   203 237 0.0600935593 H3K36me3.bw H3K36me3.bw
-#> 3    chr2L   247 279 0.0613960847 H3K36me3.bw H3K36me3.bw
-#> 4    chr2L   281 315 0.0626407191 H3K36me3.bw H3K36me3.bw
-#> 5    chr2L   431 465 0.0775992721 H3K36me3.bw H3K36me3.bw
-#> 6    chr2L   621 655 0.1499668956 H3K36me3.bw H3K36me3.bw
+#>   seqnames   start     end      score        Type       Group
+#> 1    chr2L 8050000 8050009 1.66490245 H3K36me3.bw H3K36me3.bw
+#> 2    chr2L 8050015 8050049 1.59976900 H3K36me3.bw H3K36me3.bw
+#> 3    chr2L 8050057 8050091 1.60730922 H3K36me3.bw H3K36me3.bw
+#> 4    chr2L 8050097 8050131 1.65555012 H3K36me3.bw H3K36me3.bw
+#> 5    chr2L 8050137 8050171 1.71025538 H3K36me3.bw H3K36me3.bw
+#> 6    chr2L 8050176 8050210 1.75198197 H3K36me3.bw H3K36me3.bw
 ```
 
 ### Load Hi-C data
@@ -626,8 +639,8 @@ link.file = system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverag
 ### Basic coverage
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "grey", region = "chr2L:8050000-8300000",
-                            mark.region = NULL, range.position = "out", extend = 0)
+basic.coverage = ggcoverage(data = track.df, color = "grey",
+                            mark.region = NULL, range.position = "out")
 basic.coverage
 ```
 
@@ -648,10 +661,10 @@ basic.coverage +
 #> Data length: 534
 #> Loaded 2315864 bytes of data...
 #> Read 534 records...
-#> Scale for 'y' is already present. Adding another scale for 'y', which will
-#> replace the existing scale.
-#> Scale for 'x' is already present. Adding another scale for 'x', which will
-#> replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-hic_coverage-1.png" width="100%" style="display: block; margin: auto;" />

@@ -2,7 +2,14 @@
 #'
 #' @param track.file Track file, when \code{track.folder} is not NULL, determined by \code{track.folder}.
 #' @param track.folder Track file folder. Default: NULL.
-#' @param format Track file format, chosen from bam, wig, bw(bigwig), bedgraph(bedGraph).
+#' @param format Track file format, chosen from bam, wig, bw(bigwig), bedgraph(bedGraph) and txt.
+#' @param region Region used to create coverage plot, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.
+#' Default: "chr14:21,677,306-21,737,601"
+#' @param extend Extend length of \code{region}. Default: 2000.
+#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.
+#' @param gene.name The name of gene. Default: HNRNPC.
+#' @param gene.name.type Gene name type (filed of \code{gtf.gr}), chosen from gene_name and gene_id.
+#' Default: gene_name.
 #' @param meta.info Track file metadata. The columns should be: SampleName (\code{track.file} without suffix),
 #' Type (sample with replicates information), Group (sample group). when \code{meta.file} is not NULL,
 #' determined by \code{meta.file}.Default: NULL.
@@ -20,29 +27,33 @@
 #' @importFrom Rsamtools indexBam
 #' @importFrom utils read.csv
 #' @importFrom GenomicAlignments alphabetFrequencyFromBam
+#' @importFrom GenomicRanges GRanges
+#' @importFrom IRanges IRanges
 #' @importFrom magrittr %>%
-#' @importFrom dplyr select
+#' @importFrom dplyr select filter
 #' @export
 #'
 #' @examples
 #' library(ggcoverage)
-#' sample.meta <- data.frame(
-#'   SampleName = c("Chr18_MCF7_ER_1", "Chr18_MCF7_ER_2", "Chr18_MCF7_ER_3", "Chr18_MCF7_input"),
-#'   Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),
-#'   Group = c("IP", "IP", "IP", "Input")
-#' )
+#' library(utils)
+#' meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#' sample.meta <- utils::read.csv(meta.file)
 #' # track folder
-#' track.folder <- system.file("extdata", "ChIP-seq", package = "ggcoverage")
+#' track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
 #' # load bigwig file
 #' track.df <- LoadTrackFile(
-#'   track.folder = track.folder, format = "bw",
-#'   meta.info = sample.meta
+#'   track.folder = track.folder, format = "bw", region = "chr14:21,677,306-21,737,601",
+#'   extend = 2000, meta.info = sample.meta
 #' )
-LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wig", "bw", "bedgraph"), meta.info = NULL, meta.file = "",
+LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wig", "bw", "bedgraph", "txt"),
+                          region = "chr14:21,677,306-21,737,601", extend = 2000,
+                          gtf.gr = NULL, gene.name = "HNRNPC", gene.name.type = c("gene_name", "gene_id"),
+                          meta.info = NULL, meta.file = "",
                           bamcoverage.path = NULL, norm.method = c("RPKM", "CPM", "BPM", "RPGC", "None"),
                           single.nuc = FALSE, single.nuc.region = NULL, bin.size = 10, bc.extra.para = NULL) {
   # check parameters
   format <- match.arg(arg = format)
+  gene.name.type <- match.arg(arg = gene.name.type)
   norm.method <- match.arg(arg = norm.method)
 
   # prepare track files
@@ -55,12 +66,14 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
     if (single.nuc) {
       stop("To visualize single nucleotide, please use bam file!")
     } else {
+      # get used gr
+      gr <- PrepareRegion(region = region, gtf.gr = gtf.gr, gene.name = gene.name, gene.name.type = gene.name.type, extend = extend)
       # read track file
       track.list <- lapply(track.file, function(x) {
         # get basename
         track.file.base <- basename(x)
         # import wig, bigwig and bedgraph file
-        single.track.df <- as.data.frame(rtracklayer::import(x))
+        single.track.df <- as.data.frame(rtracklayer::import(x, which = gr))
         single.track.df$TrackFile <- track.file.base
         return(single.track.df)
       })
@@ -114,6 +127,8 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
         bamcoverage.path <- bamcoverage.path
       }
 
+      # get used gr
+      gr <- PrepareRegion(region = region, gtf.gr = gtf.gr, gene.name = gene.name, gene.name.type = gene.name.type, extend = extend)
       # read track file
       track.list <- lapply(track.file, function(x) {
         # get basename
@@ -133,7 +148,21 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
           stop("Run bamCoverage error!")
         }
         # import wig, bigwig and bedgraph file
-        single.track.df <- as.data.frame(rtracklayer::import(out.bw.file))
+        single.track.df <- as.data.frame(rtracklayer::import(out.bw.file, which = gr))
+        single.track.df$TrackFile <- track.file.base
+        return(single.track.df)
+      })
+    }
+  } else if (format == "txt") {
+    if (single.nuc) {
+      stop("To visualize single nucleotide, please use bam file!")
+    } else {
+      # read track file
+      track.list <- lapply(track.file, function(x) {
+        # get basename
+        track.file.base <- basename(x)
+        # import wig, bigwig and bedgraph file
+        single.track.df <- utils::read.table(track.file, header = TRUE)
         single.track.df$TrackFile <- track.file.base
         return(single.track.df)
       })
@@ -142,7 +171,9 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
   # get track dataframe
   track.df <- do.call(rbind, track.list)
   # remove width and strand
-  track.df <- track.df %>% dplyr::select(-c(width, strand))
+  if (all(c("width", "strand") %in% colnames(track.df))) {
+    track.df <- track.df %>% dplyr::select(-c(width, strand))
+  }
 
   # get metadata
   if (file.exists(meta.file)) {
@@ -164,6 +195,14 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
     meta.info.used$SampleName <- paste(meta.info.used$SampleName, format, sep = ".")
     track.df <- merge(track.df, meta.info.used, by.x = "TrackFile", by.y = "SampleName")
     track.df$TrackFile <- NULL
+  }
+
+  # subset txt
+  if (format == "txt") {
+    track.df <- FormatTrack(
+      data = track.df, region = region, gtf.gr = gtf.gr, extend = extend,
+      gene.name = gene.name, gene.name.type = gene.name.type
+    )
   }
 
   return(track.df)
