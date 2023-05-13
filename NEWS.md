@@ -2,6 +2,7 @@
 ## Major changes
 * Mark SNV with twill or star.
 * Moved `FormatTrack` to `LoadTrackFile`, this can reduce load time and memory for big files.
+* Supporting parallel to handle multiple files more efficiently.
 
 -------------
 

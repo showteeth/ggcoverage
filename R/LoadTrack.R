@@ -21,6 +21,7 @@
 #' @param single.nuc.region Region for \code{single.nuc}. Default: NULL
 #' @param bin.size Size of the bins, in bases. Default: 50.
 #' @param bc.extra.para Extra parameters for \code{bamCoverage}, eg: "--effectiveGenomeSize 2700000000 --ignoreForNormalization chrX"
+#' @param n.cores The number of cores to be used for this job. Default:1.
 #'
 #' @return A dataframe.
 #' @importFrom rtracklayer import
@@ -31,6 +32,7 @@
 #' @importFrom IRanges IRanges
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select filter
+#' @importFrom BiocParallel register MulticoreParam bplapply
 #' @export
 #'
 #' @examples
@@ -50,7 +52,7 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
                           gtf.gr = NULL, gene.name = "HNRNPC", gene.name.type = c("gene_name", "gene_id"),
                           meta.info = NULL, meta.file = "",
                           bamcoverage.path = NULL, norm.method = c("RPKM", "CPM", "BPM", "RPGC", "None"),
-                          single.nuc = FALSE, single.nuc.region = NULL, bin.size = 10, bc.extra.para = NULL) {
+                          single.nuc = FALSE, single.nuc.region = NULL, bin.size = 10, bc.extra.para = NULL, n.cores = 1) {
   # check parameters
   format <- match.arg(arg = format)
   gene.name.type <- match.arg(arg = gene.name.type)
@@ -68,24 +70,50 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
     } else {
       # get used gr
       gr <- PrepareRegion(region = region, gtf.gr = gtf.gr, gene.name = gene.name, gene.name.type = gene.name.type, extend = extend)
-      # read track file
-      track.list <- lapply(track.file, function(x) {
-        # get basename
-        track.file.base <- basename(x)
-        # import wig, bigwig and bedgraph file
-        single.track.df <- as.data.frame(rtracklayer::import(x, which = gr))
-        single.track.df$TrackFile <- track.file.base
-        return(single.track.df)
-      })
+      if (is.null(n.cores) || n.cores == 1) {
+        # read track file
+        track.list <- lapply(track.file, function(x) {
+          # get basename
+          track.file.base <- basename(x)
+          # import wig, bigwig and bedgraph file
+          single.track.df <- as.data.frame(rtracklayer::import(x, which = gr))
+          single.track.df$TrackFile <- track.file.base
+          return(single.track.df)
+        })
+      } else {
+        # register
+        BiocParallel::register(BiocParallel::MulticoreParam(workers = n.cores), default = TRUE)
+        # read track file
+        track.list <- BiocParallel::bplapply(track.file, BPPARAM = BiocParallel::MulticoreParam(), FUN = function(x) {
+          # get basename
+          track.file.base <- basename(x)
+          # import wig, bigwig and bedgraph file
+          single.track.df <- as.data.frame(rtracklayer::import(x, which = gr))
+          single.track.df$TrackFile <- track.file.base
+          return(single.track.df)
+        })
+      }
     }
   } else if (format == "bam") {
     # create index
-    for (bam in track.file) {
-      bam.index.file <- paste(bam, "bai", sep = ".")
-      if (!file.exists(bam.index.file)) {
-        message("Create index file for: ", basename(bam))
-        Rsamtools::indexBam(bam)
+    if (is.null(n.cores) || n.cores == 1) {
+      for (bam in track.file) {
+        bam.index.file <- paste(bam, "bai", sep = ".")
+        if (!file.exists(bam.index.file)) {
+          message("Create index file for: ", basename(bam))
+          Rsamtools::indexBam(bam)
+        }
       }
+    } else {
+      # register
+      BiocParallel::register(BiocParallel::MulticoreParam(workers = n.cores), default = TRUE)
+      index.flag <- BiocParallel::bplapply(track.file, BPPARAM = BiocParallel::MulticoreParam(), FUN = function(x) {
+        bam.index.file <- paste(x, "bai", sep = ".")
+        if (!file.exists(bam.index.file)) {
+          message("Create index file for: ", basename(x))
+          Rsamtools::indexBam(x)
+        }
+      })
     }
     if (single.nuc) {
       if (!is.null(single.nuc.region)) {
@@ -94,25 +122,50 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
         single.nuc.region.se <- unlist(strsplit(x = single.nuc.region, split = ":"))[2]
         single.nuc.region.start <- unlist(strsplit(x = single.nuc.region.se, split = "-"))[1]
         single.nuc.region.end <- unlist(strsplit(x = single.nuc.region.se, split = "-"))[2]
-        track.list <- lapply(track.file, function(x) {
-          single.track.df <- GenomicAlignments::alphabetFrequencyFromBam(x, param = single.nuc.region, baseOnly = TRUE) %>% as.data.frame()
-          single.track.df <- single.track.df[, c("A", "G", "C", "T")]
-          single.track.df$score <- rowSums(single.track.df)
-          single.track.df$seqnames <- single.nuc.region.chr
-          single.track.df$start <- single.nuc.region.start:single.nuc.region.end
-          single.track.df$end <- single.track.df$start + 1
-          single.track.df$width <- 1
-          single.track.df$strand <- "*"
-          single.track.df <- single.track.df %>% dplyr::select(-c("A", "G", "C", "T"))
-          # get basename
-          track.file.base <- basename(x)
-          single.track.df$TrackFile <- track.file.base
-          single.track.df <- single.track.df[c(
-            "seqnames", "start", "end", "width",
-            "strand", "score", "TrackFile"
-          )]
-          return(single.track.df)
-        })
+        # load
+        if (is.null(n.cores) || n.cores == 1) {
+          track.list <- lapply(track.file, function(x) {
+            single.track.df <- GenomicAlignments::alphabetFrequencyFromBam(x, param = single.nuc.region, baseOnly = TRUE) %>% as.data.frame()
+            single.track.df <- single.track.df[, c("A", "G", "C", "T")]
+            single.track.df$score <- rowSums(single.track.df)
+            single.track.df$seqnames <- single.nuc.region.chr
+            single.track.df$start <- single.nuc.region.start:single.nuc.region.end
+            single.track.df$end <- single.track.df$start + 1
+            single.track.df$width <- 1
+            single.track.df$strand <- "*"
+            single.track.df <- single.track.df %>% dplyr::select(-c("A", "G", "C", "T"))
+            # get basename
+            track.file.base <- basename(x)
+            single.track.df$TrackFile <- track.file.base
+            single.track.df <- single.track.df[c(
+              "seqnames", "start", "end", "width",
+              "strand", "score", "TrackFile"
+            )]
+            return(single.track.df)
+          })
+        } else {
+          # register
+          BiocParallel::register(BiocParallel::MulticoreParam(workers = n.cores), default = TRUE)
+          track.list <- BiocParallel::bplapply(track.file, BPPARAM = BiocParallel::MulticoreParam(), FUN = function(x) {
+            single.track.df <- GenomicAlignments::alphabetFrequencyFromBam(x, param = single.nuc.region, baseOnly = TRUE) %>% as.data.frame()
+            single.track.df <- single.track.df[, c("A", "G", "C", "T")]
+            single.track.df$score <- rowSums(single.track.df)
+            single.track.df$seqnames <- single.nuc.region.chr
+            single.track.df$start <- single.nuc.region.start:single.nuc.region.end
+            single.track.df$end <- single.track.df$start + 1
+            single.track.df$width <- 1
+            single.track.df$strand <- "*"
+            single.track.df <- single.track.df %>% dplyr::select(-c("A", "G", "C", "T"))
+            # get basename
+            track.file.base <- basename(x)
+            single.track.df$TrackFile <- track.file.base
+            single.track.df <- single.track.df[c(
+              "seqnames", "start", "end", "width",
+              "strand", "score", "TrackFile"
+            )]
+            return(single.track.df)
+          })
+        }
       } else {
         stop("Please provide region for visualizing single nucleotide!")
       }
@@ -130,42 +183,82 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
       # get used gr
       gr <- PrepareRegion(region = region, gtf.gr = gtf.gr, gene.name = gene.name, gene.name.type = gene.name.type, extend = extend)
       # read track file
-      track.list <- lapply(track.file, function(x) {
-        # get basename
-        track.file.base <- basename(x)
-        # bigwig file
-        out.bw.file <- tempfile(fileext = c(".bw"))
-        # prepare bamCoverage cmd
-        bamcoverage.cmd <- paste(
-          bamcoverage.path, "-b", x, "-o", out.bw.file,
-          "--binSize", bin.size, "--normalizeUsing", norm.method, bc.extra.para
-        )
-        # run command
-        message(paste("Calling bamCoverage: ", bamcoverage.cmd))
-        bamcoverage.status <- system(bamcoverage.cmd, intern = TRUE)
-        bamcoverage.status.code <- attr(bamcoverage.status, "status")
-        if (!is.null(bamcoverage.status.code)) {
-          stop("Run bamCoverage error!")
-        }
-        # import wig, bigwig and bedgraph file
-        single.track.df <- as.data.frame(rtracklayer::import(out.bw.file, which = gr))
-        single.track.df$TrackFile <- track.file.base
-        return(single.track.df)
-      })
+      if (is.null(n.cores) || n.cores == 1) {
+        track.list <- lapply(track.file, function(x) {
+          # get basename
+          track.file.base <- basename(x)
+          # bigwig file
+          out.bw.file <- tempfile(fileext = c(".bw"))
+          # prepare bamCoverage cmd
+          bamcoverage.cmd <- paste(
+            bamcoverage.path, "-b", x, "-o", out.bw.file,
+            "--binSize", bin.size, "--normalizeUsing", norm.method, bc.extra.para
+          )
+          # run command
+          message(paste("Calling bamCoverage: ", bamcoverage.cmd))
+          bamcoverage.status <- system(bamcoverage.cmd, intern = TRUE)
+          bamcoverage.status.code <- attr(bamcoverage.status, "status")
+          if (!is.null(bamcoverage.status.code)) {
+            stop("Run bamCoverage error!")
+          }
+          # import wig, bigwig and bedgraph file
+          single.track.df <- as.data.frame(rtracklayer::import(out.bw.file, which = gr))
+          single.track.df$TrackFile <- track.file.base
+          return(single.track.df)
+        })
+      } else {
+        # register
+        BiocParallel::register(BiocParallel::MulticoreParam(workers = n.cores), default = TRUE)
+        track.list <- BiocParallel::bplapply(track.file, BPPARAM = BiocParallel::MulticoreParam(), FUN = function(x) {
+          # get basename
+          track.file.base <- basename(x)
+          # bigwig file
+          out.bw.file <- tempfile(fileext = c(".bw"))
+          # prepare bamCoverage cmd
+          bamcoverage.cmd <- paste(
+            bamcoverage.path, "-b", x, "-o", out.bw.file,
+            "--binSize", bin.size, "--normalizeUsing", norm.method, bc.extra.para
+          )
+          # run command
+          message(paste("Calling bamCoverage: ", bamcoverage.cmd))
+          bamcoverage.status <- system(bamcoverage.cmd, intern = TRUE)
+          bamcoverage.status.code <- attr(bamcoverage.status, "status")
+          if (!is.null(bamcoverage.status.code)) {
+            stop("Run bamCoverage error!")
+          }
+          # import wig, bigwig and bedgraph file
+          single.track.df <- as.data.frame(rtracklayer::import(out.bw.file, which = gr))
+          single.track.df$TrackFile <- track.file.base
+          return(single.track.df)
+        })
+      }
     }
   } else if (format == "txt") {
     if (single.nuc) {
       stop("To visualize single nucleotide, please use bam file!")
     } else {
       # read track file
-      track.list <- lapply(track.file, function(x) {
-        # get basename
-        track.file.base <- basename(x)
-        # import wig, bigwig and bedgraph file
-        single.track.df <- utils::read.table(track.file, header = TRUE)
-        single.track.df$TrackFile <- track.file.base
-        return(single.track.df)
-      })
+      if (is.null(n.cores) || n.cores == 1) {
+        track.list <- lapply(track.file, function(x) {
+          # get basename
+          track.file.base <- basename(x)
+          # import wig, bigwig and bedgraph file
+          single.track.df <- utils::read.table(track.file, header = TRUE)
+          single.track.df$TrackFile <- track.file.base
+          return(single.track.df)
+        })
+      } else {
+        # register
+        BiocParallel::register(BiocParallel::MulticoreParam(workers = n.cores), default = TRUE)
+        track.list <- BiocParallel::bplapply(track.file, BPPARAM = BiocParallel::MulticoreParam(), FUN = function(x) {
+          # get basename
+          track.file.base <- basename(x)
+          # import wig, bigwig and bedgraph file
+          single.track.df <- utils::read.table(track.file, header = TRUE)
+          single.track.df$TrackFile <- track.file.base
+          return(single.track.df)
+        })
+      }
     }
   }
   # get track dataframe

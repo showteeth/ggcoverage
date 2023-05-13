@@ -44,7 +44,8 @@ Imports:
     GenomeMatrix,
     ggforce,
     HiCBricks,
-    ggpattern
+    ggpattern,
+    BiocParallel
 Suggests: 
     rmarkdown,
     knitr,

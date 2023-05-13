@@ -20,7 +20,8 @@ LoadTrackFile(
   single.nuc = FALSE,
   single.nuc.region = NULL,
   bin.size = 10,
-  bc.extra.para = NULL
+  bc.extra.para = NULL,
+  n.cores = 1
 )
 }
 \arguments{
@@ -60,6 +61,8 @@ Default: RPKM.}
 \item{bin.size}{Size of the bins, in bases. Default: 50.}
 
 \item{bc.extra.para}{Extra parameters for \code{bamCoverage}, eg: "--effectiveGenomeSize 2700000000 --ignoreForNormalization chrX"}
+
+\item{n.cores}{The number of cores to be used for this job. Default:1.}
 }
 \value{
 A dataframe.
