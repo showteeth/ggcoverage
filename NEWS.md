@@ -4,6 +4,9 @@
 * Moved `FormatTrack` to `LoadTrackFile`, this can reduce load time and memory for big files.
 * Supporting parallel to handle multiple files more efficiently.
 
+## Minor changes
+* `geom_coverage` and `ggcoverage` supports changing shared type of y-axis scales across facets (with `facet.y.scale` parameter).
+
 -------------
 
 # ggcoverage 1.0.0
@@ -13,7 +16,7 @@
 * Supporting CNV visualization (`geom_cnv`).
 
 ## Minor changes
-* `geom_ideogram` supporting the highlight of centromere.
+* `geom_ideogram` supports the highlight of centromere.
 
 -------------
 

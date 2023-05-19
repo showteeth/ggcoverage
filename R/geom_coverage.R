@@ -8,6 +8,8 @@
 #' @param facet.key Sample type key to create coverage plot. Default: Type.
 #' @param facet.order The order of coverage plot. Default: NULL.
 #' @param facet.color The color of sample text. Default: NULL (select automatically).
+#' @param facet.y.scale The shared type of y-axis scales across facets, choose from free (facets have different y-axis scales),
+#' fixed (facets have same y-axis scales). Default: free.
 #' @param group.key Group of samples. Default: NULL.
 #' @param range.size The label size of range text, used when \code{range.position} is in. Default: 3.
 #' @param range.position The position of y axis range, chosen from in (move y axis in the plot) and
@@ -47,11 +49,13 @@
 #' # ggplot() +
 #' #   geom_coverage(data = track.df, color = "auto", mark.region = NULL)
 geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
-                          single.nuc = FALSE, facet.key = "Type", facet.order = NULL, facet.color = NULL,
+                          single.nuc = FALSE, facet.key = "Type", facet.order = NULL,
+                          facet.color = NULL, facet.y.scale = c("free", "fixed"),
                           group.key = "Group", range.size = 3, range.position = c("in", "out"),
                           mark.region = NULL, mark.color = "grey", mark.alpha = 0.5,
                           show.mark.label = TRUE, mark.label.size = 4) {
   # check parameters
+  facet.y.scale <- match.arg(arg = facet.y.scale)
   range.position <- match.arg(arg = range.position)
 
   # get mapping and color
@@ -124,8 +128,14 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
       stat = "identity"
     )
   }
+  # prepare facet scale
+  if (facet.y.scale == "free") {
+    facet.ys <- "free_y"
+  } else if (facet.y.scale == "fixed") {
+    facet.ys <- "fixed"
+  }
   region.facet <- facet_wrap2(
-    facets = facet.formula, ncol = 1, scales = "free_y", strip.position = "right",
+    facets = facet.formula, ncol = 1, scales = facet.ys, strip.position = "right",
     strip = strip_themed(background_y = elem_list_rect(
       fill = facet.color
     ))

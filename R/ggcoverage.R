@@ -8,6 +8,8 @@
 #' @param facet.key Sample type key to create coverage plot. Default: Type.
 #' @param facet.order The order of Coverage plot. Default: NULL.
 #' @param facet.color The color of sample text. Default: NULL (select automatically).
+#' @param facet.y.scale The shared type of y-axis scales across facets, choose from free (facets have different y-axis scales),
+#' fixed (facets have same y-axis scales). Default: free.
 #' @param group.key Group of samples. Default: NULL.
 #' @param range.size The label size of range text, used when \code{range.position} is in. Default: 3.
 #' @param range.position The position of y axis range, chosen from in (move y axis in the plot) and
@@ -49,7 +51,8 @@
 #' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
 #' # ggcoverage(data = track.df, color = "auto", range.position = "out")
 ggcoverage <- function(data, single.nuc = FALSE, mapping = NULL, color = NULL,
-                       rect.color = NA, facet.key = "Type", facet.order = NULL, facet.color = NULL,
+                       rect.color = NA, facet.key = "Type", facet.order = NULL,
+                       facet.color = NULL, facet.y.scale = c("free", "fixed"),
                        group.key = "Group", range.size = 3, range.position = c("in", "out"), plot.space = 0.2,
                        mark.region = NULL, mark.color = "grey", mark.alpha = 0.5, show.mark.label = TRUE, mark.label.size = 4) {
   # check parameters
@@ -59,7 +62,8 @@ ggcoverage <- function(data, single.nuc = FALSE, mapping = NULL, color = NULL,
   coverage.plot <- ggplot() +
     geom_coverage(
       data = data, mapping = mapping, color = color, rect.color = rect.color,
-      single.nuc = single.nuc, facet.key = facet.key, facet.order = facet.order, facet.color = facet.color,
+      single.nuc = single.nuc, facet.key = facet.key, facet.order = facet.order,
+      facet.color = facet.color, facet.y.scale = facet.y.scale,
       group.key = group.key, range.size = range.size, range.position = range.position,
       mark.region = mark.region, mark.color = mark.color, mark.alpha = mark.alpha, show.mark.label = show.mark.label,
       mark.label.size = mark.label.size

@@ -13,6 +13,7 @@ geom_coverage(
   facet.key = "Type",
   facet.order = NULL,
   facet.color = NULL,
+  facet.y.scale = c("free", "fixed"),
   group.key = "Group",
   range.size = 3,
   range.position = c("in", "out"),
@@ -39,6 +40,9 @@ geom_coverage(
 \item{facet.order}{The order of coverage plot. Default: NULL.}
 
 \item{facet.color}{The color of sample text. Default: NULL (select automatically).}
+
+\item{facet.y.scale}{The shared type of y-axis scales across facets, choose from free (facets have different y-axis scales),
+fixed (facets have same y-axis scales). Default: free.}
 
 \item{group.key}{Group of samples. Default: NULL.}
 
