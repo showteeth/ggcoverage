@@ -10,6 +10,7 @@ geom_coverage(
   color = NULL,
   rect.color = NA,
   single.nuc = FALSE,
+  plot.type = c("facet", "joint"),
   facet.key = "Type",
   facet.order = NULL,
   facet.color = NULL,
@@ -34,6 +35,9 @@ geom_coverage(
 \item{rect.color}{The color of every bin. Default: NA.}
 
 \item{single.nuc}{Logical value, whether to visualize at single nucleotide level (use bar plot). Default: FALSE.}
+
+\item{plot.type}{The type of the plot, choose from facet (separate plot for every sample) and
+joint (combine all sample in a single plot). Default: facet.}
 
 \item{facet.key}{Sample type key to create coverage plot. Default: Type.}
 

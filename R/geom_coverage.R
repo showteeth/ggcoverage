@@ -5,6 +5,8 @@
 #' @param color Track color. Default: NULL (select automatically).
 #' @param rect.color The color of every bin. Default: NA.
 #' @param single.nuc Logical value, whether to visualize at single nucleotide level (use bar plot). Default: FALSE.
+#' @param plot.type The type of the plot, choose from facet (separate plot for every sample) and
+#' joint (combine all sample in a single plot). Default: facet.
 #' @param facet.key Sample type key to create coverage plot. Default: Type.
 #' @param facet.order The order of coverage plot. Default: NULL.
 #' @param facet.color The color of sample text. Default: NULL (select automatically).
@@ -49,119 +51,208 @@
 #' # ggplot() +
 #' #   geom_coverage(data = track.df, color = "auto", mark.region = NULL)
 geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
-                          single.nuc = FALSE, facet.key = "Type", facet.order = NULL,
+                          single.nuc = FALSE, plot.type = c("facet", "joint"),
+                          facet.key = "Type", facet.order = NULL,
                           facet.color = NULL, facet.y.scale = c("free", "fixed"),
                           group.key = "Group", range.size = 3, range.position = c("in", "out"),
                           mark.region = NULL, mark.color = "grey", mark.alpha = 0.5,
                           show.mark.label = TRUE, mark.label.size = 4) {
   # check parameters
+  plot.type <- match.arg(arg = plot.type)
   facet.y.scale <- match.arg(arg = facet.y.scale)
   range.position <- match.arg(arg = range.position)
 
   # get mapping and color
   if (is.null(mapping)) {
-    if (!is.null(color)) {
-      if (length(color) != length(unique(data$Type))) {
-        warning("The color you provided is not as long as Type column in data, select automatically!")
-        # sample group with same color
-        tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
-        # change Type color
-        fill.color.df <- merge(unique(data[c("Type", group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
-        fill.color <- fill.color.df$color
-        names(fill.color) <- fill.color.df$Type
-      } else {
-        fill.color <- color
-        if (is.null(names(fill.color))) {
-          names(fill.color) <- unique(data$Type)
+    if (plot.type == "facet") {
+      if (!is.null(color)) {
+        if (length(color) != length(unique(data[, facet.key]))) {
+          warning("The color you provided is not as long as ", facet.key, " column in data, select automatically!")
+          # sample group with same color
+          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          # change facet key color color
+          if (facet.key == group.key) {
+            fill.color.df <- merge(unique(data[c(facet.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
+          } else {
+            fill.color.df <- merge(unique(data[c(facet.key, group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
+          }
+          fill.color <- fill.color.df$color
+          names(fill.color) <- fill.color.df[, facet.key]
+        } else {
+          fill.color <- color
+          if (is.null(names(fill.color))) {
+            names(fill.color) <- unique(data[, facet.key])
+          }
         }
+        sacle_fill_cols <- scale_fill_manual(values = fill.color)
+      } else {
+        sacle_fill_cols <- NULL
       }
-      sacle_fill_cols <- scale_fill_manual(values = fill.color)
-    } else {
-      sacle_fill_cols <- NULL
+      if (!single.nuc) {
+        mapping <- aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "score", fill = facet.key)
+      } else {
+        mapping <- aes_string(x = "start", y = "score", fill = facet.key)
+      }
+    } else if (plot.type == "joint") {
+      if (!is.null(color)) {
+        if (length(color) != length(unique(data[, group.key]))) {
+          warning("The color you provided is not as long as ", group.key, " column in data, select automatically!")
+          # sample group with same color
+          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          # change group key color
+          color.color.df <- merge(unique(data[c(group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
+          color.color <- color.color.df$color
+          names(color.color) <- color.color.df[, group.key]
+        } else {
+          color.color <- color
+          if (is.null(names(color.color))) {
+            names(color.color) <- unique(data[, group.key])
+          }
+        }
+        sacle_color_cols <- scale_color_manual(values = color.color)
+      } else {
+        sacle_color_cols <- NULL
+      }
+      if (single.nuc) {
+        stop("The joint mode is not available for SNV!")
+      } else {
+        mapping <- aes_string(x = "start", y = "score", color = group.key)
+      }
     }
+  } else {
+    if (plot.type == "facet") {
+      message("For SNV, the mapping should contains start, score, fill. For others, the mapping should contains start, end, score, fill.")
+      if ("fill" %in% names(mapping)) {
+        fill.str <- rlang::as_label(mapping$fill)
+        fill.str.len <- length(unique(data[, fill.str]))
+        if (is.null(color) | length(color) != fill.str.len) {
+          # sample group with same color
+          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          # change color
+          fill.color.df <- merge(unique(data[c(fill.str, group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
+          fill.color <- fill.color.df$color
+          names(fill.color) <- fill.color.df[, fill.str]
+        } else {
+          fill.color <- color
+          if (is.null(names(fill.color))) {
+            names(fill.color) <- unique(data[, fill.str])
+          }
+        }
+        sacle_fill_cols <- scale_fill_manual(values = fill.color)
+      } else {
+        sacle_fill_cols <- NULL
+      }
+    } else if (plot.type == "joint") {
+      message("For joint visualization, the mapping should contains start, score, color.")
+      if ("color" %in% names(mapping)) {
+        color.str <- rlang::as_label(mapping$color)
+        color.str.len <- length(unique(data[, color.str]))
+        if (is.null(color) | length(color) != color.str.len) {
+          # sample group with same color
+          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          # change color
+          if (color.str == group.key) {
+            color.color.df <- merge(unique(data[c(color.str)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
+          } else {
+            color.color.df <- merge(unique(data[c(color.str, group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
+          }
+          color.color <- color.color.df$color
+          names(color.color) <- color.color.df[, color.str]
+        } else {
+          color.color <- color
+          if (is.null(names(color.color))) {
+            names(color.color) <- unique(data[, color.str])
+          }
+        }
+        sacle_color_cols <- scale_color_manual(values = color.str)
+      } else {
+        sacle_color_cols <- NULL
+      }
+    }
+  }
+
+  # plot type
+  if (plot.type == "facet") {
+    # facet order
+    if (is.null(facet.order)) {
+      facet.order <- unique(data[, facet.key])
+    }
+    data[, facet.key] <- factor(data[, facet.key], levels = facet.order)
+
+    # facet color
+    if (is.null(facet.color)) {
+      facet.color <- AutoColor(data = data, n = 12, name = "Set3", key = facet.key)
+    }
+
+    # facet formula
+    facet.formula <- as.formula(paste0("~ ", facet.key))
     if (!single.nuc) {
-      mapping <- aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "score", fill = "Type")
+      region.rect <- geom_rect(data = data, mapping = mapping, show.legend = F, colour = rect.color)
     } else {
-      mapping <- aes_string(x = "start", y = "score", fill = "Type")
+      region.rect <- geom_bar(
+        data = data, mapping = mapping, show.legend = F, colour = rect.color,
+        stat = "identity"
+      )
     }
-  } else {
-    if ("fill" %in% names(mapping)) {
-      fill.str <- rlang::as_label(mapping$fill)
-      fill.str.len <- length(unique(data[, fill.str]))
-      if (is.null(color) | length(color) != fill.str.len) {
-        # sample group with same color
-        tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
-        # change Type color
-        fill.color.df <- merge(unique(data[c(fill.str, group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
-        fill.color <- fill.color.df$color
-        names(fill.color) <- fill.color.df[, fill.str]
+    # prepare facet scale
+    if (facet.y.scale == "free") {
+      facet.ys <- "free_y"
+    } else if (facet.y.scale == "fixed") {
+      facet.ys <- "fixed"
+    }
+    region.facet <- facet_wrap2(
+      facets = facet.formula, ncol = 1, scales = facet.ys, strip.position = "right",
+      strip = strip_themed(background_y = elem_list_rect(
+        fill = facet.color
+      ))
+    )
+    plot.ele <- list(region.rect, region.facet)
+
+    # color the track
+    if (!is.null(sacle_fill_cols)) {
+      plot.ele <- append(plot.ele, sacle_fill_cols)
+    }
+
+    # add range text to track
+    ymax.str <- rlang::as_label(mapping$ymax)
+    if (range.position == "in") {
+      data.range <- data %>%
+        dplyr::group_by(.data[[facet.key]]) %>%
+        dplyr::summarise(max_score = max(.data[[ymax.str]]))
+      data.range$max_score <- sapply(data.range$max_score, CeilingNumber)
+      data.range$label <- paste0("[0, ", data.range$max_score, "]")
+      region.range <- geom_text(
+        data = data.range,
+        mapping = aes(x = -Inf, y = Inf, label = label),
+        hjust = 0,
+        vjust = 1.5,
+        size = range.size
+      )
+      plot.ele <- append(plot.ele, region.range)
+    }
+  } else if (plot.type == "joint") {
+    # preocess data
+    data.split <- split(x = data, f = data[, facet.key])
+    data.split.final <- lapply(data.split, function(ds) {
+      ds <- ds[order(ds$start), ]
+      ds.ll <- ds[nrow(ds), ]
+      if (ds.ll$start < ds.ll$end) {
+        ds.ll.new <- ds.ll
+        ds.ll.new$start <- ds.ll.new$end
+        ds.final <- rbind(ds, ds.ll.new) %>% as.data.frame()
       } else {
-        fill.color <- color
-        if (is.null(names(fill.color))) {
-          names(fill.color) <- unique(data[, fill.str])
-        }
+        ds.final <- ds
       }
-      sacle_fill_cols <- scale_fill_manual(values = fill.color)
-    } else {
-      sacle_fill_cols <- NULL
-    }
-  }
+      rownames(ds.final) <- NULL
+      return(ds.final)
+    })
+    # get final data
+    data.final <- do.call(rbind, data.split.final) %>% as.data.frame()
+    rownames(data.final) <- NULL
 
-  # facet order
-  if (is.null(facet.order)) {
-    facet.order <- unique(data[, facet.key])
-  }
-  data[, facet.key] <- factor(data[, facet.key], levels = facet.order)
-
-  # facet color
-  if (is.null(facet.color)) {
-    facet.color <- AutoColor(data = data, n = 12, name = "Set3", key = facet.key)
-  }
-
-  # facet formula
-  facet.formula <- as.formula(paste0("~ ", facet.key))
-  if (!single.nuc) {
-    region.rect <- geom_rect(data = data, mapping = mapping, show.legend = F, colour = rect.color)
-  } else {
-    region.rect <- geom_bar(
-      data = data, mapping = mapping, show.legend = F, colour = rect.color,
-      stat = "identity"
-    )
-  }
-  # prepare facet scale
-  if (facet.y.scale == "free") {
-    facet.ys <- "free_y"
-  } else if (facet.y.scale == "fixed") {
-    facet.ys <- "fixed"
-  }
-  region.facet <- facet_wrap2(
-    facets = facet.formula, ncol = 1, scales = facet.ys, strip.position = "right",
-    strip = strip_themed(background_y = elem_list_rect(
-      fill = facet.color
-    ))
-  )
-  plot.ele <- list(region.rect, region.facet)
-
-  if (!is.null(sacle_fill_cols)) {
-    plot.ele <- append(plot.ele, sacle_fill_cols)
-  }
-
-  # add range
-  ymax.str <- rlang::as_label(mapping$ymax)
-  if (range.position == "in") {
-    data.range <- data %>%
-      dplyr::group_by(.data[[facet.key]]) %>%
-      dplyr::summarise(max_score = max(.data[[ymax.str]]))
-    data.range$max_score <- sapply(data.range$max_score, CeilingNumber)
-    data.range$label <- paste0("[0, ", data.range$max_score, "]")
-    region.range <- geom_text(
-      data = data.range,
-      mapping = aes(x = -Inf, y = Inf, label = label),
-      hjust = 0,
-      vjust = 1.5,
-      size = range.size
-    )
-    plot.ele <- append(plot.ele, region.range)
+    # create step plot
+    region.step <- geom_step(data = data.final, mapping = mapping)
+    plot.ele <- list(region.step)
   }
 
   # add rect
@@ -195,7 +286,9 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
       if ("label" %in% colnames(valid.region.df)) {
         # create mark region label
         region.label <- valid.region.df
-        region.label[, facet.key] <- facet.order[1]
+        if (plot.type == "facet") {
+          region.label[, facet.key] <- facet.order[1]
+        }
         region.mark.label <- geom_text_repel(
           data = region.label,
           mapping = aes(x = end, y = Inf, label = label),

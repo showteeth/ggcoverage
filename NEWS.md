@@ -6,6 +6,7 @@
 
 ## Minor changes
 * `geom_coverage` and `ggcoverage` supports changing shared type of y-axis scales across facets (with `facet.y.scale` parameter).
+* `geom_coverage` and `ggcoverage` supports joint view of multiple tracks.
 
 -------------
 

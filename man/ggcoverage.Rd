@@ -10,6 +10,7 @@ ggcoverage(
   mapping = NULL,
   color = NULL,
   rect.color = NA,
+  plot.type = c("facet", "joint"),
   facet.key = "Type",
   facet.order = NULL,
   facet.color = NULL,
@@ -35,6 +36,9 @@ ggcoverage(
 \item{color}{Track color. Default: NULL (select automatically).}
 
 \item{rect.color}{The color of every bin. Default: NA.}
+
+\item{plot.type}{The type of the plot, choose from facet (separate plot for every sample) and
+joint (combine all sample in a single plot). Default: facet.}
 
 \item{facet.key}{Sample type key to create coverage plot. Default: Type.}
 
