@@ -13,7 +13,8 @@
 #' @param guide.line Nucleotide frequency guide line. Default: NULL (0.5).
 #' @param guide.line.color The color of guide line. Default: "red".
 #' @param guide.line.type The line type of guide line. Default: "dashed".
-#' @param mark.type The mark type to highlight SNV position, choose from twill and star. Default: twill.
+#' @param mark.type The mark type to highlight SNV position, choose from twill (add twill to position with SNV),
+#' star (add star mark to position with SNV), and highlight (position without SNV is grey). Default: twill.
 #' @param star.size The size of star when \code{mark.type} is star. Default: 1.
 #' @param show.aa Logical value, whether to show amino acid. Default: TRUE.
 #' @param sens Sense to translate: F for forward sense and R for reverse sense.
@@ -186,6 +187,12 @@ ggplot_add.base <- function(object, plot, object_name) {
     dplyr::pull(Pos) %>%
     unique()
   alt.pos.nuc.freq.long <- pos.nuc.freq.long %>% dplyr::filter(Pos %in% c(alt.pos))
+  # get position without alt
+  ref.pos <- pos.nuc.freq.long %>%
+    dplyr::filter(Ref == Base & Total == Freq) %>%
+    dplyr::pull(Pos) %>%
+    unique()
+  ref.pos.nuc.freq.long <- pos.nuc.freq.long %>% dplyr::filter(Pos %in% c(ref.pos))
   # create label offset
   pos.nuc.freq$Offset <- nuc.offset
   # add guide line
@@ -194,36 +201,55 @@ ggplot_add.base <- function(object, plot, object_name) {
     guide.line <- 0.5
   }
 
-  # create plot
-  base.plot <- ggplot() +
-    geom_bar(
-      data = pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq", fill = "Base"),
-      position = "fill", stat = "identity", color = "white"
-    )
-
   # add mark
   if (length(alt.pos) >= 1) {
-    if (mark.type == "twill") {
-      base.plot <- base.plot +
-        ggpattern::geom_col_pattern(
-          data = alt.pos.nuc.freq.long,
-          aes_string(
-            x = "Pos", y = "Freq", pattern = "Base", fill = "Base",
-            pattern_fill = "Base", pattern_angle = "Base"
-          ),
-          position = "fill", colour = "black",
-          pattern_density = 0.35, pattern_key_scale_factor = 1.3
-        ) +
-        ggpattern::scale_pattern_fill_manual(values = c(nuc.color, "white"))
-    } else if (mark.type == "star") {
-      base.plot <- base.plot +
-        geom_point(
-          data = alt.pos.nuc.freq.long, aes_string(x = "Pos", y = "1.01"),
-          shape = 8, show.legend = FALSE, size = star.size
+    if (mark.type %in% c("twill", "star")) {
+      # create plot
+      base.plot <- ggplot() +
+        geom_bar(
+          data = pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq", fill = "Base"),
+          position = "fill", stat = "identity", color = "white"
         )
+      if (mark.type == "twill") {
+        base.plot <- base.plot +
+          ggpattern::geom_col_pattern(
+            data = alt.pos.nuc.freq.long,
+            aes_string(
+              x = "Pos", y = "Freq", pattern = "Base", fill = "Base",
+              pattern_fill = "Base", pattern_angle = "Base"
+            ),
+            position = "fill", colour = "black",
+            pattern_density = 0.35, pattern_key_scale_factor = 1.3
+          ) +
+          ggpattern::scale_pattern_fill_manual(values = c(nuc.color, "white"))
+      } else if (mark.type == "star") {
+        base.plot <- base.plot +
+          geom_point(
+            data = alt.pos.nuc.freq.long, aes_string(x = "Pos", y = "1.01"),
+            shape = 8, show.legend = FALSE, size = star.size
+          )
+      }
+    } else if (mark.type == "highlight") {
+      base.plot <- ggplot() +
+        geom_bar(
+          data = ref.pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq"),
+          position = "fill", stat = "identity", color = "white", fill = "grey"
+        ) +
+        geom_bar(
+          data = alt.pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq", fill = "Base"),
+          position = "fill", stat = "identity", color = "white"
+        )
+    } else {
+      stop("The mark.type you provided is not valid, please choose from twill, star, highlight.")
     }
   } else {
     message("No SNV detected, do not add mark!")
+    # create plot
+    base.plot <- ggplot() +
+      geom_bar(
+        data = pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq", fill = "Base"),
+        position = "fill", stat = "identity", color = "white"
+      )
   }
 
   if (show.aa) {

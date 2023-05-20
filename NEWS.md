@@ -1,6 +1,6 @@
 # ggcoverage 1.1.0
 ## Major changes
-* Mark SNV with twill or star.
+* Mark SNV with twill (add twill to position with SNV), star (add star mark to position with SNV), and highlight (position without SNV is grey).
 * Moved `FormatTrack` to `LoadTrackFile`, this can reduce load time and memory for big files.
 * Supporting parallel to handle multiple files more efficiently.
 
