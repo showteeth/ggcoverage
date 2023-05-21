@@ -63,8 +63,8 @@ geom_base(
 
 \item{guide.line.type}{The line type of guide line. Default: "dashed".}
 
-\item{mark.type}{The mark type to highlight SNV position, choose from twill (add twill to position without SNV),
-star (add star mark to position without SNV), and highlight (position without SNV is grey). Default: twill.}
+\item{mark.type}{The mark type to highlight SNV position, choose from twill (add twill to position with SNV),
+star (add star mark to position with SNV), and highlight (position without SNV is grey). Default: twill.}
 
 \item{star.size}{The size of star when \code{mark.type} is star. Default: 1.}
 

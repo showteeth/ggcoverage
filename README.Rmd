@@ -113,19 +113,41 @@ gtf.gr = rtracklayer::import.gff(con = gtf.file, format = 'gtf')
 ```
 
 ### Basic coverage
-```{r basic_coverage, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+The basic coverage plot has **two types**: 
+
+* **facet**: Create subplot for every track (specified by `facet.key`). This is default.
+* **joint**: Visualize all tracks in a single plot.
+
+#### joint view
+```{r basic_coverage_joint, warning=FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
 basic.coverage = ggcoverage(data = track.df, color = "auto", 
+                            plot.type = "joint", group.key = "Type",
                             mark.region = mark.region, range.position = "out")
 basic.coverage
 ```
 
-You can also change Y axis style:
+#### facet view
+```{r basic_coverage, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+                            mark.region = mark.region, range.position = "out")
+basic.coverage
+```
+
+#### Custom Y-axis style
+**Change the Y-axis scale label in/out of plot region with `range.position`**:
 ```{r basic_coverage_2, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df, color = "auto", 
+basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
                             mark.region = mark.region, range.position = "in")
 basic.coverage
 ```
 
+**Shared/Free Y-axis scale with `facet.y.scale`**:
+```{r basic_coverage_3, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+                            mark.region = mark.region, range.position = "in", 
+                            facet.y.scale = "fixed")
+basic.coverage
+```
 
 ### Add gene annotation
 ```{r gene_coverage, warning=FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
@@ -313,12 +335,38 @@ graphics::par(opar)
 ```
 
 #### Add base and amino acid annotation
+
+**Use twill to mark position with SNV**:
 ```{r base_aa_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 library(ggpattern)
 # create plot with twill mark
-ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=T, rect.color = "white") +
+ggcoverage(data = track.df, color = "grey", range.position = "out", 
+           single.nuc=T, rect.color = "white") +
   geom_base(bam.file = bam.file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+            mark.type = "twill") +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+**Use star to mark position with SNV**:
+```{r base_aa_coverage_star, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+# create plot with star mark
+ggcoverage(data = track.df, color = "grey", range.position = "out", 
+           single.nuc=T, rect.color = "white") +
+  geom_base(bam.file = bam.file,
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+            mark.type = "star") +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+**Highlight position with SNV**:
+```{r base_aa_coverage_highlight, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+# highlight
+ggcoverage(data = track.df, color = "grey", range.position = "out", 
+           single.nuc=T, rect.color = "white") +
+  geom_base(bam.file = bam.file,
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+            mark.type = "highlight") +
   geom_ideogram(genome = "hg19",plot.space = 0)
 ```
 

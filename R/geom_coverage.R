@@ -23,7 +23,7 @@
 #' @param mark.label.size The label size of mark label. Default: 4.
 #'
 #' @return Layers of ggplot2.
-#' @importFrom ggplot2 aes_string scale_fill_manual geom_rect geom_text aes
+#' @importFrom ggplot2 aes_string scale_fill_manual geom_rect geom_text aes geom_step
 #' @importFrom rlang .data
 #' @importFrom grDevices colorRampPalette
 #' @importFrom RColorBrewer brewer.pal

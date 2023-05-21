@@ -150,23 +150,56 @@ gtf.gr = rtracklayer::import.gff(con = gtf.file, format = 'gtf')
 
 ### Basic coverage
 
+The basic coverage plot has **two types**:
+
+-   **facet**: Create subplot for every track (specified by
+    `facet.key`). This is default.
+-   **joint**: Visualize all tracks in a single plot.
+
+#### joint view
+
 ``` r
 basic.coverage = ggcoverage(data = track.df, color = "auto", 
+                            plot.type = "joint", group.key = "Type",
+                            mark.region = mark.region, range.position = "out")
+basic.coverage
+```
+
+<img src="man/figures/README-basic_coverage_joint-1.png" width="100%" style="display: block; margin: auto;" />
+
+#### facet view
+
+``` r
+basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
                             mark.region = mark.region, range.position = "out")
 basic.coverage
 ```
 
 <img src="man/figures/README-basic_coverage-1.png" width="100%" style="display: block; margin: auto;" />
 
-You can also change Y axis style:
+#### Custom Y-axis style
+
+**Change the Y-axis scale label in/out of plot region with
+`range.position`**:
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "auto", 
+basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
                             mark.region = mark.region, range.position = "in")
 basic.coverage
 ```
 
 <img src="man/figures/README-basic_coverage_2-1.png" width="100%" style="display: block; margin: auto;" />
+
+**Shared/Free Y-axis scale with `facet.y.scale`**:
+
+``` r
+basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+                            mark.region = mark.region, range.position = "in", 
+                            facet.y.scale = "fixed")
+basic.coverage
+```
+
+<img src="man/figures/README-basic_coverage_3-1.png" width="100%" style="display: block; margin: auto;" />
 
 ### Add gene annotation
 
@@ -459,12 +492,16 @@ graphics::par(opar)
 
 #### Add base and amino acid annotation
 
+**Use twill to mark position with SNV**:
+
 ``` r
 library(ggpattern)
 # create plot with twill mark
-ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=T, rect.color = "white") +
+ggcoverage(data = track.df, color = "grey", range.position = "out", 
+           single.nuc=T, rect.color = "white") +
   geom_base(bam.file = bam.file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+            mark.type = "twill") +
   geom_ideogram(genome = "hg19",plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
@@ -473,6 +510,42 @@ ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=T
 ```
 
 <img src="man/figures/README-base_aa_coverage-1.png" width="100%" style="display: block; margin: auto;" />
+
+**Use star to mark position with SNV**:
+
+``` r
+# create plot with star mark
+ggcoverage(data = track.df, color = "grey", range.position = "out", 
+           single.nuc=T, rect.color = "white") +
+  geom_base(bam.file = bam.file,
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+            mark.type = "star") +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+#> Loading ideogram...
+#> Loading ranges...
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
+```
+
+<img src="man/figures/README-base_aa_coverage_star-1.png" width="100%" style="display: block; margin: auto;" />
+
+**Highlight position with SNV**:
+
+``` r
+# highlight
+ggcoverage(data = track.df, color = "grey", range.position = "out", 
+           single.nuc=T, rect.color = "white") +
+  geom_base(bam.file = bam.file,
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+            mark.type = "highlight") +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+#> Loading ideogram...
+#> Loading ranges...
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
+```
+
+<img src="man/figures/README-base_aa_coverage_highlight-1.png" width="100%" style="display: block; margin: auto;" />
 
 ## ChIP-seq data
 

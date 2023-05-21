@@ -130,8 +130,26 @@ gtf.gr = rtracklayer::import.gff(con = gtf.file, format = 'gtf')
 -------------
 
 ## Basic coverage
-```{r basic_coverage, eval=FALSE}
+The basic coverage plot has **two types**: 
+
+* **facet**: Create subplot for every track (specified by `facet.key`). This is default.
+* **joint**: Visualize all tracks in a single plot.
+
+#### joint view
+```{r basic_coverage_joint, eval=FALSE}
 basic.coverage = ggcoverage(data = track.df, color = "auto", 
+                            plot.type = "joint", group.key = "Type",
+                            mark.region = mark.region, range.position = "out")
+basic.coverage
+```
+
+```{r basic_coverage_joint_plot, echo=FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-basic_coverage_joint-1.png")
+```
+
+#### facet view
+```{r basic_coverage, eval=FALSE}
+basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
                             mark.region = mark.region, range.position = "out")
 basic.coverage
 ```
@@ -140,9 +158,10 @@ basic.coverage
 knitr::include_graphics("../man/figures/README-basic_coverage-1.png")
 ```
 
-You can also change Y axis style:
+#### Custom Y-axis style
+**Change the Y-axis scale label in/out of plot region with `range.position`**:
 ```{r basic_coverage_2, eval=FALSE}
-basic.coverage = ggcoverage(data = track.df, color = "auto", 
+basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
                             mark.region = mark.region, range.position = "in")
 basic.coverage
 ```
@@ -151,10 +170,21 @@ basic.coverage
 knitr::include_graphics("../man/figures/README-basic_coverage_2-1.png")
 ```
 
+**Shared/Free Y-axis scale with `facet.y.scale`**:
+```{r basic_coverage_3, eval=FALSE}
+basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+                            mark.region = mark.region, range.position = "in", 
+                            facet.y.scale = "fixed")
+basic.coverage
+```
+
+```{r basic_coverage_3_plot, echo=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-basic_coverage_3-1.png")
+```
+
 -------------
 
 ## Add gene annotation
-
 
 ```{r gene_coverage, eval=FALSE}
 basic.coverage + 
@@ -379,17 +409,50 @@ graphics::par(opar)
 ```
 
 ### Add base and amino acid annotation
+**Use twill to mark position with SNV**:
 ```{r base_aa_coverage, eval=FALSE}
 library(ggpattern)
 # create plot with twill mark
-ggcoverage(data = track.df, color = "grey", range.position = "out", single.nuc=TRUE, rect.color = "white") +
+ggcoverage(data = track.df, color = "grey", range.position = "out", 
+           single.nuc=T, rect.color = "white") +
   geom_base(bam.file = bam.file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+            mark.type = "twill") +
   geom_ideogram(genome = "hg19",plot.space = 0)
 ```
 
 ```{r base_aa_coverage_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 knitr::include_graphics("../man/figures/README-base_aa_coverage-1.png")
+```
+
+**Use star to mark position with SNV**:
+```{r base_aa_coverage_star, eval=FALSE}
+# create plot with star mark
+ggcoverage(data = track.df, color = "grey", range.position = "out", 
+           single.nuc=T, rect.color = "white") +
+  geom_base(bam.file = bam.file,
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+            mark.type = "star") +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+```{r base_aa_coverage_star_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-base_aa_coverage_star-1.png")
+```
+
+**Highlight position with SNV**:
+```{r base_aa_coverage_highlight, eval=FALSE}
+# highlight
+ggcoverage(data = track.df, color = "grey", range.position = "out", 
+           single.nuc=T, rect.color = "white") +
+  geom_base(bam.file = bam.file,
+            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+            mark.type = "highlight") +
+  geom_ideogram(genome = "hg19",plot.space = 0)
+```
+
+```{r base_aa_coverage_highlight_plot, echo=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-base_aa_coverage_highlight-1.png")
 ```
 
 ---------------------

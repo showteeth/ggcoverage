@@ -26,7 +26,7 @@
 #' @return A ggplot2 object.
 #' @importFrom magrittr %>%
 #' @importFrom ggplot2 ggplot aes_string scale_fill_manual geom_rect geom_text aes theme_classic theme unit
-#' element_blank annotate rel scale_y_continuous expansion scale_x_continuous coord_cartesian
+#' element_blank annotate rel scale_y_continuous expansion scale_x_continuous coord_cartesian geom_step
 #' @importFrom scales comma
 #' @importFrom grDevices colorRampPalette
 #' @importFrom RColorBrewer brewer.pal

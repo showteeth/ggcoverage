@@ -25,11 +25,11 @@
 #'
 #' @return A dataframe.
 #' @importFrom rtracklayer import
-#' @importFrom Rsamtools indexBam
+#' @importFrom Rsamtools indexBam ScanBamParam
 #' @importFrom utils read.csv
-#' @importFrom GenomicAlignments alphabetFrequencyFromBam
+#' @importFrom GenomicAlignments alphabetFrequencyFromBam readGAlignments coverage
 #' @importFrom GenomicRanges GRanges
-#' @importFrom IRanges IRanges
+#' @importFrom IRanges IRanges subsetByOverlaps
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select filter
 #' @importFrom BiocParallel register MulticoreParam bplapply
@@ -170,67 +170,110 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
         stop("Please provide region for visualizing single nucleotide!")
       }
     } else {
-      # require deeptools
-      if (is.null(bamcoverage.path)) {
-        bamcoverage.path <- Sys.which("bamCoverage")
-        if (bamcoverage.path == "") {
-          stop("Can not find bamCoverage automatically, please specify the path!")
-        }
-      } else {
-        bamcoverage.path <- bamcoverage.path
-      }
-
       # get used gr
       gr <- PrepareRegion(region = region, gtf.gr = gtf.gr, gene.name = gene.name, gene.name.type = gene.name.type, extend = extend)
-      # read track file
-      if (is.null(n.cores) || n.cores == 1) {
-        track.list <- lapply(track.file, function(x) {
-          # get basename
-          track.file.base <- basename(x)
-          # bigwig file
-          out.bw.file <- tempfile(fileext = c(".bw"))
-          # prepare bamCoverage cmd
-          bamcoverage.cmd <- paste(
-            bamcoverage.path, "-b", x, "-o", out.bw.file,
-            "--binSize", bin.size, "--normalizeUsing", norm.method, bc.extra.para
-          )
-          # run command
-          message(paste("Calling bamCoverage: ", bamcoverage.cmd))
-          bamcoverage.status <- system(bamcoverage.cmd, intern = TRUE)
-          bamcoverage.status.code <- attr(bamcoverage.status, "status")
-          if (!is.null(bamcoverage.status.code)) {
-            stop("Run bamCoverage error!")
-          }
-          # import wig, bigwig and bedgraph file
-          single.track.df <- as.data.frame(rtracklayer::import(out.bw.file, which = gr))
-          single.track.df$TrackFile <- track.file.base
-          return(single.track.df)
-        })
+      if (norm.method == "None") {
+        message("Calculate coverage with GenomicAlignments when norm.method is None!")
+        if (is.null(n.cores) || n.cores == 1) {
+          track.list <- lapply(track.file, function(x) {
+            # get basename
+            track.file.base <- basename(x)
+            # load track
+            param <- Rsamtools::ScanBamParam(which = gr)
+            ga <- GenomicAlignments::readGAlignments(x, param = param)
+            ga.cov <- GenomicAlignments::coverage(ga)
+            ga.cov.gr <- GenomicRanges::GRanges(ga.cov)
+            ga.cov.df <- GenomicRanges::subsetByOverlaps(ga.cov.gr, gr) %>% as.data.frame()
+            # valid the region
+            gr.df <- as.data.frame(gr)
+            ga.cov.df[1, "start"] <- gr.df[1, "start"]
+            ga.cov.df[nrow(ga.cov.df), "end"] <- gr.df[1, "end"]
+            # add track file
+            ga.cov.df$TrackFile <- track.file.base
+            return(ga.cov.df)
+          })
+        } else {
+          # register
+          BiocParallel::register(BiocParallel::MulticoreParam(workers = n.cores), default = TRUE)
+          track.list <- BiocParallel::bplapply(track.file, BPPARAM = BiocParallel::MulticoreParam(), FUN = function(x) {
+            # get basename
+            track.file.base <- basename(x)
+            # load track
+            param <- Rsamtools::ScanBamParam(which = gr)
+            ga <- GenomicAlignments::readGAlignments(x, param = param)
+            ga.cov <- GenomicAlignments::coverage(ga)
+            ga.cov.gr <- GenomicRanges::GRanges(ga.cov)
+            ga.cov.df <- GenomicRanges::subsetByOverlaps(ga.cov.gr, gr) %>% as.data.frame()
+            # valid the region
+            gr.df <- as.data.frame(gr)
+            ga.cov.df[1, "start"] <- gr.df[1, "start"]
+            ga.cov.df[nrow(ga.cov.df), "end"] <- gr.df[1, "end"]
+            # add track file
+            ga.cov.df$TrackFile <- track.file.base
+            return(ga.cov.df)
+          })
+        }
       } else {
-        # register
-        BiocParallel::register(BiocParallel::MulticoreParam(workers = n.cores), default = TRUE)
-        track.list <- BiocParallel::bplapply(track.file, BPPARAM = BiocParallel::MulticoreParam(), FUN = function(x) {
-          # get basename
-          track.file.base <- basename(x)
-          # bigwig file
-          out.bw.file <- tempfile(fileext = c(".bw"))
-          # prepare bamCoverage cmd
-          bamcoverage.cmd <- paste(
-            bamcoverage.path, "-b", x, "-o", out.bw.file,
-            "--binSize", bin.size, "--normalizeUsing", norm.method, bc.extra.para
-          )
-          # run command
-          message(paste("Calling bamCoverage: ", bamcoverage.cmd))
-          bamcoverage.status <- system(bamcoverage.cmd, intern = TRUE)
-          bamcoverage.status.code <- attr(bamcoverage.status, "status")
-          if (!is.null(bamcoverage.status.code)) {
-            stop("Run bamCoverage error!")
+        message("Calculate coverage with bamCoverage when norm.method is not None!")
+        # require deeptools
+        if (is.null(bamcoverage.path)) {
+          bamcoverage.path <- Sys.which("bamCoverage")
+          if (bamcoverage.path == "") {
+            stop("Can not find bamCoverage automatically, please specify the path!")
           }
-          # import wig, bigwig and bedgraph file
-          single.track.df <- as.data.frame(rtracklayer::import(out.bw.file, which = gr))
-          single.track.df$TrackFile <- track.file.base
-          return(single.track.df)
-        })
+        } else {
+          bamcoverage.path <- bamcoverage.path
+        }
+        # read track file
+        if (is.null(n.cores) || n.cores == 1) {
+          track.list <- lapply(track.file, function(x) {
+            # get basename
+            track.file.base <- basename(x)
+            # bigwig file
+            out.bw.file <- tempfile(fileext = c(".bw"))
+            # prepare bamCoverage cmd
+            bamcoverage.cmd <- paste(
+              bamcoverage.path, "-b", x, "-o", out.bw.file,
+              "--binSize", bin.size, "--normalizeUsing", norm.method, bc.extra.para
+            )
+            # run command
+            message(paste("Calling bamCoverage: ", bamcoverage.cmd))
+            bamcoverage.status <- system(bamcoverage.cmd, intern = TRUE)
+            bamcoverage.status.code <- attr(bamcoverage.status, "status")
+            if (!is.null(bamcoverage.status.code)) {
+              stop("Run bamCoverage error!")
+            }
+            # import wig, bigwig and bedgraph file
+            single.track.df <- as.data.frame(rtracklayer::import(out.bw.file, which = gr))
+            single.track.df$TrackFile <- track.file.base
+            return(single.track.df)
+          })
+        } else {
+          # register
+          BiocParallel::register(BiocParallel::MulticoreParam(workers = n.cores), default = TRUE)
+          track.list <- BiocParallel::bplapply(track.file, BPPARAM = BiocParallel::MulticoreParam(), FUN = function(x) {
+            # get basename
+            track.file.base <- basename(x)
+            # bigwig file
+            out.bw.file <- tempfile(fileext = c(".bw"))
+            # prepare bamCoverage cmd
+            bamcoverage.cmd <- paste(
+              bamcoverage.path, "-b", x, "-o", out.bw.file,
+              "--binSize", bin.size, "--normalizeUsing", norm.method, bc.extra.para
+            )
+            # run command
+            message(paste("Calling bamCoverage: ", bamcoverage.cmd))
+            bamcoverage.status <- system(bamcoverage.cmd, intern = TRUE)
+            bamcoverage.status.code <- attr(bamcoverage.status, "status")
+            if (!is.null(bamcoverage.status.code)) {
+              stop("Run bamCoverage error!")
+            }
+            # import wig, bigwig and bedgraph file
+            single.track.df <- as.data.frame(rtracklayer::import(out.bw.file, which = gr))
+            single.track.df$TrackFile <- track.file.base
+            return(single.track.df)
+          })
+        }
       }
     }
   } else if (format == "txt") {
