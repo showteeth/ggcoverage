@@ -8,6 +8,7 @@
 #' @param plot.type The type of the plot, choose from facet (separate plot for every sample) and
 #' joint (combine all sample in a single plot). Default: facet.
 #' @param facet.key Sample type key to create coverage plot. Default: Type.
+#' @param joint.avg Logical value, whether to show average coverage across \code{group.key}. Default: FALSE.
 #' @param facet.order The order of Coverage plot. Default: NULL.
 #' @param facet.color The color of sample text. Default: NULL (select automatically).
 #' @param facet.y.scale The shared type of y-axis scales across facets, choose from free (facets have different y-axis scales),
@@ -30,7 +31,7 @@
 #' @importFrom scales comma
 #' @importFrom grDevices colorRampPalette
 #' @importFrom RColorBrewer brewer.pal
-#' @importFrom rlang as_label
+#' @importFrom rlang as_label .data
 #' @importFrom stats as.formula
 #' @importFrom ggh4x facet_wrap2 strip_themed
 #' @importFrom dplyr group_by summarise
@@ -53,7 +54,7 @@
 #' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
 #' # ggcoverage(data = track.df, color = "auto", range.position = "out")
 ggcoverage <- function(data, single.nuc = FALSE, mapping = NULL, color = NULL,
-                       rect.color = NA, plot.type = c("facet", "joint"), facet.key = "Type",
+                       rect.color = NA, plot.type = c("facet", "joint"), facet.key = "Type", joint.avg = FALSE,
                        facet.order = NULL, facet.color = NULL, facet.y.scale = c("free", "fixed"),
                        group.key = "Group", range.size = 3, range.position = c("in", "out"), plot.space = 0.2,
                        mark.region = NULL, mark.color = "grey", mark.alpha = 0.5, show.mark.label = TRUE, mark.label.size = 4) {
@@ -65,7 +66,7 @@ ggcoverage <- function(data, single.nuc = FALSE, mapping = NULL, color = NULL,
     geom_coverage(
       data = data, mapping = mapping, color = color, rect.color = rect.color,
       single.nuc = single.nuc, plot.type = plot.type,
-      facet.key = facet.key, facet.order = facet.order,
+      facet.key = facet.key, joint.avg = joint.avg, facet.order = facet.order,
       facet.color = facet.color, facet.y.scale = facet.y.scale,
       group.key = group.key, range.size = range.size, range.position = range.position,
       mark.region = mark.region, mark.color = mark.color, mark.alpha = mark.alpha, show.mark.label = show.mark.label,

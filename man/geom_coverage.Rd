@@ -12,6 +12,7 @@ geom_coverage(
   single.nuc = FALSE,
   plot.type = c("facet", "joint"),
   facet.key = "Type",
+  joint.avg = FALSE,
   facet.order = NULL,
   facet.color = NULL,
   facet.y.scale = c("free", "fixed"),
@@ -39,7 +40,9 @@ geom_coverage(
 \item{plot.type}{The type of the plot, choose from facet (separate plot for every sample) and
 joint (combine all sample in a single plot). Default: facet.}
 
-\item{facet.key}{Sample type key to create coverage plot. Default: Type.}
+\item{facet.key}{Sample type key to create coverage plot. Used in both facet and joint plot. Default: Type.}
+
+\item{joint.avg}{Logical value, whether to show average coverage across \code{group.key}. Default: FALSE.}
 
 \item{facet.order}{The order of coverage plot. Default: NULL.}
 

@@ -7,7 +7,8 @@
 #' @param single.nuc Logical value, whether to visualize at single nucleotide level (use bar plot). Default: FALSE.
 #' @param plot.type The type of the plot, choose from facet (separate plot for every sample) and
 #' joint (combine all sample in a single plot). Default: facet.
-#' @param facet.key Sample type key to create coverage plot. Default: Type.
+#' @param facet.key Sample type key to create coverage plot. Used in both facet and joint plot. Default: Type.
+#' @param joint.avg Logical value, whether to show average coverage across \code{group.key}. Default: FALSE.
 #' @param facet.order The order of coverage plot. Default: NULL.
 #' @param facet.color The color of sample text. Default: NULL (select automatically).
 #' @param facet.y.scale The shared type of y-axis scales across facets, choose from free (facets have different y-axis scales),
@@ -52,7 +53,7 @@
 #' #   geom_coverage(data = track.df, color = "auto", mark.region = NULL)
 geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
                           single.nuc = FALSE, plot.type = c("facet", "joint"),
-                          facet.key = "Type", facet.order = NULL,
+                          facet.key = "Type", joint.avg = FALSE, facet.order = NULL,
                           facet.color = NULL, facet.y.scale = c("free", "fixed"),
                           group.key = "Group", range.size = 3, range.position = c("in", "out"),
                           mark.region = NULL, mark.color = "grey", mark.alpha = 0.5,
@@ -231,28 +232,60 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
       plot.ele <- append(plot.ele, region.range)
     }
   } else if (plot.type == "joint") {
-    # preocess data
     data.split <- split(x = data, f = data[, facet.key])
-    data.split.final <- lapply(data.split, function(ds) {
-      ds <- ds[order(ds$start), ]
-      ds.ll <- ds[nrow(ds), ]
-      if (ds.ll$start < ds.ll$end) {
-        ds.ll.new <- ds.ll
-        ds.ll.new$start <- ds.ll.new$end
-        ds.final <- rbind(ds, ds.ll.new) %>% as.data.frame()
-      } else {
-        ds.final <- ds
-      }
-      rownames(ds.final) <- NULL
-      return(ds.final)
-    })
-    # get final data
-    data.final <- do.call(rbind, data.split.final) %>% as.data.frame()
-    rownames(data.final) <- NULL
+    if (joint.avg) {
+      # process data
+      data.list <- lapply(data.split, function(ds) {
+        ds.list <- apply(ds, 1, function(x) {
+          x.start <- seq(x["start"], x["end"])
+          x.len <- length(x.start)
+          x.df <- data.frame(
+            seqnames = rep(x["seqnames"], x.len), start = x.start,
+            score = rep(x["score"], x.len)
+          )
+          x.df[, facet.key] <- x[facet.key]
+          x.df[, group.key] <- x[group.key]
+          x.df
+        })
+        ds.final <- do.call(rbind, ds.list)
+        rownames(ds.final) <- NULL
+        return(ds.final)
+      })
+      data.final <- do.call(rbind, data.list)
+      rownames(data.final) <- NULL
+      # as numeric
+      data.final$score <- as.numeric(data.final$score)
+      data.final$start <- as.numeric(data.final$start)
+      # get average
+      data.final.mean <- data.final %>%
+        dplyr::group_by(.data[[group.key]], .data[["start"]]) %>%
+        dplyr::summarise(score = mean(.data[["score"]]))
+      # create avg plot
+      avg.plot <- geom_line(data = data.final.mean, mapping = mapping)
+      plot.ele <- list(avg.plot)
+    } else {
+      # preocess data
+      data.split.final <- lapply(data.split, function(ds) {
+        ds <- ds[order(ds$start), ]
+        ds.ll <- ds[nrow(ds), ]
+        if (ds.ll$start < ds.ll$end) {
+          ds.ll.new <- ds.ll
+          ds.ll.new$start <- ds.ll.new$end
+          ds.final <- rbind(ds, ds.ll.new) %>% as.data.frame()
+        } else {
+          ds.final <- ds
+        }
+        rownames(ds.final) <- NULL
+        return(ds.final)
+      })
+      # get final data
+      data.final <- do.call(rbind, data.split.final) %>% as.data.frame()
+      rownames(data.final) <- NULL
 
-    # create step plot
-    region.step <- geom_step(data = data.final, mapping = mapping)
-    plot.ele <- list(region.step)
+      # create step plot
+      region.step <- geom_step(data = data.final, mapping = mapping)
+      plot.ele <- list(region.step)
+    }
   }
 
   # add rect

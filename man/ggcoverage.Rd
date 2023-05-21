@@ -12,6 +12,7 @@ ggcoverage(
   rect.color = NA,
   plot.type = c("facet", "joint"),
   facet.key = "Type",
+  joint.avg = FALSE,
   facet.order = NULL,
   facet.color = NULL,
   facet.y.scale = c("free", "fixed"),
@@ -41,6 +42,8 @@ ggcoverage(
 joint (combine all sample in a single plot). Default: facet.}
 
 \item{facet.key}{Sample type key to create coverage plot. Default: Type.}
+
+\item{joint.avg}{Logical value, whether to show average coverage across \code{group.key}. Default: FALSE.}
 
 \item{facet.order}{The order of Coverage plot. Default: NULL.}
 

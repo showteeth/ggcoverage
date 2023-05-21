@@ -158,14 +158,30 @@ The basic coverage plot has **two types**:
 
 #### joint view
 
+Create line plot for **every sample** (`facet.key = "Type"`) and color
+by **every sample** (`group.key = "Type"`):
+
 ``` r
 basic.coverage = ggcoverage(data = track.df, color = "auto", 
-                            plot.type = "joint", group.key = "Type",
+                            plot.type = "joint", facet.key = "Type", group.key = "Type",
                             mark.region = mark.region, range.position = "out")
 basic.coverage
 ```
 
 <img src="man/figures/README-basic_coverage_joint-1.png" width="100%" style="display: block; margin: auto;" />
+
+Create **group average line plot** (sample is indicated by
+`facet.key = "Type"`, group is indicated by `group.key = "Group"`):
+
+``` r
+basic.coverage = ggcoverage(data = track.df, color = "auto", 
+                            plot.type = "joint", facet.key = "Type", group.key = "Group", 
+                            joint.avg = TRUE,
+                            mark.region = mark.region, range.position = "out")
+basic.coverage
+```
+
+<img src="man/figures/README-basic_coverage_joint_avg-1.png" width="100%" style="display: block; margin: auto;" />
 
 #### facet view
 
