@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcoverage</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -136,9 +136,12 @@
   color <span class='op'>=</span> <span class='cn'>NULL</span>,
   rect.color <span class='op'>=</span> <span class='cn'>NA</span>,
   single.nuc <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  plot.type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"facet"</span>, <span class='st'>"joint"</span><span class='op'>)</span>,
   facet.key <span class='op'>=</span> <span class='st'>"Type"</span>,
+  joint.avg <span class='op'>=</span> <span class='cn'>FALSE</span>,
   facet.order <span class='op'>=</span> <span class='cn'>NULL</span>,
   facet.color <span class='op'>=</span> <span class='cn'>NULL</span>,
+  facet.y.scale <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"free"</span>, <span class='st'>"fixed"</span><span class='op'>)</span>,
   group.key <span class='op'>=</span> <span class='st'>"Group"</span>,
   range.size <span class='op'>=</span> <span class='fl'>3</span>,
   range.position <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"in"</span>, <span class='st'>"out"</span><span class='op'>)</span>,
@@ -173,8 +176,17 @@
       <td><p>Logical value, whether to visualize at single nucleotide level (use bar plot). Default: FALSE.</p></td>
     </tr>
     <tr>
+      <th>plot.type</th>
+      <td><p>The type of the plot, choose from facet (separate plot for every sample) and
+joint (combine all sample in a single plot). Default: facet.</p></td>
+    </tr>
+    <tr>
       <th>facet.key</th>
-      <td><p>Sample type key to create coverage plot. Default: Type.</p></td>
+      <td><p>Sample type key to create coverage plot. Used in both facet and joint plot. Default: Type.</p></td>
+    </tr>
+    <tr>
+      <th>joint.avg</th>
+      <td><p>Logical value, whether to show average coverage across <code>group.key</code>. Default: FALSE.</p></td>
     </tr>
     <tr>
       <th>facet.order</th>
@@ -183,6 +195,11 @@
     <tr>
       <th>facet.color</th>
       <td><p>The color of sample text. Default: NULL (select automatically).</p></td>
+    </tr>
+    <tr>
+      <th>facet.y.scale</th>
+      <td><p>The shared type of y-axis scales across facets, choose from free (facets have different y-axis scales),
+fixed (facets have same y-axis scales). Default: free.</p></td>
     </tr>
     <tr>
       <th>group.key</th>

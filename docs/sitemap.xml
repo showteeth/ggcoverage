@@ -25,6 +25,9 @@
     <loc>https://showteeth.github.io/ggcoverage//reference/geom_coverage.html</loc>
   </url>
   <url>
+    <loc>https://showteeth.github.io/ggcoverage//reference/geom_feature.html</loc>
+  </url>
+  <url>
     <loc>https://showteeth.github.io/ggcoverage//reference/geom_gc.html</loc>
   </url>
   <url>
@@ -40,6 +43,9 @@
     <loc>https://showteeth.github.io/ggcoverage//reference/geom_peak.html</loc>
   </url>
   <url>
+    <loc>https://showteeth.github.io/ggcoverage//reference/geom_protein.html</loc>
+  </url>
+  <url>
     <loc>https://showteeth.github.io/ggcoverage//reference/geom_tad.html</loc>
   </url>
   <url>
@@ -50,6 +56,9 @@
   </url>
   <url>
     <loc>https://showteeth.github.io/ggcoverage//reference/ggcoverage.html</loc>
+  </url>
+  <url>
+    <loc>https://showteeth.github.io/ggcoverage//reference/ggprotein.html</loc>
   </url>
   <url>
     <loc>https://showteeth.github.io/ggcoverage//reference/theme_aa.html</loc>
@@ -70,6 +79,9 @@
     <loc>https://showteeth.github.io/ggcoverage//reference/theme_coverage2.html</loc>
   </url>
   <url>
+    <loc>https://showteeth.github.io/ggcoverage//reference/theme_feature.html</loc>
+  </url>
+  <url>
     <loc>https://showteeth.github.io/ggcoverage//reference/theme_gc.html</loc>
   </url>
   <url>
@@ -83,6 +95,12 @@
   </url>
   <url>
     <loc>https://showteeth.github.io/ggcoverage//reference/theme_peak.html</loc>
+  </url>
+  <url>
+    <loc>https://showteeth.github.io/ggcoverage//reference/theme_protein.html</loc>
+  </url>
+  <url>
+    <loc>https://showteeth.github.io/ggcoverage//reference/theme_protein2.html</loc>
   </url>
   <url>
     <loc>https://showteeth.github.io/ggcoverage//reference/theme_tad.html</loc>

@@ -67,7 +67,7 @@ library("ggpattern")
 
   The goal of `ggcoverage` is simplify the process of visualizing omics coverage. It contains three main parts:
 
-* **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph, txt/xlsx files from various omics data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, proteomics, et al.
+* **Load the data**: `ggcoverage` can load `BAM`, `BigWig (.bw)`, `BedGraph`, `txt/xlsx` files from various omics data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, proteomics, et al.
 * **Create omics coverage plot**
 * **Add annotations**: `ggcoverage` supports six different annotations:
   * **base and amino acid annotation**: Visualize genome coverage at single-nucleotide level with bases and amino acids.

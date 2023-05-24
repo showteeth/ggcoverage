@@ -17,17 +17,22 @@ An important feature of `ggcoverage` is the support of customization. This vigne
 
 ## Customize the theme
 ### Inner object
-Before we start, let me introduce the internal structure of layers provided by `ggcoverage`. `ggcoverage` provides seven layers, and `geom_coverage` is based solely on `ggplot2`, while the others are based on `ggplot2` and [patchwork](https://patchwork.data-imaginist.com/).
+Before we start, let me introduce the internal structure of layers provided by `ggcoverage`. `ggcoverage` provides twelve layers, and `geom_coverage`, `geom_protein` are based solely on `ggplot2`, while the others are based on `ggplot2` and [patchwork](https://patchwork.data-imaginist.com/).
 
 | Modules         | Type       | Description                                          | Object             |
 |-----------------|------------|------------------------------------------------------|--------------------|
 | geom_coverage   | Coverage   | Create genome coverage plot                          | ggplot2            |
 | geom_base       | Annotation | Add base, base frequency and amino acid annotations  | ggplot2, patchwork |
+| geom_cnv        | Annotation | Add CNV annotation                                   | ggplot2, patchwork |
 | geom_gc         | Annotation | Add GC content annotation                            | ggplot2, patchwork |
 | geom_gene       | Annotation | Add gene annotation                                  | ggplot2, patchwork |
 | geom_transcript | Annotation | Add gene’s transcripts annotation                    | ggplot2, patchwork |
 | geom_peak       | Annotation | Add peak annotation                                  | ggplot2, patchwork |
 | geom_ideogram   | Annotation | Add chromosome ideogram annotation                   | ggplot2, patchwork |
+| geom_tad        | Annotation | Add contact map annotation                           | ggplot2, patchwork |
+| geom_link       | Annotation | Add link annotation                                  | ggplot2, patchwork |
+| geom_protein    | Coverage   | Create protein coverage plot                         | ggplot2            |
+| geom_feature    | Annotation | Add feature annotation for genome/protein coverage   | ggplot2, patchwork |
 
 By the way, all inner themes used are available in [theme_ggcoverage.R](https://github.com/showteeth/ggcoverage/blob/main/R/theme_ggcoverage.R)
 
@@ -59,7 +64,7 @@ sample.meta
 # track folder
 track.folder = system.file("extdata", "ChIP-seq", package = "ggcoverage")
 # load bigwig file
-track.df = LoadTrackFile(track.folder = track.folder, format = "bw",
+track.df = LoadTrackFile(track.folder = track.folder, format = "bw", region = "chr18:76822285-76900000",
                          meta.info = sample.meta)
 # check data
 head(track.df)
@@ -70,9 +75,9 @@ mark.region=data.frame(start=c(76822533),
                        label=c("Promoter"))
 # check data
 mark.region
-basic.coverage = ggcoverage(data = track.df, color = "auto", region = "chr18:76822285-76900000",
-                            range.position = "out",
-                            mark.region=mark.region, show.mark.label = TRUE)
+# create basic coverage plot
+basic.coverage = ggcoverage(data = track.df, color = "auto", range.position = "out",
+                            mark.region=mark.region, show.mark.label = FALSE)
 basic.coverage
 ```
 

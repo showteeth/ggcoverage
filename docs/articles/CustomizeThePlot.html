@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcoverage</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -104,7 +104,7 @@
 <div id="inner-object" class="section level3">
 <h3 class="hasAnchor">
 <a href="#inner-object" class="anchor"></a>Inner object</h3>
-<p>Before we start, let me introduce the internal structure of layers provided by <code>ggcoverage</code>. <code>ggcoverage</code> provides seven layers, and <code>geom_coverage</code> is based solely on <code>ggplot2</code>, while the others are based on <code>ggplot2</code> and <a href="https://patchwork.data-imaginist.com/">patchwork</a>.</p>
+<p>Before we start, let me introduce the internal structure of layers provided by <code>ggcoverage</code>. <code>ggcoverage</code> provides twelve layers, and <code>geom_coverage</code>, <code>geom_protein</code> are based solely on <code>ggplot2</code>, while the others are based on <code>ggplot2</code> and <a href="https://patchwork.data-imaginist.com/">patchwork</a>.</p>
 <table class="table">
 <colgroup>
 <col width="16%">
@@ -132,33 +132,63 @@
 <td>ggplot2, patchwork</td>
 </tr>
 <tr class="odd">
+<td>geom_cnv</td>
+<td>Annotation</td>
+<td>Add CNV annotation</td>
+<td>ggplot2, patchwork</td>
+</tr>
+<tr class="even">
 <td>geom_gc</td>
 <td>Annotation</td>
 <td>Add GC content annotation</td>
 <td>ggplot2, patchwork</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>geom_gene</td>
 <td>Annotation</td>
 <td>Add gene annotation</td>
 <td>ggplot2, patchwork</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>geom_transcript</td>
 <td>Annotation</td>
 <td>Add gene’s transcripts annotation</td>
 <td>ggplot2, patchwork</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>geom_peak</td>
 <td>Annotation</td>
 <td>Add peak annotation</td>
 <td>ggplot2, patchwork</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>geom_ideogram</td>
 <td>Annotation</td>
 <td>Add chromosome ideogram annotation</td>
+<td>ggplot2, patchwork</td>
+</tr>
+<tr class="odd">
+<td>geom_tad</td>
+<td>Annotation</td>
+<td>Add contact map annotation</td>
+<td>ggplot2, patchwork</td>
+</tr>
+<tr class="even">
+<td>geom_link</td>
+<td>Annotation</td>
+<td>Add link annotation</td>
+<td>ggplot2, patchwork</td>
+</tr>
+<tr class="odd">
+<td>geom_protein</td>
+<td>Coverage</td>
+<td>Create protein coverage plot</td>
+<td>ggplot2</td>
+</tr>
+<tr class="even">
+<td>geom_feature</td>
+<td>Annotation</td>
+<td>Add feature annotation for genome/protein coverage</td>
 <td>ggplot2, patchwork</td>
 </tr>
 </tbody>
@@ -173,7 +203,7 @@
 <code class="sourceCode R"><span class="co"># library</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">ggcoverage</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rtracklayer</span><span class="op">)</span></code></pre></div>
 <hr>
@@ -200,17 +230,17 @@
 <code class="sourceCode R"><span class="co"># track folder</span>
 <span class="va">track.folder</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ChIP-seq"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="co"># load bigwig file</span>
-<span class="va">track.df</span> <span class="op">=</span> <span class="fu"><a href="../reference/LoadTrackFile.html">LoadTrackFile</a></span><span class="op">(</span>track.folder <span class="op">=</span> <span class="va">track.folder</span>, format <span class="op">=</span> <span class="st">"bw"</span>,
+<span class="va">track.df</span> <span class="op">=</span> <span class="fu"><a href="../reference/LoadTrackFile.html">LoadTrackFile</a></span><span class="op">(</span>track.folder <span class="op">=</span> <span class="va">track.folder</span>, format <span class="op">=</span> <span class="st">"bw"</span>, region <span class="op">=</span> <span class="st">"chr18:76822285-76900000"</span>,
                          meta.info <span class="op">=</span> <span class="va">sample.meta</span><span class="op">)</span>
 <span class="co"># check data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">track.df</span><span class="op">)</span></code></pre></div>
 <pre><code>##   seqnames    start      end   score      Type Group
-## 1    chr18 76799701 76800000 439.316 MCF7_ER_1    IP
-## 2    chr18 76800001 76800300 658.974 MCF7_ER_1    IP
-## 3    chr18 76800301 76800600 219.658 MCF7_ER_1    IP
-## 4    chr18 76800601 76800900 658.974 MCF7_ER_1    IP
-## 5    chr18 76800901 76801200   0.000 MCF7_ER_1    IP
-## 6    chr18 76801201 76801500 219.658 MCF7_ER_1    IP</code></pre>
+## 1    chr18 76820285 76820400 219.658 MCF7_ER_1    IP
+## 2    chr18 76820401 76820700   0.000 MCF7_ER_1    IP
+## 3    chr18 76820701 76821000 439.316 MCF7_ER_1    IP
+## 4    chr18 76821001 76821300 219.658 MCF7_ER_1    IP
+## 5    chr18 76821301 76821600   0.000 MCF7_ER_1    IP
+## 6    chr18 76821601 76821900 219.658 MCF7_ER_1    IP</code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">track.df</span> <span class="op">=</span> <span class="va">track.df</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Type</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MCF7_ER_1"</span>, <span class="st">"MCF7_input"</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># create mark region</span>
@@ -222,9 +252,9 @@
 <pre><code>##      start      end    label
 ## 1 76822533 76823743 Promoter</code></pre>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"auto"</span>, region <span class="op">=</span> <span class="st">"chr18:76822285-76900000"</span>,
-                            range.position <span class="op">=</span> <span class="st">"out"</span>,
-                            mark.region<span class="op">=</span><span class="va">mark.region</span>, show.mark.label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># create basic coverage plot</span>
+<span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"auto"</span>, range.position <span class="op">=</span> <span class="st">"out"</span>,
+                            mark.region<span class="op">=</span><span class="va">mark.region</span>, show.mark.label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">basic.coverage</span></code></pre></div>
 <p><img src="CustomizeThePlot_files/figure-html/prepare_data-1.png" width="768" style="display: block; margin: auto;"></p>
 <hr>
@@ -246,8 +276,8 @@
       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html">aes_string</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="st">"start"</span>, xmax <span class="op">=</span> <span class="st">"end"</span>, ymin <span class="op">=</span> <span class="st">"0"</span>, ymax <span class="op">=</span> <span class="st">"Inf"</span><span class="op">)</span>,
       fill <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.6</span>
     <span class="op">)</span></code></pre></div>
-<pre><code>## Scale for 'fill' is already present. Adding another scale for 'fill', which
-## will replace the existing scale.</code></pre>
+<pre><code>## Scale for fill is already present.
+## Adding another scale for fill, which will replace the existing scale.</code></pre>
 <p><img src="CustomizeThePlot_files/figure-html/customize_ggplot2-1.png" width="768" style="display: block; margin: auto;"></p>
 <hr>
 </div>
@@ -270,8 +300,8 @@
   <span class="fu"><a href="../reference/geom_ideogram.html">geom_ideogram</a></span><span class="op">(</span>genome <span class="op">=</span> <span class="st">"hg19"</span>,plot.space <span class="op">=</span> <span class="fl">0</span>, plot.height <span class="op">=</span> <span class="fl">0.15</span><span class="op">)</span></code></pre></div>
 <pre><code>## Loading ideogram...</code></pre>
 <pre><code>## Loading ranges...</code></pre>
-<pre><code>## Scale for 'x' is already present. Adding another scale for 'x', which will
-## replace the existing scale.</code></pre>
+<pre><code>## Scale for x is already present.
+## Adding another scale for x, which will replace the existing scale.</code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get the class of chip.coverage</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">chip.coverage</span><span class="op">)</span></code></pre></div>
@@ -349,7 +379,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">coverage.data</span><span class="op">)</span></code></pre></div>
 <pre><code>## 'data.frame':    431 obs. of  6 variables:
 ##  $ seqnames: Factor w/ 1 level "chr18": 1 1 1 1 1 1 1 1 1 1 ...
-##  $ start   : num  76820285 76820401 76820701 76821001 76821301 ...
+##  $ start   : int  76820285 76820401 76820701 76821001 76821301 76821601 76821901 76822201 76822801 76823101 ...
 ##  $ end     : int  76820400 76820700 76821000 76821300 76821600 76821900 76822200 76822800 76823100 76823400 ...
 ##  $ score   : num  220 0 439 220 0 ...
 ##  $ Type    : Factor w/ 2 levels "MCF7_ER_1","MCF7_input": 1 1 1 1 1 1 1 1 1 1 ...

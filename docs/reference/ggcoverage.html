@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcoverage</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -132,18 +132,16 @@
 
     <pre class="usage"><span class='fu'>ggcoverage</span><span class='op'>(</span>
   <span class='va'>data</span>,
-  region <span class='op'>=</span> <span class='st'>"chr14:21,677,306-21,737,601"</span>,
-  gtf.gr <span class='op'>=</span> <span class='cn'>NULL</span>,
-  extend <span class='op'>=</span> <span class='fl'>2000</span>,
-  gene.name <span class='op'>=</span> <span class='st'>"HNRNPC"</span>,
-  gene.name.type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene_name"</span>, <span class='st'>"gene_id"</span><span class='op'>)</span>,
   single.nuc <span class='op'>=</span> <span class='cn'>FALSE</span>,
   mapping <span class='op'>=</span> <span class='cn'>NULL</span>,
   color <span class='op'>=</span> <span class='cn'>NULL</span>,
   rect.color <span class='op'>=</span> <span class='cn'>NA</span>,
+  plot.type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"facet"</span>, <span class='st'>"joint"</span><span class='op'>)</span>,
   facet.key <span class='op'>=</span> <span class='st'>"Type"</span>,
+  joint.avg <span class='op'>=</span> <span class='cn'>FALSE</span>,
   facet.order <span class='op'>=</span> <span class='cn'>NULL</span>,
   facet.color <span class='op'>=</span> <span class='cn'>NULL</span>,
+  facet.y.scale <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"free"</span>, <span class='st'>"fixed"</span><span class='op'>)</span>,
   group.key <span class='op'>=</span> <span class='st'>"Group"</span>,
   range.size <span class='op'>=</span> <span class='fl'>3</span>,
   range.position <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"in"</span>, <span class='st'>"out"</span><span class='op'>)</span>,
@@ -163,28 +161,6 @@
       <td><p>Coverage dataframe loaded by <code><a href='LoadTrackFile.html'>LoadTrackFile</a></code>.</p></td>
     </tr>
     <tr>
-      <th>region</th>
-      <td><p>Region used to create coverage plot, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.
-Default: NULL.</p></td>
-    </tr>
-    <tr>
-      <th>gtf.gr</th>
-      <td><p>Granges object of GTF, created with <code><a href='https://rdrr.io/pkg/rtracklayer/man/GFFFile-class.html'>import.gff</a></code>. Default: NULL.</p></td>
-    </tr>
-    <tr>
-      <th>extend</th>
-      <td><p>Extend length of <code>region</code>. Default: 2000.</p></td>
-    </tr>
-    <tr>
-      <th>gene.name</th>
-      <td><p>The name of gene. Default: HNRNPC.</p></td>
-    </tr>
-    <tr>
-      <th>gene.name.type</th>
-      <td><p>Gene name type (filed of <code>gtf.gr</code>), chosen from gene_name and gene_id.
-Default: gene_name.</p></td>
-    </tr>
-    <tr>
       <th>single.nuc</th>
       <td><p>Logical value, whether to visualize at single nucleotide level. Default: FALSE.</p></td>
     </tr>
@@ -201,8 +177,17 @@ Default: gene_name.</p></td>
       <td><p>The color of every bin. Default: NA.</p></td>
     </tr>
     <tr>
+      <th>plot.type</th>
+      <td><p>The type of the plot, choose from facet (separate plot for every sample) and
+joint (combine all sample in a single plot). Default: facet.</p></td>
+    </tr>
+    <tr>
       <th>facet.key</th>
       <td><p>Sample type key to create coverage plot. Default: Type.</p></td>
+    </tr>
+    <tr>
+      <th>joint.avg</th>
+      <td><p>Logical value, whether to show average coverage across <code>group.key</code>. Default: FALSE.</p></td>
     </tr>
     <tr>
       <th>facet.order</th>
@@ -211,6 +196,11 @@ Default: gene_name.</p></td>
     <tr>
       <th>facet.color</th>
       <td><p>The color of sample text. Default: NULL (select automatically).</p></td>
+    </tr>
+    <tr>
+      <th>facet.y.scale</th>
+      <td><p>The shared type of y-axis scales across facets, choose from free (facets have different y-axis scales),
+fixed (facets have same y-axis scales). Default: free.</p></td>
     </tr>
     <tr>
       <th>group.key</th>
@@ -264,10 +254,8 @@ out (normal y axis). Default: in.</p></td>
 <span class='co'># track folder</span>
 <span class='co'># track.folder &lt;- system.file("extdata", "RNA-seq", package = "ggcoverage")</span>
 <span class='co'># load bigwig file</span>
-<span class='co'># track.df &lt;- LoadTrackFile(</span>
-<span class='co'>#   track.folder = track.folder, format = "bw",</span>
-<span class='co'>#   meta.info = sample.meta</span>
-<span class='co'># )</span>
+<span class='co'># track.df &lt;- LoadTrackFile(track.folder = track.folder, format = "bw",region = "chr14:21,677,306-21,737,601",</span>
+<span class='co'>#                           extend = 2000, meta.info = sample.meta)</span>
 <span class='co'># gtf.file &lt;- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")</span>
 <span class='co'># gtf.gr &lt;- rtracklayer::import.gff(con = gtf.file, format = "gtf")</span>
 <span class='co'># ggcoverage(data = track.df, color = "auto", range.position = "out")</span>
