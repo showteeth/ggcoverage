@@ -42,7 +42,6 @@ Imports:
     GenomicAlignments,
     reshape2,
     seqinr,
-    GenomeMatrix,
     ggforce,
     HiCBricks,
     ggpattern,
@@ -57,5 +56,6 @@ Suggests:
     htmltools,
     BSgenome.Hsapiens.UCSC.hg19,
     graphics,
-    HiCDataHumanIMR90
+    HiCDataHumanIMR90,
+    GenomeMatrix
 VignetteBuilder: knitr

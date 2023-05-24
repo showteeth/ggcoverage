@@ -21,7 +21,6 @@
 #' element_text margin scale_y_continuous scale_x_continuous coord_cartesian
 #' @importFrom patchwork wrap_plots
 #'
-#' @export
 #'
 #' @examples
 #' library(ggcoverage)

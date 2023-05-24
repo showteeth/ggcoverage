@@ -19,7 +19,7 @@ theme_coverage <- function(space = 0.2) {
       axis.text.y = element_blank(),
       axis.title = element_blank()
     ),
-    annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
+    ggplot2::annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
     scale_y_continuous(expand = expansion(mult = c(0))),
     scale_x_continuous(labels = scales::comma, expand = c(0, 0))
   )
@@ -48,7 +48,7 @@ theme_coverage2 <- function(space = 0.2) {
       panel.spacing.y = unit(x = space, units = "line"),
       axis.title = element_blank()
     ),
-    annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
+    ggplot2::annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
     scale_x_continuous(labels = scales::comma, expand = c(0, 0))
   )
 }
@@ -490,7 +490,7 @@ theme_protein <- function() {
       axis.text.y = element_blank(),
       axis.title = element_blank()
     ),
-    annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
+    ggplot2::annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
     scale_y_continuous(expand = expansion(mult = c(0))),
     scale_x_continuous(expand = c(0, 0))
   )
@@ -517,7 +517,7 @@ theme_protein2 <- function() {
     theme(
       axis.title = element_blank()
     ),
-    annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
+    ggplot2::annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
     scale_x_continuous(expand = c(0, 0))
   )
 }
