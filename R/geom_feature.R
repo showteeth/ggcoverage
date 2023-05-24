@@ -12,7 +12,7 @@
 #' @importFrom dplyr arrange
 #' @importFrom magrittr %>%
 #' @importFrom ggplot2 ggplot_add ggplot geom_segment aes_string theme_classic theme element_blank element_text
-#' element_rect margin scale_x_continuous scale_y_continuous coord_cartesian
+#' element_rect margin scale_x_continuous scale_y_continuous coord_cartesian scale_color_manual
 #' @export
 #'
 #' @examples

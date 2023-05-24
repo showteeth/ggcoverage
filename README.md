@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ggcoverage - Visualize and annotate genome coverage with ggplot2
+# ggcoverage - Visualize and annotate omics coverage with ggplot2
 
 <img src = "man/figures/ggcoverage.png" align = "right" width = "200"/>
 
@@ -11,13 +11,13 @@
 
 ## Introduction
 
-The goal of `ggcoverage` is simplify the process of visualizing genome
+The goal of `ggcoverage` is simplify the process of visualizing omics
 coverage. It contains three main parts:
 
--   **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph
-    files from various NGS data, including WGS, RNA-seq, ChIP-seq,
-    ATAC-seq, et al.
--   **Create genome coverage plot**
+-   **Load the data**: `ggcoverage` can load BAM, BigWig (.bw),
+    BedGraph, txt/xlsx files from various omics data, including WGS,
+    RNA-seq, ChIP-seq, ATAC-seq, proteomics, et al.
+-   **Create omics coverage plot**
 -   **Add annotations**: `ggcoverage` supports six different
     annotations:
     -   **base and amino acid annotation**: Visualize genome coverage at
@@ -35,6 +35,8 @@ coverage. It contains three main parts:
     -   **contact map annotation**: Visualize genome coverage with Hi-C
         contact map
     -   **link annotation**: Visualize genome coverage with contacts
+    -   **peotein feature annotation**: Visualize protein coverage with
+        features
 
 `ggcoverage` utilizes `ggplot2` plotting system, so its usage is
 **ggplot2-style**!
@@ -757,6 +759,125 @@ basic.coverage +
 ```
 
 <img src="man/figures/README-hic_coverage-1.png" width="100%" style="display: block; margin: auto;" />
+
+## Mass spectrometry protein coverage
+
+[Mass spectrometry (MS) is an important method for the accurate mass
+determination and characterization of proteins, and a variety of methods
+and instrumentations have been developed for its many
+uses](https://en.wikipedia.org/wiki/Protein_mass_spectrometry). After
+MS, we can check the coverage of protein to check the quality of the
+data and find the reason why the segment did not appear and improve the
+experiment.
+
+### Load coverage
+
+The exported coverage from [Proteome Discoverer](https://www.thermofisher.cn/cn/zh/home/industrial/mass-spectrometry/liquid-chromatography-mass-spectrometry-lc-ms/lc-ms-software/multi-omics-data-analysis/proteome-discoverer-software.html?adobe_mc=MCMID%7C90228073352279367993013412919222863692%7CMCAID%3D3208C32C269355DE-4000028116B65FEB%7CMCORGID%3D5B135A0C5370E6B40A490D44%40AdobeOrg%7CTS=1614293705):
+
+``` r
+library(openxlsx)
+# prepare coverage dataframe
+coverage.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
+coverage.df <- openxlsx::read.xlsx(coverage.file)
+# check the data
+head(coverage.df)
+#>   Confidence                            Annotated.Sequence
+#> 1       High  [K].ATEEQLKTVMENFVAFVDKCCAADDKEACFAVEGPK.[L]
+#> 2       High  [K].ATEEQLKTVMENFVAFVDKCCAADDKEACFAVEGPK.[L]
+#> 3       High         [K].TVMENFVAFVDKCCAADDKEACFAVEGPK.[L]
+#> 4       High      [K].HLVDEPQNLIKQNCDQFEKLGEYGFQNALIVR.[Y]
+#> 5       High [R].RHPYFYAPELLYYANKYNGVFQECCQAEDKGACLLPK.[I]
+#> 6       High             [K].AFDEKLFTFHADICTLPDTEKQIKK.[Q]
+#>                                          Modifications Contaminant
+#> 1                    3xCarbamidomethyl [C20; C21; C29]        TRUE
+#> 2 3xCarbamidomethyl [C20; C21; C29]; 1xOxidation [M10]        TRUE
+#> 3  3xCarbamidomethyl [C13; C14; C22]; 1xOxidation [M3]        TRUE
+#> 4                              1xCarbamidomethyl [C14]        TRUE
+#> 5                    3xCarbamidomethyl [C24; C25; C33]        TRUE
+#> 6                              1xCarbamidomethyl [C14]        TRUE
+#>   #.Protein.Groups #.Proteins #.PSMs Master.Protein.Accessions
+#> 1                1          2     15                ALBU_BOVIN
+#> 2                1          2     26                ALBU_BOVIN
+#> 3                1          2     14                ALBU_BOVIN
+#> 4                1          2     41                ALBU_BOVIN
+#> 5                1          2     37                ALBU_BOVIN
+#> 6                1          2     40                ALBU_BOVIN
+#>   Positions.in.Master.Proteins Modifications.in.Master.Proteins
+#> 1         ALBU_BOVIN [562-597]                               NA
+#> 2         ALBU_BOVIN [562-597]                               NA
+#> 3         ALBU_BOVIN [569-597]                               NA
+#> 4         ALBU_BOVIN [402-433]                               NA
+#> 5         ALBU_BOVIN [168-204]                               NA
+#> 6         ALBU_BOVIN [524-548]                               NA
+#>   #.Missed.Cleavages Theo..MH+.[Da] Abundance:.F3:.Sample Quan.Info
+#> 1                  3     4107.88065            18692597.5      <NA>
+#> 2                  3     4123.87556            87767162.0      <NA>
+#> 3                  2     3324.46798            19803927.2      <NA>
+#> 4                  2     3815.91737           204933705.0      <NA>
+#> 5                  3     4513.12024            57012156.5      <NA>
+#> 6                  3     2995.52337           183934556.7      <NA>
+#>   Found.in.Sample:.[S3].F3:.Sample Confidence.(by.Search.Engine):.Sequest.HT
+#> 1                             High                                      High
+#> 2                             High                                      High
+#> 3                             High                                      High
+#> 4                             High                                      High
+#> 5                             High                                      High
+#> 6                             High                                      High
+#>   XCorr.(by.Search.Engine):.Sequest.HT Top.Apex.RT.[min]
+#> 1                                11.96             97.50
+#> 2                                10.91             90.09
+#> 3                                 9.89             84.90
+#> 4                                 9.75             91.84
+#> 5                                 8.94             93.30
+#> 6                                 8.90             75.40
+```
+
+The input protein fasta:
+
+``` r
+library(Biostrings)
+fasta.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
+# prepare track dataframe
+protein.set <- Biostrings::readAAStringSet(fasta.file)
+# check the data
+protein.set
+#> AAStringSet object of length 2:
+#>     width seq                                               names               
+#> [1]   607 MKWVTFISLLLLFSSAYSRGVFR...DDKEACFAVEGPKLVVSTQTALA sp|P02769|ALBU_BOVIN
+#> [2]   583 DTHKSEIAHRFKDLGEEHFKGLV...DDKEACFAVEGPKLVVSTQTALA decoy
+```
+
+### Protein coverage
+
+``` r
+protein.coverage = ggprotein(coverage.file = coverage.file, fasta.file = fasta.file, 
+                             protein.id = "sp|P02769|ALBU_BOVIN", range.position = "out")
+protein.coverage
+```
+
+<img src="man/figures/README-basic_coverage_protein-1.png" width="100%" style="display: block; margin: auto;" />
+
+### Add annotation
+
+We can obtain features of the protein from
+[UniProt](https://www.uniprot.org/). For example, the above protein
+coverage plot shows that there is empty region in 1-24, and this empty
+region in [UniProt](https://www.uniprot.org/uniprotkb/P02769/entry) is
+annotated as Signal peptide and Propeptide peptide. When the protein is
+mature and released extracellular, these peptides will be cleaved. This
+is the reason why there is empty region in 1-24.
+
+``` r
+# protein feature obtained from UniProt
+protein.feature.df = data.frame(ProteinID = "sp|P02769|ALBU_BOVIN", start = c(1, 19, 25), 
+                                end = c(18, 24, 607), 
+                                Type = c("Signal", "Propeptide", "Chain"))
+# add annotation
+protein.coverage + 
+  geom_feature(feature.df = protein.feature.df, feature.color = c("#4d81be","#173b5e","#6a521d"))
+```
+
+<img src="man/figures/README-basic_coverage_protein_feature-1.png" width="100%" style="display: block; margin: auto;" />
 
 ## Code of Conduct
 
