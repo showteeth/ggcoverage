@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ggcoverage - Visualize and annotate genome coverage with ggplot2
+# ggcoverage - Visualize and annotate omics coverage with ggplot2
 
 <img src = "man/figures/ggcoverage.png" align = "right" width = "200"/>
 
@@ -23,10 +23,10 @@ knitr::opts_chunk$set(
 [![CODE_SIZE](https://img.shields.io/github/languages/code-size/showteeth/ggcoverage.svg)](https://github.com/showteeth/ggcoverage)
 
 ## Introduction
-  The goal of `ggcoverage` is simplify the process of visualizing genome coverage. It contains three main parts:
+  The goal of `ggcoverage` is simplify the process of visualizing omics coverage. It contains three main parts:
 
-* **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph files from various NGS data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, et al.
-* **Create genome coverage plot**
+* **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph, txt/xlsx files from various omics data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, proteomics, et al.
+* **Create omics coverage plot**
 * **Add annotations**: `ggcoverage` supports six different annotations:
   * **base and amino acid annotation**: Visualize genome coverage at single-nucleotide level with bases and amino acids.
   * **GC annotation**: Visualize genome coverage with GC content
@@ -37,6 +37,7 @@ knitr::opts_chunk$set(
   * **peak annotation**: Visualize genome coverage and peak identified
   * **contact map annotation**: Visualize genome coverage with Hi-C contact map
   * **link annotation**: Visualize genome coverage with contacts
+  * **peotein feature annotation**: Visualize protein coverage with features
 
 `ggcoverage` utilizes `ggplot2` plotting system, so its usage is **ggplot2-style**!
 

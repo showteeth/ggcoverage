@@ -5,7 +5,7 @@
 #'
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme unit element_blank annotate rel scale_y_continuous expansion
-#' scale_x_continuous coord_cartesian
+#' scale_x_continuous
 #' @importFrom scales comma
 #' @export
 #'
@@ -32,7 +32,7 @@ theme_coverage <- function(space = 0.2) {
 #'
 #' @return List of layers.
 #' @importFrom ggplot2 scale_y_continuous expansion theme_classic theme unit element_blank annotate rel
-#' scale_x_continuous coord_cartesian
+#' scale_x_continuous
 #' @importFrom scales comma
 #' @export
 #'
@@ -471,3 +471,55 @@ theme_cnv <- function(x.range, margin.len) {
     coord_cartesian(xlim = x.range)
   )
 }
+
+# theme for ggprotein: suitable for range position is in
+#' Theme for geom_protein.
+#'
+#' @return List of layers.
+#' @importFrom ggplot2 theme_classic theme unit element_blank annotate rel scale_y_continuous expansion
+#' scale_x_continuous
+#' @importFrom scales comma
+#' @export
+#'
+theme_protein <- function() {
+  list(
+    theme_classic(),
+    theme(
+      axis.line.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      axis.text.y = element_blank(),
+      axis.title = element_blank()
+    ),
+    annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
+    scale_y_continuous(expand = expansion(mult = c(0)))
+  )
+}
+
+# theme for ggprotein: suitable for range position is out
+#' Theme for geom_protein.
+#'
+#' @return List of layers.
+#' @importFrom ggplot2 scale_y_continuous expansion theme_classic theme unit element_blank annotate rel
+#' scale_x_continuous
+#' @importFrom scales comma scientific
+#' @export
+#'
+theme_protein2 <- function() {
+  list(
+    scale_y_continuous(
+      limits = ~ c(0, CeilingNumber(max(.x)), digits = 2),
+      breaks = ~ .x[2],
+      expand = expansion(mult = c(0)),
+      labels = function(x) format(x, scientific = TRUE, digits = 2)
+    ),
+    theme_classic(),
+    theme(
+      axis.title = element_blank()
+    ),
+    annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1))
+  )
+}
+
+
+
+

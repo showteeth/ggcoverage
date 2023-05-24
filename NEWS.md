@@ -1,3 +1,9 @@
+# ggcoverage 1.2.0
+## Major changes
+* Supporting protein coverage and annotation plot (`ggprotein`, `geom_protein`).
+
+-------------
+
 # ggcoverage 1.1.0
 ## Major changes
 * Mark SNV with twill (add twill to position with SNV), star (add star mark to position with SNV), and highlight (position without SNV is grey).

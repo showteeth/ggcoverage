@@ -9,7 +9,7 @@ author:
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('ggcoverage')`"
 abstract: >
-  The goal of `ggcoverage` is to simplify the process of visualizing genome coverage. It contains functions to load data from BAM, BigWig or BedGraph files, create genome coverage plot, add various annotation to the coverage plot, including base and amino acid annotation, GC annotation, CNV annotation, gene annotation, transcript annotation, ideogram annotation, peak annotation, HiC contact map and contact link annotation.
+  The goal of `ggcoverage` is to simplify the process of visualizing omics coverage. It contains functions to load data from BAM, BigWig, BedGraph, txt/xlsx files, create genome/protein coverage plot, add various annotation to the coverage plot, including base and amino acid annotation, GC annotation, CNV annotation, gene annotation, transcript annotation, ideogram annotation, peak annotation, HiC contact map, contact link annotation and peotein feature annotation.
 output: 
   BiocStyle::html_document:
     toc_depth: 4
@@ -65,22 +65,21 @@ library("ggpattern")
 # Introduction
 <img src = "../man/figures/ggcoverage.png" align = "right" width = "200"/>
 
-  The goal of `ggcoverage` is simplify the process of visualizing genome coverage. It contains three main parts:
+  The goal of `ggcoverage` is simplify the process of visualizing omics coverage. It contains three main parts:
 
-* **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph files from various NGS data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, et al.
-* **Create genome coverage plot**
+* **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph, txt/xlsx files from various omics data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, proteomics, et al.
+* **Create omics coverage plot**
 * **Add annotations**: `ggcoverage` supports six different annotations:
-  * **Base and amino acid annotation**: Visualize genome coverage at single-nucleotide level with bases and amino acids.
+  * **base and amino acid annotation**: Visualize genome coverage at single-nucleotide level with bases and amino acids.
   * **GC annotation**: Visualize genome coverage with GC content
   * **CNV annotation**: Visualize genome coverage with copy number variation (CNV)
-  * **gene annotation**: Visualize genome coverage across whole gene
+  * **gene annotation**: Visualize genome coverage across genes
   * **transcription annotation**: Visualize genome coverage across different transcripts
   * **ideogram annotation**: Visualize the region showing on whole chromosome
   * **peak annotation**: Visualize genome coverage and peak identified
   * **contact map annotation**: Visualize genome coverage with Hi-C contact map
   * **link annotation**: Visualize genome coverage with contacts
-  
-`ggcoverage` utilizes `ggplot2` plotting system, so its usage is **ggplot2-style**!
+  * **peotein feature annotation**: Visualize protein coverage with features
 
 -------------
 
