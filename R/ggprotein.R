@@ -41,22 +41,24 @@
 #' # fasta.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
 #' # protein.id = "sp|P02769|ALBU_BOVIN"
 #' # ggprotein(coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id)
-ggprotein = function(coverage.file, fasta.file, protein.id, XCorr.threshold = 2,
-                     confidence = "High", contaminant = NULL, remove.na = TRUE,
-                     color = "grey", mark.bare = TRUE, mark.color = "red", mark.alpha = 0.5,
-                     show.table = TRUE, table.position = c("right_top", "left_top", "left_bottom", "right_bottom"),
-                     table.size = 4, table.color = "black", range.size = 3, range.position = c("in", "out"), plot.space = 0.2){
+ggprotein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold = 2,
+                      confidence = "High", contaminant = NULL, remove.na = TRUE,
+                      color = "grey", mark.bare = TRUE, mark.color = "red", mark.alpha = 0.5,
+                      show.table = TRUE, table.position = c("right_top", "left_top", "left_bottom", "right_bottom"),
+                      table.size = 4, table.color = "black", range.size = 3, range.position = c("in", "out"), plot.space = 0.2) {
   # check parameters
   table.position <- match.arg(arg = table.position)
   range.position <- match.arg(arg = range.position)
 
   # ms protein plot
-  protein.plot = ggplot() +
-    geom_protein(coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id,
-                 XCorr.threshold = XCorr.threshold, confidence = confidence, contaminant = contaminant,
-                 remove.na = remove.na, color = color, mark.bare = mark.bare, mark.color = mark.color,
-                 mark.alpha = mark.alpha, show.table = show.table, table.position = table.position,
-                 table.size = table.size, table.color = table.color, range.size = range.size, range.position = range.position)
+  protein.plot <- ggplot() +
+    geom_protein(
+      coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id,
+      XCorr.threshold = XCorr.threshold, confidence = confidence, contaminant = contaminant,
+      remove.na = remove.na, color = color, mark.bare = mark.bare, mark.color = mark.color,
+      mark.alpha = mark.alpha, show.table = show.table, table.position = table.position,
+      table.size = table.size, table.color = table.color, range.size = range.size, range.position = range.position
+    )
 
   # add theme
   if (range.position == "in") {

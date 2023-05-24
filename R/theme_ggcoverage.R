@@ -491,7 +491,8 @@ theme_protein <- function() {
       axis.title = element_blank()
     ),
     annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
-    scale_y_continuous(expand = expansion(mult = c(0)))
+    scale_y_continuous(expand = expansion(mult = c(0))),
+    scale_x_continuous(expand = c(0, 0))
   )
 }
 
@@ -516,10 +517,41 @@ theme_protein2 <- function() {
     theme(
       axis.title = element_blank()
     ),
-    annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1))
+    annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
+    scale_x_continuous(expand = c(0, 0))
   )
 }
 
-
-
-
+#' Theme for geom_feature.
+#'
+#' @param margin.len Top and bottom margin.
+#' @param x.range X axis ranges.
+#' @param fill.color Fill color for different feature type.
+#'
+#' @return List of layers.
+#' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
+#' scale_x_continuous scale_y_continuous coord_cartesian scale_color_manual
+#'
+theme_feature <- function(margin.len, x.range, fill.color) {
+  list(
+    theme_classic(),
+    theme(
+      axis.line.y = element_blank(),
+      axis.text.y = element_blank(),
+      axis.title.y.right = element_text(color = "black", angle = 90, vjust = 0.5),
+      axis.ticks.y = element_blank(),
+      axis.text.x = element_blank(),
+      axis.title.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      panel.border = element_rect(colour = "black", fill = NA, size = 1),
+      plot.margin = margin(t = margin.len, b = margin.len)
+    ),
+    scale_y_continuous(
+      limits = c(1 - 0.1, 1 + 0.1),
+      expand = c(0, 0), position = "right"
+    ),
+    scale_x_continuous(expand = c(0, 0)),
+    coord_cartesian(xlim = x.range),
+    scale_color_manual(values = fill.color)
+  )
+}

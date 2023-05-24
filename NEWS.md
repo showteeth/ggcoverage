@@ -1,6 +1,6 @@
 # ggcoverage 1.2.0
 ## Major changes
-* Supporting protein coverage and annotation plot (`ggprotein`, `geom_protein`).
+* Supporting protein coverage and annotation plot (`ggprotein`, `geom_protein`, `geom_feature`).
 
 -------------
 
