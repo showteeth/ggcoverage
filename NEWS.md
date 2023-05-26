@@ -1,14 +1,17 @@
 # ggcoverage 1.2.0
 ## Major changes
-* Supporting protein coverage and annotation plot (`ggprotein`, `geom_protein`, `geom_feature`).
+* Support protein coverage and annotation plot (`ggprotein`, `geom_protein`, `geom_feature`).
+
+## Minor changes
+* Export all themes to simplify customization.
 
 -------------
 
 # ggcoverage 1.1.0
 ## Major changes
 * Mark SNV with twill (add twill to position with SNV), star (add star mark to position with SNV), and highlight (position without SNV is grey).
-* Moved `FormatTrack` to `LoadTrackFile`, this can reduce load time and memory for big files.
-* Supporting parallel to handle multiple files more efficiently.
+* Move `FormatTrack` to `LoadTrackFile`, this can reduce load time and memory for big files.
+* Support parallel to handle multiple files more efficiently.
 
 ## Minor changes
 * `geom_coverage` and `ggcoverage` supports changing shared type of y-axis scales across facets (with `facet.y.scale` parameter).
@@ -20,9 +23,9 @@
 
 # ggcoverage 1.0.0
 ## Major changes
-* Supporting Hi-C visualization (`geom_tad` and `geom_tad2`).
-* Supporting genome region interaction visualization (`geom_link`).
-* Supporting CNV visualization (`geom_cnv`).
+* Support Hi-C visualization (`geom_tad` and `geom_tad2`).
+* Support genome region interaction visualization (`geom_link`).
+* Support CNV visualization (`geom_cnv`).
 
 ## Minor changes
 * `geom_ideogram` supports the highlight of centromere.
@@ -31,7 +34,7 @@
 
 # ggcoverage 0.9.0
 ## Major changes
-* Supporting gtf file from Ensembl
+* Support gtf file from Ensembl
 
 ## Minor changes
 * Fixed bugs in getting gene group.

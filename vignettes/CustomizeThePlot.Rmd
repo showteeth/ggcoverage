@@ -198,27 +198,9 @@ peak.plot = ggplot() +
       color = "red", size = 5
     ) + 
   labs(y="Peak") + 
-  theme_classic() + 
-  theme(
-      axis.line.y = element_blank(),
-      axis.text.y = element_blank(),
-      axis.title.y.right = element_text(color = "black", angle = 90, vjust = 0.5),
-      axis.ticks.y = element_blank(),
-      axis.text.x = element_blank(),
-      axis.title.x = element_blank(),
-      axis.ticks.x = element_blank(),
-      panel.border = element_rect(colour = "black", fill = NA, size = 1),
-      plot.margin = margin(t = 0.1, b = 0.1)
-    ) + 
-    scale_y_continuous(
-      limits = c(1 - 0.1, 1 + 0.1),
-      expand = c(0, 0), position = "right"
-    ) + 
-    scale_x_continuous(expand = c(0, 0)) + 
-    coord_cartesian(xlim = c(plot.region.start, plot.region.end))
+  theme_peak(margin.len = 0.1, x.range = c(plot.region.start, plot.region.end))
 peak.plot
 ```
-
 
 Combine the plot:
 ```{r combine_layers, warning=FALSE,fig.height = 7, fig.width = 8, fig.align = "center"}

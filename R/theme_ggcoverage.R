@@ -62,6 +62,7 @@ theme_coverage2 <- function(space = 0.2) {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
 #' scale_y_continuous scale_x_continuous coord_cartesian
+#' @export
 #'
 theme_gc <- function(x.range, margin.len) {
   list(
@@ -88,6 +89,7 @@ theme_gc <- function(x.range, margin.len) {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text margin
 #' scale_y_continuous scale_x_continuous coord_cartesian scale_fill_manual
+#' @export
 theme_base <- function(margin.len, fill.color) {
   list(
     theme_classic(),
@@ -114,6 +116,7 @@ theme_base <- function(margin.len, fill.color) {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text
 #' scale_y_continuous scale_x_continuous coord_cartesian scale_fill_manual
+#' @export
 theme_base2 <- function(fill.color) {
   list(
     theme_classic(),
@@ -140,6 +143,7 @@ theme_base2 <- function(fill.color) {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text margin
 #' scale_y_continuous scale_x_continuous coord_cartesian scale_fill_manual
+#' @export
 theme_aa <- function(margin.len, fill.color) {
   list(
     theme_classic(),
@@ -171,6 +175,7 @@ theme_aa <- function(margin.len, fill.color) {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
 #' scale_y_continuous scale_color_manual scale_x_continuous coord_cartesian
+#' @export
 #'
 theme_gene <- function(overlap.gene.gap, group.num, fill.color, x.range, margin.len) {
   list(
@@ -208,6 +213,7 @@ theme_gene <- function(overlap.gene.gap, group.num, fill.color, x.range, margin.
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
 #' scale_y_continuous scale_color_manual scale_x_continuous coord_cartesian
+#' @export
 #'
 theme_transcript <- function(overlap.tx.gap, group.num, fill.color, x.range, margin.len) {
   list(
@@ -239,6 +245,7 @@ theme_transcript <- function(overlap.tx.gap, group.num, fill.color, x.range, mar
 #'
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank scale_x_continuous scale_y_continuous
+#' @export
 #'
 theme_ideogram <- function() {
   list(
@@ -266,6 +273,7 @@ theme_ideogram <- function() {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
 #' scale_x_continuous scale_y_continuous coord_cartesian
+#' @export
 #'
 theme_peak <- function(margin.len, x.range) {
   list(
@@ -299,6 +307,7 @@ theme_peak <- function(margin.len, x.range) {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
 #' scale_x_continuous scale_y_continuous coord_cartesian
+#' @export
 theme_tad2 <- function(x.range, margin.len, show.rect) {
   if (show.rect) {
     list(
@@ -350,6 +359,7 @@ theme_tad2 <- function(x.range, margin.len, show.rect) {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
 #' scale_x_continuous scale_y_continuous
+#' @export
 theme_tad <- function(margin.len, show.rect) {
   if (show.rect) {
     list(
@@ -402,6 +412,7 @@ theme_tad <- function(margin.len, show.rect) {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
 #' scale_x_continuous scale_y_continuous coord_cartesian expansion
+#' @export
 theme_link <- function(x.range, margin.len, show.rect) {
   if (show.rect) {
     list(
@@ -453,6 +464,7 @@ theme_link <- function(x.range, margin.len, show.rect) {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
 #' scale_x_continuous coord_cartesian
+#' @export
 theme_cnv <- function(x.range, margin.len) {
   list(
     theme_classic(),
@@ -531,6 +543,7 @@ theme_protein2 <- function() {
 #' @return List of layers.
 #' @importFrom ggplot2 theme_classic theme element_blank element_text element_rect margin
 #' scale_x_continuous scale_y_continuous coord_cartesian scale_color_manual
+#' @export
 #'
 theme_feature <- function(margin.len, x.range, fill.color) {
   list(
