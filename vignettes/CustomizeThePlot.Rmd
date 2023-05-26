@@ -10,8 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Introduction
 An important feature of `ggcoverage` is the support of customization. This vignette will show how to customize the plot from the following two aspects:
 
-* customize the theme
-* add additional layer
+* customize the elements of existing plot
+* add additional layer to the existing plot
 
 <hr />
 

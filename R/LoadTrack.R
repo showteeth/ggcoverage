@@ -183,7 +183,7 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
             ga <- GenomicAlignments::readGAlignments(x, param = param)
             ga.cov <- GenomicAlignments::coverage(ga)
             ga.cov.gr <- GenomicRanges::GRanges(ga.cov)
-            ga.cov.df <- GenomicRanges::subsetByOverlaps(ga.cov.gr, gr) %>% as.data.frame()
+            ga.cov.df <- IRanges::subsetByOverlaps(ga.cov.gr, gr) %>% as.data.frame()
             # valid the region
             gr.df <- as.data.frame(gr)
             ga.cov.df[1, "start"] <- gr.df[1, "start"]
@@ -203,7 +203,7 @@ LoadTrackFile <- function(track.file, track.folder = NULL, format = c("bam", "wi
             ga <- GenomicAlignments::readGAlignments(x, param = param)
             ga.cov <- GenomicAlignments::coverage(ga)
             ga.cov.gr <- GenomicRanges::GRanges(ga.cov)
-            ga.cov.df <- GenomicRanges::subsetByOverlaps(ga.cov.gr, gr) %>% as.data.frame()
+            ga.cov.df <- IRanges::subsetByOverlaps(ga.cov.gr, gr) %>% as.data.frame()
             # valid the region
             gr.df <- as.data.frame(gr)
             ga.cov.df[1, "start"] <- gr.df[1, "start"]

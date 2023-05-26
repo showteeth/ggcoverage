@@ -59,6 +59,9 @@
 <li>
       <a href="../articles/CustomizeThePlot.html">Customize The Plot</a>
     </li>
+    <li>
+      <a href="../articles/TimeAndMemory.html">Time And Memory</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -93,8 +96,8 @@
 <a href="#introduction" class="anchor"></a>Introduction</h2>
 <p>An important feature of <code>ggcoverage</code> is the support of customization. This vignette will show how to customize the plot from the following two aspects:</p>
 <ul>
-<li>customize the theme</li>
-<li>add additional layer</li>
+<li>customize the elements of existing plot</li>
+<li>add additional layer to the existing plot</li>
 </ul>
 <hr>
 </div>
@@ -405,24 +408,7 @@
       color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">5</span>
     <span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>y<span class="op">=</span><span class="st">"Peak"</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>
-      axis.line.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-      axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-      axis.title.y.right <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span>, angle <span class="op">=</span> <span class="fl">90</span>, vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,
-      axis.ticks.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-      axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-      axis.title.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-      axis.ticks.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-      panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> <span class="cn">NA</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
-      plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">margin</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">0.1</span>, b <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>
-    <span class="op">)</span> <span class="op">+</span> 
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>
-      limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">0.1</span>, <span class="fl">1</span> <span class="op">+</span> <span class="fl">0.1</span><span class="op">)</span>,
-      expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, position <span class="op">=</span> <span class="st">"right"</span>
-    <span class="op">)</span> <span class="op">+</span> 
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot.region.start</span>, <span class="va">plot.region.end</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="../reference/theme_peak.html">theme_peak</a></span><span class="op">(</span>margin.len <span class="op">=</span> <span class="fl">0.1</span>, x.range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot.region.start</span>, <span class="va">plot.region.end</span><span class="op">)</span><span class="op">)</span>
 <span class="va">peak.plot</span></code></pre></div>
 <p><img src="CustomizeThePlot_files/figure-html/add_peak_data-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>Combine the plot:</p>

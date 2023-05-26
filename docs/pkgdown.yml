@@ -3,8 +3,9 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   CustomizeThePlot: CustomizeThePlot.html
+  TimeAndMemory: TimeAndMemory.html
   ggcoverage: ggcoverage.html
-last_built: 2023-05-24T12:55Z
+last_built: 2023-05-26T14:40Z
 urls:
   reference: https://showteeth.github.io/ggcoverage//reference
   article: https://showteeth.github.io/ggcoverage//articles

@@ -99,6 +99,9 @@
     <li>
       <a href="../articles/CustomizeThePlot.html">Customize The Plot</a>
     </li>
+    <li>
+      <a href="../articles/TimeAndMemory.html">Time And Memory</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -132,7 +135,14 @@
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>Major changes</h2>
 <ul>
-<li>Supporting protein coverage and annotation plot (<code>ggprotein</code>, <code>geom_protein</code>, <code>geom_feature</code>).</li>
+<li>Support protein coverage and annotation plot (<code>ggprotein</code>, <code>geom_protein</code>, <code>geom_feature</code>).</li>
+</ul>
+</div>
+<div id="minor-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>Export all themes to simplify customization.</li>
 </ul>
 <hr>
 </div>
@@ -146,13 +156,13 @@
 <a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <ul>
 <li>Mark SNV with twill (add twill to position with SNV), star (add star mark to position with SNV), and highlight (position without SNV is grey).</li>
-<li>Moved <code>FormatTrack</code> to <code>LoadTrackFile</code>, this can reduce load time and memory for big files.</li>
-<li>Supporting parallel to handle multiple files more efficiently.</li>
+<li>Move <code>FormatTrack</code> to <code>LoadTrackFile</code>, this can reduce load time and memory for big files.</li>
+<li>Support parallel to handle multiple files more efficiently.</li>
 </ul>
 </div>
-<div id="minor-changes" class="section level2">
+<div id="minor-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code>geom_coverage</code> and <code>ggcoverage</code> supports changing shared type of y-axis scales across facets (with <code>facet.y.scale</code> parameter).</li>
@@ -174,14 +184,14 @@
 <h2 class="hasAnchor">
 <a href="#major-changes-2" class="anchor"></a>Major changes</h2>
 <ul>
-<li>Supporting Hi-C visualization (<code>geom_tad</code> and <code>geom_tad2</code>).</li>
-<li>Supporting genome region interaction visualization (<code>geom_link</code>).</li>
-<li>Supporting CNV visualization (<code>geom_cnv</code>).</li>
+<li>Support Hi-C visualization (<code>geom_tad</code> and <code>geom_tad2</code>).</li>
+<li>Support genome region interaction visualization (<code>geom_link</code>).</li>
+<li>Support CNV visualization (<code>geom_cnv</code>).</li>
 </ul>
 </div>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code>geom_ideogram</code> supports the highlight of centromere.</li>
@@ -197,12 +207,12 @@
 <h2 class="hasAnchor">
 <a href="#major-changes-3" class="anchor"></a>Major changes</h2>
 <ul>
-<li>Supporting gtf file from Ensembl</li>
+<li>Support gtf file from Ensembl</li>
 </ul>
 </div>
-<div id="minor-changes-2" class="section level2">
+<div id="minor-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-3" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Fixed bugs in getting gene group.</li>
 </ul>
@@ -213,9 +223,9 @@
 <h1 class="page-header" data-toc-text="0.8.1">
 <a href="#ggcoverage-081" class="anchor"></a>ggcoverage 0.8.1<small> Unreleased </small>
 </h1>
-<div id="minor-changes-3" class="section level2">
+<div id="minor-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-3" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-4" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Fixed bugs in <code>ggcoverage</code>.</li>
 </ul>
@@ -237,9 +247,9 @@
 <li>Added a new vignette to customize the plot</li>
 </ul>
 </div>
-<div id="minor-changes-4" class="section level2">
+<div id="minor-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-4" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-5" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Fixed bugs in <code>geom_base</code>.</li>
 </ul>
@@ -257,9 +267,9 @@
 <li>Added <code>GetConsensusPeak</code> to get consensus peak from replicates with MSPC.</li>
 </ul>
 </div>
-<div id="minor-changes-5" class="section level2">
+<div id="minor-changes-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-5" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-6" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Added <code>peak.df</code> for <code>geom_peak</code> to support dataframe as input.</li>
 </ul>
@@ -277,9 +287,9 @@
 <li>Added <code>geom_base</code> to annotate genome coverage with base and amino acids.</li>
 </ul>
 </div>
-<div id="minor-changes-6" class="section level2">
+<div id="minor-changes-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-6" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-7" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code>LoadTrackFile</code> supported visualization at single-nucleotide level.</li>
@@ -306,9 +316,9 @@
 <h1 class="page-header" data-toc-text="0.5.0">
 <a href="#ggcoverage-050" class="anchor"></a>ggcoverage 0.5.0<small> Unreleased </small>
 </h1>
-<div id="minor-changes-7" class="section level2">
+<div id="minor-changes-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-7" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-8" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Fixed bug in <code>getIdeogram</code>.</li>
 </ul>
@@ -340,9 +350,9 @@
 <li>Added <code>geom_transcript</code>, <code>geom_ideogram</code>.</li>
 </ul>
 </div>
-<div id="minor-changes-8" class="section level2">
+<div id="minor-changes-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-8" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-9" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Fixed bug in <code>GetGeneGroup</code>.</li>
 </ul>
