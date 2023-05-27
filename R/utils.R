@@ -123,62 +123,62 @@ AAPadding <- function(len, offset = 0, aa.seq) {
 # }
 
 # divide genes to non-overlap groups (V2)
-# GetGeneGroup <- function(gene.gr, fc = "queryHits", sc = "subjectHits", overlap.gene.gap = 1) {
-#   overlap.df <- IRanges::findOverlaps(gene.gr, gene.gr, ignore.strand = TRUE) %>%
-#     as.data.frame() %>%
-#     dplyr::arrange(.data[[fc]], .data[[sc]])
-#   overlap.list <- lapply(split(overlap.df, overlap.df[, fc]), function(x) {
-#     x[, sc]
-#   })
-#   overlap.list <- overlap.list[order(sapply(overlap.list, length))]
-#   group.idx <- rep(1, length(unique(overlap.df[, fc])))
-#   for (i in names(overlap.list)) {
-#     i <- as.numeric(i)
-#     ovrlap.vec <- overlap.list[[i]]
-#     curr.group <- group.idx[i]
-#     remain.vec <- setdiff(ovrlap.vec, i)
-#     for (j in remain.vec) {
-#       if (group.idx[j] == curr.group) {
-#         group.idx[j] <- curr.group + overlap.gene.gap
-#       }
-#     }
-#   }
-#   return(group.idx)
-# }
-# V3
-GetGeneGroup <- function(gene.gr, overlap.gene.gap = 1) {
-  # convert to dataframe
-  gene.gr.df <- as.data.frame(gene.gr)
-  gene.gr.df$ID <- 1:nrow(gene.gr.df)
-  # split to group
-  group.flag <- 1
-  group.list <- list()
-  while (nrow(gene.gr.df) > 0) {
-    A <- gene.gr.df[1, ]
-    vec <- c(A$ID)
-    if (nrow(gene.gr.df) >= 2) {
-      for (i in 2:nrow(gene.gr.df)) {
-        if (gene.gr.df[i, "start"] > A[1, "end"]) {
-          vec <- c(vec, gene.gr.df[i, "ID"])
-          A$end <- gene.gr.df[i, "end"]
-        }
+GetGeneGroup <- function(gene.gr, fc = "queryHits", sc = "subjectHits", overlap.gene.gap = 1) {
+  overlap.df <- IRanges::findOverlaps(gene.gr, gene.gr, ignore.strand = TRUE) %>%
+    as.data.frame() %>%
+    dplyr::arrange(.data[[fc]], .data[[sc]])
+  overlap.list <- lapply(split(overlap.df, overlap.df[, fc]), function(x) {
+    x[, sc]
+  })
+  overlap.list <- overlap.list[order(sapply(overlap.list, length))]
+  group.idx <- rep(1, length(unique(overlap.df[, fc])))
+  for (i in names(overlap.list)) {
+    i <- as.numeric(i)
+    ovrlap.vec <- overlap.list[[i]]
+    curr.group <- group.idx[i]
+    remain.vec <- setdiff(ovrlap.vec, i)
+    for (j in remain.vec) {
+      if (group.idx[j] == curr.group) {
+        group.idx[j] <- curr.group + overlap.gene.gap
       }
     }
-    group.list[[paste0("G", group.flag)]] <- vec
-    gene.gr.df <- gene.gr.df %>% dplyr::filter(!ID %in% vec)
-    group.flag <- group.flag + 1
   }
-  # get group index
-  group.index <- c()
-  for (g in 1:length(group.list)) {
-    g.index <- 1 + overlap.gene.gap * (g - 1)
-    g.index.vec <- rep(g.index, length(group.list[[g]]))
-    names(g.index.vec) <- group.list[[g]]
-    group.index <- c(group.index, g.index.vec)
-  }
-  group.index <- group.index[order(names(group.index))]
-  return(group.index)
+  return(group.idx)
 }
+# V3
+# GetGeneGroup <- function(gene.gr, overlap.gene.gap = 1) {
+#   # convert to dataframe
+#   gene.gr.df <- as.data.frame(gene.gr)
+#   gene.gr.df$ID <- 1:nrow(gene.gr.df)
+#   # split to group
+#   group.flag <- 1
+#   group.list <- list()
+#   while (nrow(gene.gr.df) > 0) {
+#     A <- gene.gr.df[1, ]
+#     vec <- c(A$ID)
+#     if (nrow(gene.gr.df) >= 2) {
+#       for (i in 2:nrow(gene.gr.df)) {
+#         if (gene.gr.df[i, "start"] > A[1, "end"]) {
+#           vec <- c(vec, gene.gr.df[i, "ID"])
+#           A$end <- gene.gr.df[i, "end"]
+#         }
+#       }
+#     }
+#     group.list[[paste0("G", group.flag)]] <- vec
+#     gene.gr.df <- gene.gr.df %>% dplyr::filter(!ID %in% vec)
+#     group.flag <- group.flag + 1
+#   }
+#   # get group index
+#   group.index <- c()
+#   for (g in 1:length(group.list)) {
+#     g.index <- 1 + overlap.gene.gap * (g - 1)
+#     g.index.vec <- rep(g.index, length(group.list[[g]]))
+#     names(g.index.vec) <- group.list[[g]]
+#     group.index <- c(group.index, g.index.vec)
+#   }
+#   group.index <- group.index[order(names(group.index))]
+#   return(group.index)
+# }
 
 # SplitExonUTR(exon.df = gene.info.used.exon, utr.df = gene.info.used.utr)
 # substract UTR from exon

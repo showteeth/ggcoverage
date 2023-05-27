@@ -143,7 +143,7 @@
 <span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## Calculate coverage with GenomicAlignments when norm.method is None!</code></pre>
 <pre><code>##  用户  系统  流逝 
-## 0.405 0.015 0.420</code></pre>
+## 0.482 0.011 0.562</code></pre>
 <p>check the data:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">track.df</span><span class="op">)</span></code></pre></div>
@@ -164,7 +164,7 @@
 <span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## Calculate coverage with GenomicAlignments when norm.method is None!</code></pre>
 <pre><code>##  用户  系统  流逝 
-## 0.886 0.030 0.919</code></pre>
+## 0.862 0.032 0.900</code></pre>
 <hr>
 </div>
 <div id="create-coverage" class="section level3">
@@ -177,7 +177,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="va">basic.coverage</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"red"</span>, 
                                         range.position <span class="op">=</span> <span class="st">"out"</span>, show.mark.label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##  用户  系统  流逝 
-## 0.048 0.000 0.048</code></pre>
+## 0.046 0.001 0.047</code></pre>
 <p>The coverage plot (the bars are relatively dense, and can be viewed more clearly when saved as a PDF): <img src="../man/figures/time_memory_large.png" width="568" style="display: block; margin: auto;"></p>
 <hr>
 </div>
