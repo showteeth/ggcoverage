@@ -48,11 +48,12 @@ coverage. It contains three main parts:
 enter:
 
 ``` r
-# install via CRAN
+# install via CRAN (v0.7.1) # old version, it's better to install via Github
 install.packages("ggcoverage")
 
-# install via Github
+# install via Github (v1.2.0)
 # install.package("remotes")   #In case you have not installed it.
+# BiocManager::install("areyesq89/GenomeMatrix") # In case of possible dependency error
 remotes::install_github("showteeth/ggcoverage")
 ```
 
