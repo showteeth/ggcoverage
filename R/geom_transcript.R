@@ -3,6 +3,8 @@
 #' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.
 #' @param gene.name Gene name of all transcripts. Default: HNRNPC.
 #' @param overlap.tx.gap The gap between transcript groups. Default: 0.1.
+#' @param overlap.style The style of transcript groups, choose from loose (each transcript occupies single line)
+#' and tight (place non-overlap transcripts in one line). Default: loose.
 #' @param tx.size The line size of transcript. Default: 1.
 #' @param utr.size The line size of UTR. Default: 2.
 #' @param exon.size The line size of exon. Default: 4.
@@ -46,14 +48,14 @@
 #' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
 #' # basic.coverage <- ggcoverage(data = track.df, color = "auto", range.position = "out")
 #' # basic.coverage + geom_transcript(gtf.gr = gtf.gr, label.vjust = 1.5)
-geom_transcript <- function(gtf.gr, gene.name = "HNRNPC", overlap.tx.gap = 0.1, tx.size = 1,
-                            utr.size = 2, exon.size = 4, arrow.size = 1, color.by = "strand",
+geom_transcript <- function(gtf.gr, gene.name = "HNRNPC", overlap.tx.gap = 0.1, overlap.style = "loose",
+                            tx.size = 1, utr.size = 2, exon.size = 4, arrow.size = 1, color.by = "strand",
                             fill.color = c("-" = "darkblue", "+" = "darkgreen"),
                             arrow.gap = NULL, arrow.num = 50, arrow.length = 0.06,
                             label.size = 3, label.vjust = 2, plot.space = 0.1, plot.height = 1) {
   structure(list(
-    gtf.gr = gtf.gr, gene.name = gene.name, overlap.tx.gap = overlap.tx.gap, tx.size = tx.size,
-    utr.size = utr.size, exon.size = exon.size, arrow.size = arrow.size, color.by = color.by,
+    gtf.gr = gtf.gr, gene.name = gene.name, overlap.tx.gap = overlap.tx.gap, overlap.style = overlap.style,
+    tx.size = tx.size, utr.size = utr.size, exon.size = exon.size, arrow.size = arrow.size, color.by = color.by,
     fill.color = fill.color, arrow.gap = arrow.gap, arrow.num = arrow.num,
     arrow.length = arrow.length, label.size = label.size, label.vjust = label.vjust,
     plot.space = plot.space, plot.height = plot.height
@@ -89,6 +91,7 @@ ggplot_add.transcript <- function(object, plot, object_name) {
   gtf.gr <- object$gtf.gr
   gene.name <- object$gene.name
   overlap.tx.gap <- object$overlap.tx.gap
+  overlap.style <- object$overlap.style
   tx.size <- object$tx.size
   utr.size <- object$utr.size
   exon.size <- object$exon.size
@@ -132,7 +135,11 @@ ggplot_add.transcript <- function(object, plot, object_name) {
     strand.field = "strand"
   )
   # divide genes to non-overlap groups
-  tx.group.idx <- GetGeneGroup(tx.gr, overlap.gene.gap = overlap.tx.gap)
+  if (overlap.style == "loose") {
+    tx.group.idx <- GetGeneGroup(tx.gr, overlap.gene.gap = overlap.tx.gap)
+  } else if (overlap.style == "tight") {
+    tx.group.idx <- GetGeneGroupTight(tx.gr, overlap.gene.gap = overlap.tx.gap)
+  }
   group.num <- length(unique(tx.group.idx))
   gene.tx.df.tx$group <- tx.group.idx
   gene.tx.df.tx$start <- as.numeric(gene.tx.df.tx$start)

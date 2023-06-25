@@ -8,6 +8,7 @@ geom_transcript(
   gtf.gr,
   gene.name = "HNRNPC",
   overlap.tx.gap = 0.1,
+  overlap.style = "loose",
   tx.size = 1,
   utr.size = 2,
   exon.size = 4,
@@ -29,6 +30,9 @@ geom_transcript(
 \item{gene.name}{Gene name of all transcripts. Default: HNRNPC.}
 
 \item{overlap.tx.gap}{The gap between transcript groups. Default: 0.1.}
+
+\item{overlap.style}{The style of transcript groups, choose from loose (each transcript occupies single line)
+and tight (place non-overlap transcripts in one line). Default: loose.}
 
 \item{tx.size}{The line size of transcript. Default: 1.}
 

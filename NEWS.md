@@ -4,6 +4,7 @@
 
 ## Minor changes
 * Export all themes to simplify customization.
+* Optimized the gene and transcript group.
 
 -------------
 

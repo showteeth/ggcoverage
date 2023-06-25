@@ -173,7 +173,6 @@ basic.coverage +
   geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5)
 ```
 
-
 ### Add ideogram
 ```{r ideogram_coverage_1, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 basic.coverage +

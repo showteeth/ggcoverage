@@ -2,6 +2,8 @@
 #'
 #' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.
 #' @param overlap.gene.gap The gap between gene groups. Default: 0.1.
+#' @param overlap.style The style of gene groups, choose from loose (each gene occupies single line)
+#' and tight (place non-overlap genes in one line). Default: loose.
 #' @param gene.size The line size of gene. Default: 1.
 #' @param utr.size The line size of UTR. Default: 2.
 #' @param exon.size The line size of exon. Default: 4.
@@ -46,14 +48,14 @@
 #' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
 #' # basic.coverage <- ggcoverage(data = track.df, color = "auto", range.position = "out")
 #' # basic.coverage + geom_gene(gtf.gr = gtf.gr)
-geom_gene <- function(gtf.gr, overlap.gene.gap = 0.1, gene.size = 1,
+geom_gene <- function(gtf.gr, overlap.gene.gap = 0.1, overlap.style = "loose", gene.size = 1,
                       utr.size = 2, exon.size = 4, arrow.size = 1, color.by = "strand",
                       fill.color = c("-" = "darkblue", "+" = "darkgreen"), show.utr = TRUE,
                       arrow.gap = NULL, arrow.num = 50, arrow.length = 0.06,
                       label.size = 3, label.vjust = 2, plot.space = 0.1, plot.height = 0.2) {
   structure(list(
     gtf.gr = gtf.gr,
-    overlap.gene.gap = overlap.gene.gap, gene.size = gene.size,
+    overlap.gene.gap = overlap.gene.gap, overlap.style = overlap.style, gene.size = gene.size,
     utr.size = utr.size, exon.size = exon.size, arrow.size = arrow.size, color.by = color.by,
     fill.color = fill.color, show.utr = show.utr, arrow.gap = arrow.gap, arrow.num = arrow.num,
     arrow.length = arrow.length, label.size = label.size, label.vjust = label.vjust,
@@ -87,6 +89,7 @@ ggplot_add.gene <- function(object, plot, object_name) {
   # get parameters
   gtf.gr <- object$gtf.gr
   overlap.gene.gap <- object$overlap.gene.gap
+  overlap.style <- object$overlap.style
   gene.size <- object$gene.size
   utr.size <- object$utr.size
   exon.size <- object$exon.size
@@ -137,7 +140,11 @@ ggplot_add.gene <- function(object, plot, object_name) {
     strand.field = "strand"
   )
   # divide genes to non-overlap groups
-  gene.group.idx <- GetGeneGroup(used.gene.gr, overlap.gene.gap = overlap.gene.gap)
+  if (overlap.style == "loose") {
+    gene.group.idx <- GetGeneGroup(used.gene.gr, overlap.gene.gap = overlap.gene.gap)
+  } else if (overlap.style == "tight") {
+    gene.group.idx <- GetGeneGroupTight(used.gene.gr, overlap.gene.gap = overlap.gene.gap)
+  }
   group.num <- length(unique(gene.group.idx))
   gene.info.used.gene$group <- gene.group.idx
   gene.info.used.gene$start <- as.numeric(gene.info.used.gene$start)

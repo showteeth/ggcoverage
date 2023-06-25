@@ -7,6 +7,7 @@
 geom_gene(
   gtf.gr,
   overlap.gene.gap = 0.1,
+  overlap.style = "loose",
   gene.size = 1,
   utr.size = 2,
   exon.size = 4,
@@ -27,6 +28,9 @@ geom_gene(
 \item{gtf.gr}{Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.}
 
 \item{overlap.gene.gap}{The gap between gene groups. Default: 0.1.}
+
+\item{overlap.style}{The style of gene groups, choose from loose (each gene occupies single line)
+and tight (place non-overlap genes in one line). Default: loose.}
 
 \item{gene.size}{The line size of gene. Default: 1.}
 
