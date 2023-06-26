@@ -48,12 +48,11 @@ coverage. It contains three main parts:
 enter:
 
 ``` r
-# install via CRAN (v0.7.1) # old version, it's better to install via Github
+# install via CRAN
 install.packages("ggcoverage")
 
-# install via Github (v1.2.0)
+# install via Github
 # install.package("remotes")   #In case you have not installed it.
-# BiocManager::install("areyesq89/GenomeMatrix") # In case of possible dependency error
 remotes::install_github("showteeth/ggcoverage")
 ```
 
@@ -231,12 +230,23 @@ basic.coverage +
 
 ### Add transcript annotation
 
+**In “loose” stype (default style; each transcript occupies one line)**:
+
 ``` r
-basic.coverage + 
+basic.coverage +
   geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5)
 ```
 
 <img src="man/figures/README-transcript_coverage-1.png" width="100%" style="display: block; margin: auto;" />
+
+**In “tight” style (place non-overlap transcripts in one line)**:
+
+``` r
+basic.coverage +
+  geom_transcript(gtf.gr=gtf.gr, overlap.style = "tight", label.vjust = 1.5)
+```
+
+<img src="man/figures/README-transcript_coverage_tight-1.png" width="100%" style="display: block; margin: auto;" />
 
 ### Add ideogram
 

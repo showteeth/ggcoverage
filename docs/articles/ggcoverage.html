@@ -92,7 +92,7 @@
       School of Life Sciences, Tsinghua University<br><a class="author_email" href="mailto:#"></a><a href="mailto:songyb18@mails.tsinghua.edu.cn" class="email">songyb18@mails.tsinghua.edu.cn</a>
       </address>
                   
-            <h4 class="date">28 五月 2023</h4>
+            <h4 class="date">25 六月 2023</h4>
       
       
       <div class="hidden name"><code>ggcoverage.Rmd</code></div>
@@ -121,11 +121,12 @@ document.addEventListener("DOMContentLoaded", function() {
 <a href="#getting-started" class="anchor"></a>Getting started</h1>
 <p><code>ggcoverage</code> is an R package distributed as part of the <a href="https://cran.r-project.org/">CRAN</a>. To install the package, start R and enter:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install via CRAN</span>
+<code class="sourceCode R"><span class="co"># install via CRAN (v0.7.1) # old version, it's better to install via Github</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"ggcoverage"</span><span class="op">)</span>
 
-<span class="co"># install via Github</span>
+<span class="co"># install via Github (v1.2.0)</span>
 <span class="co"># install.package("remotes")   #In case you have not installed it.</span>
+<span class="co"># BiocManager::install("areyesq89/GenomeMatrix") # In case of possible dependency error</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"showteeth/ggcoverage"</span><span class="op">)</span></code></pre></div>
 <p>In general, it is <strong>recommended</strong> to install from <a href="https://github.com/showteeth/ggcoverage">Github repository</a> (update more timely).</p>
 <p>Once <code>ggcoverage</code> is installed, it can be loaded by the following command.</p>
@@ -299,21 +300,27 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="add-transcript-annotation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#add-transcript-annotation" class="anchor"></a>Add transcript annotation</h2>
+<p><strong>In “loose” stype (default style; each transcript occupies one line)</strong>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">+</span> 
+<code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/geom_transcript.html">geom_transcript</a></span><span class="op">(</span>gtf.gr<span class="op">=</span><span class="va">gtf.gr</span>,label.vjust <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></code></pre></div>
 <p><img src="../man/figures/README-transcript_coverage-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><strong>In “tight” style (place non-overlap transcripts in one line)</strong>:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/geom_transcript.html">geom_transcript</a></span><span class="op">(</span>gtf.gr<span class="op">=</span><span class="va">gtf.gr</span>, overlap.style <span class="op">=</span> <span class="st">"tight"</span>, label.vjust <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></code></pre></div>
+<p><img src="../man/figures/README-transcript_coverage_tight-1.png" width="576" style="display: block; margin: auto;"></p>
 <hr>
 </div>
 <div id="add-ideogram" class="section level2">
 <h2 class="hasAnchor">
 <a href="#add-ideogram" class="anchor"></a>Add ideogram</h2>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/geom_gene.html">geom_gene</a></span><span class="op">(</span>gtf.gr<span class="op">=</span><span class="va">gtf.gr</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/geom_ideogram.html">geom_ideogram</a></span><span class="op">(</span>genome <span class="op">=</span> <span class="st">"hg19"</span>,plot.space <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="../man/figures/README-ideogram_coverage_1-1.png" width="576" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/geom_transcript.html">geom_transcript</a></span><span class="op">(</span>gtf.gr<span class="op">=</span><span class="va">gtf.gr</span>,label.vjust <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/geom_ideogram.html">geom_ideogram</a></span><span class="op">(</span>genome <span class="op">=</span> <span class="st">"hg19"</span>,plot.space <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
@@ -334,7 +341,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h4 class="hasAnchor">
 <a href="#load-the-data-1" class="anchor"></a>Load the data</h4>
 <p>The DNA-seq data used here are from <a href="http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html">Copy number work flow</a>, we select tumor sample, and get bin counts with <code><a href="https://rdrr.io/pkg/cn.mops/man/getReadCountsFromBAM.html">cn.mops::getReadCountsFromBAM</a></code> with <code>WL</code> 1000.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># prepare metafile</span>
 <span class="va">cnv.meta.info</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   SampleName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CNV_example"</span><span class="op">)</span>,
@@ -359,7 +366,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="basic-coverage-1" class="section level4">
 <h4 class="hasAnchor">
 <a href="#basic-coverage-1" class="anchor"></a>Basic coverage</h4>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>,color <span class="op">=</span> <span class="st">"grey"</span>, mark.region <span class="op">=</span> <span class="cn">NULL</span>,
                             range.position <span class="op">=</span> <span class="st">"out"</span><span class="op">)</span>
 <span class="va">basic.coverage</span></code></pre></div>
@@ -369,7 +376,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h4 class="hasAnchor">
 <a href="#add-annotations" class="anchor"></a>Add annotations</h4>
 <p>Add <strong>GC</strong>, <strong>ideogram</strong> and <strong>gene</strong> annotations.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load genome data</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"BSgenome.Hsapiens.UCSC.hg19"</span><span class="op">)</span>
 <span class="co"># create plot</span>
@@ -387,7 +394,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h4 class="hasAnchor">
 <a href="#load-the-data-2" class="anchor"></a>Load the data</h4>
 <p>The DNA-seq data used here are from <a href="https://www.nature.com/articles/nprot.2012.039">Genome-wide copy number analysis of single cells</a>, and the accession number is <a href="https://trace.ncbi.nlm.nih.gov/Traces/index.html?run=SRR054616">SRR054616</a>.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># track file</span>
 <span class="va">track.file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"DNA-seq"</span>, <span class="st">"SRR054616.bw"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="co"># load track</span>
@@ -408,7 +415,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="basic-coverage-2" class="section level4">
 <h4 class="hasAnchor">
 <a href="#basic-coverage-2" class="anchor"></a>Basic coverage</h4>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"grey"</span>,
                             mark.region <span class="op">=</span> <span class="cn">NULL</span>, range.position <span class="op">=</span> <span class="st">"out"</span><span class="op">)</span>
 <span class="va">basic.coverage</span></code></pre></div>
@@ -417,7 +424,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="load-cnv-file" class="section level4">
 <h4 class="hasAnchor">
 <a href="#load-cnv-file" class="anchor"></a>Load CNV file</h4>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># prepare files</span>
 <span class="va">cnv.file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"DNA-seq"</span>, <span class="st">"SRR054616_copynumber.txt"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="co"># read CNV</span>
@@ -436,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h4 class="hasAnchor">
 <a href="#add-annotations-1" class="anchor"></a>Add annotations</h4>
 <p>Add <strong>GC</strong>, <strong>ideogram</strong> and <strong>CNV</strong> annotations.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load genome data</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"BSgenome.Hsapiens.UCSC.hg19"</span><span class="op">)</span>
 <span class="co"># create plot</span>
@@ -455,7 +462,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="load-the-data-3" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-the-data-3" class="anchor"></a>Load the data</h3>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># prepare sample metadata</span>
 <span class="va">sample.meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   SampleName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"tumorA.chr4.selected"</span><span class="op">)</span>,
@@ -483,7 +490,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <a href="#default-color-scheme" class="anchor"></a>Default color scheme</h3>
 <p>For base and amino acid annotation, we have following default color schemes, you can change with <code>nuc.color</code> and <code>aa.color</code> parameters.</p>
 <p>Default color scheme for base annotation is <code>Clustal-style</code>, more popular color schemes is available <a href="https://www.biostars.org/p/171056/">here</a>.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># color scheme</span>
 <span class="va">nuc.color</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="st">"#ff2b08"</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="st">"#009aff"</span>, <span class="st">"G"</span> <span class="op">=</span> <span class="st">"#ffb507"</span>, <span class="st">"T"</span> <span class="op">=</span> <span class="st">"#00bc0d"</span><span class="op">)</span>
 <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="op">)</span> 
@@ -500,12 +507,12 @@ document.addEventListener("DOMContentLoaded", function() {
   side <span class="op">=</span> <span class="fl">2</span>
 <span class="op">)</span></code></pre></div>
 <p><img src="ggcoverage_files/figure-html/base_color_scheme-1.png" width="360" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># reset par default</span>
 <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span></code></pre></div>
 <p>Default color scheme for amino acid annotation is from <a href="https://academic.oup.com/peds/article/10/7/743/1593029?login=false">Residual colours: a proposal for aminochromography</a>:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">aa.color</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="st">"D"</span> <span class="op">=</span> <span class="st">"#FF0000"</span>, <span class="st">"S"</span> <span class="op">=</span> <span class="st">"#FF2400"</span>, <span class="st">"T"</span> <span class="op">=</span> <span class="st">"#E34234"</span>, <span class="st">"G"</span> <span class="op">=</span> <span class="st">"#FF8000"</span>, <span class="st">"P"</span> <span class="op">=</span> <span class="st">"#F28500"</span>,
   <span class="st">"C"</span> <span class="op">=</span> <span class="st">"#FFFF00"</span>, <span class="st">"A"</span> <span class="op">=</span> <span class="st">"#FDFF00"</span>, <span class="st">"V"</span> <span class="op">=</span> <span class="st">"#E3FF00"</span>, <span class="st">"I"</span> <span class="op">=</span> <span class="st">"#C0FF00"</span>, <span class="st">"L"</span> <span class="op">=</span> <span class="st">"#89318C"</span>,
@@ -526,7 +533,7 @@ document.addEventListener("DOMContentLoaded", function() {
   side <span class="op">=</span> <span class="fl">2</span>
 <span class="op">)</span></code></pre></div>
 <p><img src="ggcoverage_files/figure-html/aa_color_scheme-1.png" width="600" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># reset par default</span>
 <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span></code></pre></div>
@@ -535,7 +542,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h3 class="hasAnchor">
 <a href="#add-base-and-amino-acid-annotation" class="anchor"></a>Add base and amino acid annotation</h3>
 <p><strong>Use twill to mark position with SNV</strong>:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/coolbutuseless/ggpattern">ggpattern</a></span><span class="op">)</span>
 <span class="co"># create plot with twill mark</span>
 <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"grey"</span>, range.position <span class="op">=</span> <span class="st">"out"</span>, 
@@ -546,7 +553,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <span class="fu"><a href="../reference/geom_ideogram.html">geom_ideogram</a></span><span class="op">(</span>genome <span class="op">=</span> <span class="st">"hg19"</span>,plot.space <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="../man/figures/README-base_aa_coverage-1.png" width="576" style="display: block; margin: auto;"></p>
 <p><strong>Use star to mark position with SNV</strong>:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create plot with star mark</span>
 <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"grey"</span>, range.position <span class="op">=</span> <span class="st">"out"</span>, 
            single.nuc<span class="op">=</span><span class="cn">T</span>, rect.color <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span>
@@ -556,7 +563,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <span class="fu"><a href="../reference/geom_ideogram.html">geom_ideogram</a></span><span class="op">(</span>genome <span class="op">=</span> <span class="st">"hg19"</span>,plot.space <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p><img src="../man/figures/README-base_aa_coverage_star-1.png" width="576" style="display: block; margin: auto;"></p>
 <p><strong>Highlight position with SNV</strong>:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># highlight</span>
 <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"grey"</span>, range.position <span class="op">=</span> <span class="st">"out"</span>, 
            single.nuc<span class="op">=</span><span class="cn">T</span>, rect.color <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span>
@@ -574,7 +581,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <a href="#chip-seq-data" class="anchor"></a>ChIP-seq data</h1>
 <p>The ChIP-seq data used here are from <a href="https://bioconductor.org/packages/release/bioc/html/DiffBind.html">DiffBind</a>, I select four sample to use as example: Chr18_MCF7_input, Chr18_MCF7_ER_1, Chr18_MCF7_ER_3, Chr18_MCF7_ER_2, and all bam files are converted to bigwig file with <a href="https://deeptools.readthedocs.io/en/develop/">deeptools</a>.</p>
 <p>Create metadata:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load metadata</span>
 <span class="va">sample.meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>SampleName<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Chr18_MCF7_ER_1'</span>,<span class="st">'Chr18_MCF7_ER_2'</span>,<span class="st">'Chr18_MCF7_ER_3'</span>,<span class="st">'Chr18_MCF7_input'</span><span class="op">)</span>,
                          Type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MCF7_ER_1"</span>,<span class="st">"MCF7_ER_2"</span>,<span class="st">"MCF7_ER_3"</span>,<span class="st">"MCF7_input"</span><span class="op">)</span>,
@@ -586,7 +593,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <span class="co">#&gt; 3  Chr18_MCF7_ER_3  MCF7_ER_3    IP</span>
 <span class="co">#&gt; 4 Chr18_MCF7_input MCF7_input Input</span></code></pre></div>
 <p>Load track files:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># track folder</span>
 <span class="va">track.folder</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ChIP-seq"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="co"># load bigwig file</span>
@@ -602,7 +609,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <span class="co">#&gt; 5    chr18 76821301 76821600   0.000 MCF7_ER_1    IP</span>
 <span class="co">#&gt; 6    chr18 76821601 76821900 219.658 MCF7_ER_1    IP</span></code></pre></div>
 <p>Prepare mark region:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create mark region</span>
 <span class="va">mark.region</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>start<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">76822533</span><span class="op">)</span>,
                        end<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">76823743</span><span class="op">)</span>,
@@ -615,7 +622,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="basic-coverage-3" class="section level2">
 <h2 class="hasAnchor">
 <a href="#basic-coverage-3" class="anchor"></a>Basic coverage</h2>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"auto"</span>, 
                             mark.region<span class="op">=</span><span class="va">mark.region</span>, show.mark.label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">basic.coverage</span></code></pre></div>
@@ -626,7 +633,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2 class="hasAnchor">
 <a href="#get-consensus-peaks" class="anchor"></a>Get consensus peaks</h2>
 <p>Before create peak annotation, we first <strong>get consensus peaks</strong> from replicates with <a href="https://github.com/Genometric/MSPC">MSPC</a>.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load peak file</span>
 <span class="va">peak.file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ChIP-seq"</span>, <span class="st">"consensus.peak"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="co"># get consensus peak (do nothing when there is only one file)</span>
@@ -637,7 +644,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2 class="hasAnchor">
 <a href="#add-annotations-2" class="anchor"></a>Add annotations</h2>
 <p>Add <strong>gene</strong>, <strong>ideogram</strong> and <strong>peak</strong> annotations:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get consensus peak file</span>
 <span class="va">peak.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ChIP-seq"</span>, <span class="st">"consensus.peak"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="co"># create with peak file</span>
@@ -663,7 +670,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="load-track-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-track-data" class="anchor"></a>Load track data</h2>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">ggcoverage</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/GenomicRanges">GenomicRanges</a></span><span class="op">)</span>
 <span class="co"># prepare track dataframe</span>
@@ -686,13 +693,13 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2 class="hasAnchor">
 <a href="#load-hi-c-data" class="anchor"></a>Load Hi-C data</h2>
 <p>Matrix:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## matrix</span>
 <span class="va">hic.mat.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"HiC"</span>, <span class="st">"HiC_mat.txt"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="va">hic.mat</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">hic.mat.file</span>, sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span>
 <span class="va">hic.mat</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">hic.mat</span><span class="op">)</span></code></pre></div>
 <p>Bin table:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## bin</span>
 <span class="va">hic.bin.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"HiC"</span>, <span class="st">"HiC_bin.txt"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
 <span class="va">hic.bin</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">hic.bin.file</span>, sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span>
@@ -704,7 +711,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="va">x</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>Data transfromation method:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## transfrom func</span>
 <span class="va">FailSafe_log10</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
   <span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.nan</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.infinite</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span>
@@ -714,14 +721,14 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="load-link" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-link" class="anchor"></a>Load link</h2>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># prepare arcs</span>
 <span class="va">link.file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"HiC"</span>, <span class="st">"HiC_link.bedpe"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="basic-coverage-4" class="section level2">
 <h2 class="hasAnchor">
 <a href="#basic-coverage-4" class="anchor"></a>Basic coverage</h2>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">=</span> <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"grey"</span>,
                             mark.region <span class="op">=</span> <span class="cn">NULL</span>, range.position <span class="op">=</span> <span class="st">"out"</span><span class="op">)</span>
 <span class="va">basic.coverage</span></code></pre></div>
@@ -731,7 +738,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2 class="hasAnchor">
 <a href="#add-annotations-3" class="anchor"></a>Add annotations</h2>
 <p>Add <strong>link</strong>, <strong>contact map</strong>annotations:</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basic.coverage</span> <span class="op">+</span>
   <span class="fu"><a href="../reference/geom_tad.html">geom_tad</a></span><span class="op">(</span>matrix <span class="op">=</span> <span class="va">hic.mat</span>, granges <span class="op">=</span> <span class="va">hic.bin.gr</span>, value.cut <span class="op">=</span> <span class="fl">0.99</span>,
            color.palette <span class="op">=</span> <span class="st">"viridis"</span>, transform.fun <span class="op">=</span> <span class="va">FailSafe_log10</span>,
@@ -749,7 +756,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2 class="hasAnchor">
 <a href="#load-coverage" class="anchor"></a>Load coverage</h2>
 <p>The exported coverage from <a href="https://www.thermofisher.cn/cn/zh/home/industrial/mass-spectrometry/liquid-chromatography-mass-spectrometry-lc-ms/lc-ms-software/multi-omics-data-analysis/proteome-discoverer-software.html?adobe_mc=MCMID%7C90228073352279367993013412919222863692%7CMCAID%3D3208C32C269355DE-4000028116B65FEB%7CMCORGID%3D5B135A0C5370E6B40A490D44%40AdobeOrg%7CTS=1614293705">Proteome Discoverer</a>:</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ycphs.github.io/openxlsx/index.html">openxlsx</a></span><span class="op">)</span>
 <span class="co"># prepare coverage dataframe</span>
 <span class="va">coverage.file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"Proteomics"</span>, <span class="st">"MS_BSA_coverage.xlsx"</span>, package <span class="op">=</span> <span class="st">"ggcoverage"</span><span class="op">)</span>
@@ -806,7 +813,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <span class="co">#&gt; 5                                 8.94             93.30</span>
 <span class="co">#&gt; 6                                 8.90             75.40</span></code></pre></div>
 <p>The input protein fasta:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/Biostrings">Biostrings</a></span><span class="op">)</span>
 <span class="co">#&gt; 载入需要的程辑包：XVector</span>
 <span class="co">#&gt; </span>
@@ -827,7 +834,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="protein-coverage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#protein-coverage" class="anchor"></a>Protein coverage</h2>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">protein.coverage</span> <span class="op">=</span> <span class="fu"><a href="../reference/ggprotein.html">ggprotein</a></span><span class="op">(</span>coverage.file <span class="op">=</span> <span class="va">coverage.file</span>, fasta.file <span class="op">=</span> <span class="va">fasta.file</span>, 
                              protein.id <span class="op">=</span> <span class="st">"sp|P02769|ALBU_BOVIN"</span>, range.position <span class="op">=</span> <span class="st">"out"</span><span class="op">)</span>
 <span class="va">protein.coverage</span></code></pre></div>
@@ -837,7 +844,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2 class="hasAnchor">
 <a href="#add-annotation" class="anchor"></a>Add annotation</h2>
 <p>We can obtain features of the protein from <a href="https://www.uniprot.org/">UniProt</a>. For example, the above protein coverage plot shows that there is empty region in 1-24, and this empty region in <a href="https://www.uniprot.org/uniprotkb/P02769/entry">UniProt</a> is annotated as Signal peptide and Propeptide peptide. When the protein is mature and released extracellular, these peptides will be cleaved. This is the reason why there is empty region in 1-24.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># protein feature obtained from UniProt</span>
 <span class="va">protein.feature.df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>ProteinID <span class="op">=</span> <span class="st">"sp|P02769|ALBU_BOVIN"</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">19</span>, <span class="fl">25</span><span class="op">)</span>, 
                                 end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">24</span>, <span class="fl">607</span><span class="op">)</span>, 
@@ -852,7 +859,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; R version 4.0.3 (2020-10-10)</span>
 <span class="co">#&gt; Platform: x86_64-conda-linux-gnu (64-bit)</span>

@@ -168,9 +168,16 @@ basic.coverage +
 
 
 ### Add transcript annotation
+**In "loose" stype (default style; each transcript occupies one line)**:
 ```{r transcript_coverage, warning=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
-basic.coverage + 
+basic.coverage +
   geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5)
+```
+
+**In "tight" style (place non-overlap transcripts in one line)**:
+```{r transcript_coverage_tight, warning=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
+basic.coverage +
+  geom_transcript(gtf.gr=gtf.gr, overlap.style = "tight", label.vjust = 1.5)
 ```
 
 ### Add ideogram

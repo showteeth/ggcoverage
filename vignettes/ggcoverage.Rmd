@@ -212,13 +212,24 @@ knitr::include_graphics("../man/figures/README-gene_coverage-1.png")
 -------------
 
 ## Add transcript annotation
+**In "loose" stype (default style; each transcript occupies one line)**:
 ```{r transcript_coverage, eval=FALSE}
-basic.coverage + 
+basic.coverage +
   geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5)
 ```
 
 ```{r transcript_coverage_plot, echo=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
 knitr::include_graphics("../man/figures/README-transcript_coverage-1.png")
+```
+
+**In "tight" style (place non-overlap transcripts in one line)**:
+```{r transcript_coverage_tight, eval=FALSE}
+basic.coverage +
+  geom_transcript(gtf.gr=gtf.gr, overlap.style = "tight", label.vjust = 1.5)
+```
+
+```{r transcript_coverage_tight_plot, echo=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-transcript_coverage_tight-1.png")
 ```
 
 -------------

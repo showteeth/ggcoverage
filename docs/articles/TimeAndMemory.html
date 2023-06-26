@@ -121,9 +121,13 @@
 <pre><code>## Registered S3 method overwritten by 'GGally':
 ##   method from   
 ##   +.gg   ggplot2</code></pre>
+<pre><code>## Possible Ensembl SSL connectivity problems detected.
+## Please see the 'Connection Troubleshooting' section of the biomaRt vignette
+## vignette('accessing_ensembl', package = 'biomaRt')Error in curl::curl_fetch_memory(url, handle = handle) : 
+##   SSL certificate problem: certificate has expired</code></pre>
 <pre><code>## Warning: replacing previous import 'ggplot2::annotate' by 'ggpp::annotate' when
 ## loading 'ggcoverage'</code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># prepare metadata</span>
 <span class="va">sample.meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>SampleName<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'possorted_genome_bam'</span><span class="op">)</span>,
                          Type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"possorted_genome_bam"</span><span class="op">)</span>,
@@ -131,7 +135,7 @@
 <span class="va">sample.meta</span></code></pre></div>
 <pre><code>##             SampleName                 Type Group
 ## 1 possorted_genome_bam possorted_genome_bam   10x</code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># prepare track folder</span>
 <span class="va">track.folder</span> <span class="op">=</span> <span class="st">'~/projects/ggcoverage'</span>
 <span class="co"># load the track</span>
@@ -143,9 +147,9 @@
 <span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## Calculate coverage with GenomicAlignments when norm.method is None!</code></pre>
 <pre><code>##  用户  系统  流逝 
-## 0.482 0.011 0.562</code></pre>
+## 0.501 0.013 0.615</code></pre>
 <p>check the data:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">track.df</span><span class="op">)</span></code></pre></div>
 <pre><code>##   seqnames     start       end score                 Type Group
 ## 1    chr11 118339075 118339075   136 possorted_genome_bam   10x
@@ -155,7 +159,7 @@
 ## 5    chr11 118339079 118339079   257 possorted_genome_bam   10x
 ## 6    chr11 118339080 118339080   281 possorted_genome_bam   10x</code></pre>
 <p>For larger region:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># region length: 203631</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/LoadTrackFile.html">LoadTrackFile</a></span><span class="op">(</span>
   track.folder <span class="op">=</span> <span class="va">track.folder</span>, format <span class="op">=</span> <span class="st">"bam"</span>, norm.method <span class="op">=</span> <span class="st">"None"</span>,
@@ -164,20 +168,20 @@
 <span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## Calculate coverage with GenomicAlignments when norm.method is None!</code></pre>
 <pre><code>##  用户  系统  流逝 
-## 0.862 0.032 0.900</code></pre>
+## 0.959 0.027 1.000</code></pre>
 <hr>
 </div>
 <div id="create-coverage" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-coverage" class="anchor"></a>Create coverage</h3>
 <p>With the track dataframe, we can generate coverage plot.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create basic coverage plot</span>
 <span class="co"># the running time is very small</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="va">basic.coverage</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggcoverage.html">ggcoverage</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">track.df</span>, color <span class="op">=</span> <span class="st">"red"</span>, 
                                         range.position <span class="op">=</span> <span class="st">"out"</span>, show.mark.label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##  用户  系统  流逝 
-## 0.046 0.001 0.047</code></pre>
+## 0.048 0.001 0.048</code></pre>
 <p>The coverage plot (the bars are relatively dense, and can be viewed more clearly when saved as a PDF): <img src="../man/figures/time_memory_large.png" width="568" style="display: block; margin: auto;"></p>
 <hr>
 </div>
@@ -190,19 +194,8 @@
 <a href="#test-data-1" class="anchor"></a>Test data</h3>
 <p>To test the perfromance, we use three identical bam files from <a href="https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR053616">SRR053616</a>.</p>
 <p>Data folder for <strong>sequential normalization</strong>:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># test the sequential normalization</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> ./test</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; total 2.0G</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 3.9M May  26 16:44 SRR054616_rep3.bam.bai</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 3.9M May  26 16:44 SRR054616_rep2.bam.bai</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 3.9M May  26 16:44 SRR054616_rep1.bam.bai</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 646M May  26 16:44 SRR054616_rep3.bam</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 646M May  26 16:44 SRR054616_rep2.bam</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 646M May  26 16:44 SRR054616_rep1.bam</span></span></code></pre></div>
-<p>Data folder for <strong>parallel normalization</strong>:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># test the parallel normalization</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> ./test2</span>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># test the sequential normalization</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> ./test</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; total 2.0G</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 3.9M May  26 16:44 SRR054616_rep3.bam.bai</span></span>
@@ -211,12 +204,23 @@
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 646M May  26 16:44 SRR054616_rep3.bam</span></span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 646M May  26 16:44 SRR054616_rep2.bam</span></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 646M May  26 16:44 SRR054616_rep1.bam</span></span></code></pre></div>
+<p>Data folder for <strong>parallel normalization</strong>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># test the parallel normalization</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> ./test2</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; total 2.0G</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 3.9M May  26 16:44 SRR054616_rep3.bam.bai</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 3.9M May  26 16:44 SRR054616_rep2.bam.bai</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 3.9M May  26 16:44 SRR054616_rep1.bam.bai</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 646M May  26 16:44 SRR054616_rep3.bam</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 646M May  26 16:44 SRR054616_rep2.bam</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -rw-r--r--. 1 songyabing wanglab 646M May  26 16:44 SRR054616_rep1.bam</span></span></code></pre></div>
 <hr>
 </div>
 <div id="sequential-normalization" class="section level3">
 <h3 class="hasAnchor">
 <a href="#sequential-normalization" class="anchor"></a>Sequential normalization</h3>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># prepare sample metadata</span>
 <span class="va">sample.meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>SampleName<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'SRR054616_rep1'</span>,<span class="st">'SRR054616_rep2'</span>,<span class="st">'SRR054616_rep3'</span><span class="op">)</span>,
                          Type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SRR054616_rep1"</span>,<span class="st">"SRR054616_rep2"</span>,<span class="st">"SRR054616_rep3"</span><span class="op">)</span>,
@@ -241,7 +245,7 @@
 <div id="parallel-normalization-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#parallel-normalization-1" class="anchor"></a>Parallel normalization</h3>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># prepare sample metadata</span>
 <span class="va">sample.meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>SampleName<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'SRR054616_rep1'</span>,<span class="st">'SRR054616_rep2'</span>,<span class="st">'SRR054616_rep3'</span><span class="op">)</span>,
                          Type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SRR054616_rep1"</span>,<span class="st">"SRR054616_rep2"</span>,<span class="st">"SRR054616_rep3"</span><span class="op">)</span>,
@@ -267,7 +271,7 @@
 <h3 class="hasAnchor">
 <a href="#create-coverage-1" class="anchor"></a>Create coverage</h3>
 <p>In general, the loading step is the most time-consuming step. With the track dataframe, we can generate coverage plot.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># read the track dataframe</span>
 <span class="va">track.df</span> <span class="op">=</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"~/projects/ggcoverage/ggcoverage_parallel_track.txt"</span>, 
                              sep <span class="op">=</span> <span class="st">"\t"</span>, header <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
@@ -278,7 +282,7 @@
 <pre><code>## Warning in geom_coverage(data = data, mapping = mapping, color = color, : The
 ## color you provided is not as long as Type column in data, select automatically!</code></pre>
 <pre><code>##  用户  系统  流逝 
-## 0.018 0.000 0.018</code></pre>
+## 0.019 0.000 0.019</code></pre>
 <p>The coverage plot: <img src="TimeAndMemory_files/figure-html/parallel_coverage_plot-1.png" width="1152" style="display: block; margin: auto;"></p>
 </div>
 </div>

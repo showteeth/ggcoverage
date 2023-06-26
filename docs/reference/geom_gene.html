@@ -136,6 +136,7 @@
     <pre class="usage"><span class='fu'>geom_gene</span><span class='op'>(</span>
   <span class='va'>gtf.gr</span>,
   overlap.gene.gap <span class='op'>=</span> <span class='fl'>0.1</span>,
+  overlap.style <span class='op'>=</span> <span class='st'>"loose"</span>,
   gene.size <span class='op'>=</span> <span class='fl'>1</span>,
   utr.size <span class='op'>=</span> <span class='fl'>2</span>,
   exon.size <span class='op'>=</span> <span class='fl'>4</span>,
@@ -162,6 +163,11 @@
     <tr>
       <th>overlap.gene.gap</th>
       <td><p>The gap between gene groups. Default: 0.1.</p></td>
+    </tr>
+    <tr>
+      <th>overlap.style</th>
+      <td><p>The style of gene groups, choose from loose (each gene occupies single line)
+and tight (place non-overlap genes in one line). Default: loose.</p></td>
     </tr>
     <tr>
       <th>gene.size</th>
