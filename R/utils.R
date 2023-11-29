@@ -82,6 +82,8 @@ CeilingNumber <- function(x, digits = 2) {
     sci.part <- as.numeric(x.split[2])
     valid.digits <- digits - 1
     x.ceiling <- round(num.part + 5 * 10^(-valid.digits - 1), valid.digits) * 10^(sci.part)
+  } else {
+    x.ceiling <- 0
   }
   # final number
   x.final <- x.ceiling * flag
