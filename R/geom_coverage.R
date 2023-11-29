@@ -50,7 +50,7 @@
 #' #   meta.info = sample.meta
 #' # )
 #' # ggplot() +
-#' #   geom_coverage(data = track.df, color = "auto", mark.region = NULL)
+#' #   geom_coverage(data = track.df, color = NULL, mark.region = NULL)
 geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
                           single.nuc = FALSE, plot.type = c("facet", "joint"),
                           facet.key = "Type", joint.avg = FALSE, facet.order = NULL,
@@ -67,32 +67,28 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
   if (is.null(mapping)) {
     if (plot.type == "facet") {
       if (!is.null(color)) {
-        if (length(color) != length(unique(data[, facet.key]))) {
-          warning("The color you provided is not as long as ", facet.key, " column in data, select automatically!")
+        testcolors <- sapply(color, function(x) {
+          tryCatch(is.matrix(col2rgb(x)),
+                   error = function(e) FALSE)
+        })
+        if (length(color) < length(unique(data[, group.key]))) {
+          warning("Fewer colors provided than there are groups in ", group.key, " variable, falling back to default colors")
           # sample group with same color
-          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
-          # change facet key color color
-          if (facet.key == group.key) {
-            fill.color.df <- merge(unique(data[c(facet.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
-          } else {
-            fill.color.df <- merge(unique(data[c(facet.key, group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
-          }
-          fill.color <- fill.color.df$color
-          names(fill.color) <- fill.color.df[, facet.key]
+          fill.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
         } else {
           fill.color <- color
-          if (is.null(names(fill.color))) {
-            names(fill.color) <- unique(data[, facet.key])
-          }
+        }
+        if (is.null(names(fill.color))) {
+          names(fill.color) <- unique(data[, group.key])
         }
         sacle_fill_cols <- scale_fill_manual(values = fill.color)
       } else {
         sacle_fill_cols <- NULL
       }
       if (!single.nuc) {
-        mapping <- aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "score", fill = facet.key)
+        mapping <- aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "score", fill = group.key)
       } else {
-        mapping <- aes_string(x = "start", y = "score", fill = facet.key)
+        mapping <- aes_string(x = "start", y = "score", fill = group.key)
       }
     } else if (plot.type == "joint") {
       if (!is.null(color)) {
