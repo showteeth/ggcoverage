@@ -122,7 +122,7 @@ The basic coverage plot has **two types**:
 #### joint view
 Create line plot for **every sample** (`facet.key = "Type"`) and color by **every sample** (`group.key = "Type"`):
 ```{r basic_coverage_joint, warning=FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df, color = "auto", 
+basic.coverage = ggcoverage(data = track.df,
                             plot.type = "joint", facet.key = "Type", group.key = "Type",
                             mark.region = mark.region, range.position = "out")
 basic.coverage
@@ -130,7 +130,7 @@ basic.coverage
 
 Create **group average line plot** (sample is indicated by `facet.key = "Type"`, group is indicated by `group.key = "Group"`):
 ```{r basic_coverage_joint_avg, warning=FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df, color = "auto", 
+basic.coverage = ggcoverage(data = track.df,
                             plot.type = "joint", facet.key = "Type", group.key = "Group", 
                             joint.avg = TRUE,
                             mark.region = mark.region, range.position = "out")
@@ -139,7 +139,7 @@ basic.coverage
 
 #### facet view
 ```{r basic_coverage, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+basic.coverage = ggcoverage(data = track.df, plot.type = "facet",
                             mark.region = mark.region, range.position = "out")
 basic.coverage
 ```
@@ -147,14 +147,14 @@ basic.coverage
 #### Custom Y-axis style
 **Change the Y-axis scale label in/out of plot region with `range.position`**:
 ```{r basic_coverage_2, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+basic.coverage = ggcoverage(data = track.df, plot.type = "facet",
                             mark.region = mark.region, range.position = "in")
 basic.coverage
 ```
 
 **Shared/Free Y-axis scale with `facet.y.scale`**:
 ```{r basic_coverage_3, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+basic.coverage = ggcoverage(data = track.df, plot.type = "facet",
                             mark.region = mark.region, range.position = "in", 
                             facet.y.scale = "fixed")
 basic.coverage
@@ -422,7 +422,7 @@ mark.region
 
 ### Basic coverage
 ```{r basic_coverage_chip, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
-basic.coverage = ggcoverage(data = track.df, color = "auto", 
+basic.coverage = ggcoverage(data = track.df,
                             mark.region=mark.region, show.mark.label = FALSE)
 basic.coverage
 ```
