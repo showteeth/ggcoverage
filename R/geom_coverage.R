@@ -3,7 +3,7 @@
 #' @param data Track prepared by \code{\link{FormatTrack}}.
 #' @param mapping Set of aesthetic mappings created by \code{aes} or \code{aes_}. Default: NULL.
 #' @param color Track color. Default: NULL (select automatically).
-#' @param rect.color The color of every bin. Default: NA.
+#' @param rect.color The color of every bin. Default: NA
 #' @param single.nuc Logical value, whether to visualize at single nucleotide level (use bar plot). Default: FALSE.
 #' @param plot.type The type of the plot, choose from facet (separate plot for every sample) and
 #' joint (combine all sample in a single plot). Default: facet.
@@ -37,20 +37,63 @@
 #'
 #' @export
 #' @examples
-#' # library(ggcoverage)
-#' # library(utils)
-#' # library(ggplot2)
-#' # meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-#' # sample.meta <- utils::read.csv(meta.file)
-#' # track folder
-#' # track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
-#' # load bigwig file
-#' # track.df <- LoadTrackFile(
-#' #   track.folder = track.folder, format = "bw",
-#' #   meta.info = sample.meta
-#' # )
-#' # ggplot() +
-#' #   geom_coverage(data = track.df, color = NULL, mark.region = NULL)
+#' library(ggcoverage)
+#' library(ggplot2)
+#'
+#' # import track data
+#' meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#' sample.meta <- utils::read.csv(meta.file)
+#' track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+#'
+#' track.df <- LoadTrackFile(
+#'   track.folder = track.folder, format = "bw",
+#'   meta.info = sample.meta
+#' )
+#'
+#' # plot tracks with coloring by 'Group' variable
+#' ggplot() +
+#'   geom_coverage(data = track.df, facet.key = "Type", group.key = "Group")
+#'
+#' # plot tracks without coloring by any group
+#' ggplot() +
+#'   geom_coverage(data = track.df, facet.key = "Type", group.key = NULL)
+#'
+#' # plot tracks with coloring each facet differently (facet.key == group.key)
+#' ggplot() +
+#'   geom_coverage(data = track.df, facet.key = "Type", group.key = "Type")
+#'
+#' # supply your own colors
+#' ggplot() +
+#'   geom_coverage(
+#'     data = track.df, facet.key = "Type",
+#'     group.key = "Type", color = 1:4,
+#'     facet.color = 1:4
+#'   )
+#'
+#' # plot tracks together in one panel instead of separately;
+#' # 'facet.key' is not needed
+#' ggplot() +
+#'   geom_coverage(
+#'     data = track.df, group.key = "Type",
+#'     plot.type = "joint"
+#'   )
+#'
+#' # use a custom theme
+#' ggplot() +
+#'   geom_coverage(data = track.df, facet.key = "Type") +
+#'   theme_bw()
+#'
+#' # mark a region
+#' ggplot() +
+#'   geom_coverage(
+#'     data = track.df, facet.key = "Type",
+#'     mark.region = data.frame(
+#'       start = c(21678900,21732001,21737590),
+#'       end = c(21679900,21732400,21737650),
+#'       label=c("M1", "M2", "M3")),
+#'     mark.color = grey(0.4)
+#'   )
+#'
 geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
                           single.nuc = FALSE, plot.type = c("facet", "joint"),
                           facet.key = "Type", joint.avg = FALSE, facet.order = NULL,
@@ -185,11 +228,13 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
     facet.formula <- as.formula(paste0("~ ", facet.key))
     if (!single.nuc) {
       region.rect <- geom_rect(data = data, mapping = mapping, show.legend = F, colour = rect.color)
+      ymax.str <- rlang::as_label(mapping$ymax)
     } else {
       region.rect <- geom_bar(
         data = data, mapping = mapping, show.legend = F, colour = rect.color,
         stat = "identity"
       )
+      ymax.str <- rlang::as_label(mapping$y)
     }
     # prepare facet scale
     if (facet.y.scale == "free") {
@@ -210,8 +255,6 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
       plot.ele <- append(plot.ele, sacle_fill_cols)
     }
 
-    # add range text to track
-    ymax.str <- rlang::as_label(mapping$ymax)
     if (range.position == "in") {
       data.range <- data %>%
         dplyr::group_by(.data[[facet.key]]) %>%
