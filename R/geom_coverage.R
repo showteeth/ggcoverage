@@ -258,9 +258,11 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
     if (range.position == "in") {
       data.range <- data %>%
         dplyr::group_by(.data[[facet.key]]) %>%
-        dplyr::summarise(max_score = max(.data[[ymax.str]]))
-      data.range$max_score <- sapply(data.range$max_score, CeilingNumber)
-      data.range$label <- paste0("[0, ", data.range$max_score, "]")
+        dplyr::summarise(.groups = "drop_last",
+                         min_score = CeilingNumber(min(.data[[ymax.str]])),
+                         max_score = CeilingNumber(max(.data[[ymax.str]]))
+        )
+      data.range$label <- paste0("[", data.range$min_score, ", ", data.range$max_score, "]")
       region.range <- geom_text(
         data = data.range,
         mapping = aes(x = -Inf, y = Inf, label = label),
@@ -349,7 +351,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
 
     region.mark <- geom_rect(
       data = valid.region.df,
-      aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "Inf"),
+      aes_string(xmin = "start", xmax = "end", ymin = "-Inf", ymax = "Inf"),
       fill = mark.color, alpha = mark.alpha
     )
     plot.ele <- append(plot.ele, region.mark)
