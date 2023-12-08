@@ -66,28 +66,17 @@ AutoColor <- function(data, n, name, key) {
 
 # ceiling for number bigger than zero, floor for number smaller than zero
 CeilingNumber <- function(x, digits = 2) {
-  # mark number
-  if (x < 0) {
-    flag <- -1
-    x <- abs(x)
+  if (x == 0) {
+    "0"
+  } else if (abs(x) >= 10^6) {
+    formatC(x, format = "e", digits = 2)
+  } else if (abs(x) >= 10000) {
+    formatC(round(x), format = "f", digits = 0)
+  } else if ((x %% floor(x)) != 0) {
+    formatC(x, format = "f", digits = 2)
   } else {
-    flag <- 1
+    formatC(x, format = "f", digits = 0)
   }
-  # transfrom
-  if (x > 1) {
-    x.ceiling <- round(x + 5 * 10^(-digits - 1), digits)
-  } else if (x > 0) {
-    x.split <- unlist(strsplit(formatC(x, format = "e"), "e"))
-    num.part <- as.numeric(x.split[1])
-    sci.part <- as.numeric(x.split[2])
-    valid.digits <- digits - 1
-    x.ceiling <- round(num.part + 5 * 10^(-valid.digits - 1), valid.digits) * 10^(sci.part)
-  } else {
-    x.ceiling <- 0
-  }
-  # final number
-  x.final <- x.ceiling * flag
-  return(x.final)
 }
 
 # create aa plot dataframe with padding offset
