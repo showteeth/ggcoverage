@@ -66,7 +66,6 @@ AutoColor <- function(data, n, name, key) {
 
 # ceiling for number bigger than zero, floor for number smaller than zero
 CeilingNumber <- function(x, digits = 2) {
-  print(x)
   if (x == 0) {
     "0"
   } else if (abs(x) >= 10^6) {
