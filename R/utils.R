@@ -66,16 +66,21 @@ AutoColor <- function(data, n, name, key) {
 
 # ceiling for number bigger than zero, floor for number smaller than zero
 CeilingNumber <- function(x, digits = 2) {
+  print(x)
   if (x == 0) {
     "0"
   } else if (abs(x) >= 10^6) {
     formatC(x, format = "e", digits = 2)
   } else if (abs(x) >= 10000) {
     formatC(round(x), format = "f", digits = 0)
-  } else if ((x %% floor(x)) != 0) {
-    formatC(x, format = "f", digits = 2)
+  } else if (abs(x) >= 1) {
+    if ((x %% floor(x)) != 0) {
+      formatC(x, format = "f", digits = 2)
+    } else {
+      formatC(x, format = "f", digits = 0)
+    }
   } else {
-    formatC(x, format = "f", digits = 0)
+    formatC(x, format = "f", digits = 2)
   }
 }
 
