@@ -164,7 +164,7 @@ Create line plot for **every sample** (`facet.key = "Type"`) and color
 by **every sample** (`group.key = "Type"`):
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "auto", 
+basic.coverage = ggcoverage(data = track.df,
                             plot.type = "joint", facet.key = "Type", group.key = "Type",
                             mark.region = mark.region, range.position = "out")
 basic.coverage
@@ -176,7 +176,7 @@ Create **group average line plot** (sample is indicated by
 `facet.key = "Type"`, group is indicated by `group.key = "Group"`):
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "auto", 
+basic.coverage = ggcoverage(data = track.df,
                             plot.type = "joint", facet.key = "Type", group.key = "Group", 
                             joint.avg = TRUE,
                             mark.region = mark.region, range.position = "out")
@@ -188,7 +188,7 @@ basic.coverage
 #### facet view
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+basic.coverage = ggcoverage(data = track.df, plot.type = "facet",
                             mark.region = mark.region, range.position = "out")
 basic.coverage
 ```
@@ -201,7 +201,7 @@ basic.coverage
 `range.position`**:
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+basic.coverage = ggcoverage(data = track.df, plot.type = "facet",
                             mark.region = mark.region, range.position = "in")
 basic.coverage
 ```
@@ -211,7 +211,7 @@ basic.coverage
 **Shared/Free Y-axis scale with `facet.y.scale`**:
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "auto", plot.type = "facet",
+basic.coverage = ggcoverage(data = track.df, plot.type = "facet",
                             mark.region = mark.region, range.position = "in", 
                             facet.y.scale = "fixed")
 basic.coverage
@@ -635,7 +635,7 @@ mark.region
 ### Basic coverage
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "auto", 
+basic.coverage = ggcoverage(data = track.df,
                             mark.region=mark.region, show.mark.label = FALSE)
 basic.coverage
 ```

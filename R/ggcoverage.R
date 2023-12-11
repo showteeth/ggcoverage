@@ -40,19 +40,64 @@
 #' @export
 #'
 #' @examples
-#' # library(ggcoverage)
-#' # library(utils)
-#' # library(rtracklayer)
-#' # meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-#' # sample.meta <- utils::read.csv(meta.file)
-#' # track folder
-#' # track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
-#' # load bigwig file
-#' # track.df <- LoadTrackFile(track.folder = track.folder, format = "bw",region = "chr14:21,677,306-21,737,601",
-#' #                           extend = 2000, meta.info = sample.meta)
-#' # gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-#' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
-#' # ggcoverage(data = track.df, color = "auto", range.position = "out")
+#' library(ggcoverage)
+#' library(rtracklayer)
+#' library(ggplot2)
+#'
+#' # import track data
+#' meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#' sample.meta <- read.csv(meta.file)
+#' track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+#'
+#' track.df <- LoadTrackFile(
+#'   track.folder = track.folder, format = "bw",
+#'   region = "chr14:21,677,306-21,737,601",
+#'   extend = 2000, meta.info = sample.meta
+#' )
+#'
+#' gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#' gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
+#'
+#' # plot tracks with coloring by 'Group' variable
+#' ggcoverage(data = track.df, facet.key = "Type", group.key = "Group")
+#'
+#' # plot tracks without coloring by any group
+#' ggcoverage(data = track.df, facet.key = "Type", group.key = NULL)
+#'
+#' # plot tracks with coloring each facet differently (facet.key == group.key)
+#' ggcoverage(data = track.df, facet.key = "Type", group.key = "Type")
+#'
+#' # supply your own colors
+#' ggcoverage(
+#'   data = track.df, facet.key = "Type",
+#'   group.key = "Type", color = 1:4,
+#'   facet.color = 1:4
+#' )
+#'
+#' # plot tracks together in one panel instead of separately;
+#' # 'facet.key' is not needed
+#' ggcoverage(
+#'   data = track.df, group.key = "Type",
+#'   plot.type = "joint"
+#' )
+#'
+#' # use a custom theme
+#' ggcoverage(data = track.df, facet.key = "Type") +
+#'   theme_bw()
+#'
+#' # mark a region
+#' ggcoverage(
+#'   data = track.df, facet.key = "Type",
+#'   mark.region = data.frame(
+#'     start = c(21678900,21732001,21737590),
+#'     end = c(21679900,21732400,21737650),
+#'     label=c("M1", "M2", "M3")),
+#'   mark.color = grey(0.4)
+#' )
+#'
+#' # position range labels outside of tracks
+#' ggcoverage(data = track.df, facet.key = "Type", range.position = "out")
+#'
 ggcoverage <- function(data, single.nuc = FALSE, mapping = NULL, color = NULL,
                        rect.color = NA, plot.type = c("facet", "joint"), facet.key = "Type", joint.avg = FALSE,
                        facet.order = NULL, facet.color = NULL, facet.y.scale = c("free", "fixed"),

@@ -76,7 +76,7 @@ mark.region=data.frame(start=c(76822533),
 # check data
 mark.region
 # create basic coverage plot
-basic.coverage = ggcoverage(data = track.df, color = "auto", range.position = "out",
+basic.coverage = ggcoverage(data = track.df, range.position = "out",
                             mark.region=mark.region, show.mark.label = FALSE)
 basic.coverage
 ```
