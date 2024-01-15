@@ -24,11 +24,10 @@ geom_base(
   numcode = 1,
   NAstring = "X",
   ambiguous = FALSE,
-  aa.color = c(D = "#FF0000", S = "#FF2400", T = "#E34234", G = "#FF8000", P =
-    "#F28500", C = "#FFFF00", A = "#FDFF00", V = "#E3FF00", I = "#C0FF00", L = "#89318C",
-    M = "#00FF00", F = "#50C878", Y = "#30D5C8", W = "#00FFFF", H = "#0F2CB3", R =
-    "#0000FF", K = "#4b0082", N = "#800080", Q = "#FF00FF", E = "#8F00FF", `*` =
-    "#FFC0CB"),
+  aa.color = c(D = "#FF0000", S = "#FF2400", T = "#E34234", G = "#FF8000", P = "#F28500",
+    C = "#FFFF00", A = "#FDFF00", V = "#E3FF00", I = "#C0FF00", L = "#89318C", M =
+    "#00FF00", F = "#50C878", Y = "#30D5C8", W = "#00FFFF", H = "#0F2CB3", R = "#0000FF",
+    K = "#4b0082", N = "#800080", Q = "#FF00FF", E = "#8F00FF", `*` = "#FFC0CB"),
   aa.border.color = "white",
   aa.size = 4,
   aa.margin = 2,

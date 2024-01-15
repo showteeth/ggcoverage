@@ -26,7 +26,7 @@
 #' @return Layers of ggplot2.
 #' @importFrom ggplot2 aes_string scale_fill_manual geom_rect geom_text aes geom_step
 #' @importFrom rlang .data
-#' @importFrom grDevices colorRampPalette
+#' @importFrom grDevices colorRampPalette col2rgb
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom rlang as_label
 #' @importFrom stats as.formula
@@ -34,6 +34,7 @@
 #' @importFrom dplyr group_by summarise
 #' @importFrom magrittr %>%
 #' @importFrom ggrepel geom_text_repel
+#' @importFrom utils tail
 #'
 #' @export
 #' @examples
@@ -259,8 +260,8 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
       data.range <- data %>%
         dplyr::group_by(.data[[facet.key]]) %>%
         dplyr::summarise(.groups = "drop_last",
-                         min_score = CeilingNumber(min(.data[[ymax.str]])),
-                         max_score = CeilingNumber(max(.data[[ymax.str]]))
+                         min_score = pretty(.data[[ymax.str]])[1],
+                         max_score = tail(pretty(.data[[ymax.str]]), 1)
         )
       data.range$label <- paste0("[", data.range$min_score, ", ", data.range$max_score, "]")
       region.range <- geom_text(
