@@ -240,8 +240,10 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
     # prepare facet scale
     if (facet.y.scale == "free") {
       facet.ys <- "free_y"
+      data.range <- dplyr::group_by(data, .data[[facet.key]])
     } else if (facet.y.scale == "fixed") {
       facet.ys <- "fixed"
+      data.range <- data
     }
     region.facet <- facet_wrap2(
       facets = facet.formula, ncol = 1, scales = facet.ys, strip.position = "right",
@@ -257,8 +259,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
     }
 
     if (range.position == "in") {
-      data.range <- data %>%
-        dplyr::group_by(.data[[facet.key]]) %>%
+      data.range <- data.range %>%
         dplyr::summarise(.groups = "drop_last",
                          min_score = pretty(.data[[ymax.str]])[1],
                          max_score = tail(pretty(.data[[ymax.str]]), 1)
