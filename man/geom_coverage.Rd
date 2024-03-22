@@ -33,7 +33,7 @@ geom_coverage(
 
 \item{color}{Track color. Default: NULL (select automatically).}
 
-\item{rect.color}{The color of every bin. Default: NA.}
+\item{rect.color}{The color of every bin. Default: NA}
 
 \item{single.nuc}{Logical value, whether to visualize at single nucleotide level (use bar plot). Default: FALSE.}
 
@@ -75,18 +75,61 @@ Layers of ggplot2.
 Layer for Coverage Plot.
 }
 \examples{
-# library(ggcoverage)
-# library(utils)
-# library(ggplot2)
-# meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-# sample.meta <- utils::read.csv(meta.file)
-# track folder
-# track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
-# load bigwig file
-# track.df <- LoadTrackFile(
-#   track.folder = track.folder, format = "bw",
-#   meta.info = sample.meta
-# )
-# ggplot() +
-#   geom_coverage(data = track.df, color = "auto", mark.region = NULL)
+library(ggcoverage)
+library(ggplot2)
+
+# import track data
+meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+sample.meta <- utils::read.csv(meta.file)
+track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+
+track.df <- LoadTrackFile(
+  track.folder = track.folder, format = "bw",
+  meta.info = sample.meta
+)
+
+# plot tracks with coloring by 'Group' variable
+ggplot() +
+  geom_coverage(data = track.df, facet.key = "Type", group.key = "Group")
+
+# plot tracks without coloring by any group
+ggplot() +
+  geom_coverage(data = track.df, facet.key = "Type", group.key = NULL)
+
+# plot tracks with coloring each facet differently (facet.key == group.key)
+ggplot() +
+  geom_coverage(data = track.df, facet.key = "Type", group.key = "Type")
+
+# supply your own colors
+ggplot() +
+  geom_coverage(
+    data = track.df, facet.key = "Type",
+    group.key = "Type", color = 1:4,
+    facet.color = 1:4
+  )
+
+# plot tracks together in one panel instead of separately;
+# 'facet.key' is not needed
+ggplot() +
+  geom_coverage(
+    data = track.df, group.key = "Type",
+    plot.type = "joint"
+  )
+
+# use a custom theme
+ggplot() +
+  geom_coverage(data = track.df, facet.key = "Type") +
+  theme_bw()
+
+# mark a region
+ggplot() +
+  geom_coverage(
+    data = track.df, facet.key = "Type",
+    mark.region = data.frame(
+      start = c(21678900,21732001,21737590),
+      end = c(21679900,21732400,21737650),
+      label=c("M1", "M2", "M3")),
+    mark.color = grey(0.4)
+  )
+
 }
