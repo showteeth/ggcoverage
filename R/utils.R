@@ -64,25 +64,6 @@ AutoColor <- function(data, n, name, key) {
   return(fill.color)
 }
 
-# ceiling for number bigger than zero, floor for number smaller than zero
-CeilingNumber <- function(x, digits = 2) {
-  if (x == 0) {
-    "0"
-  } else if (abs(x) >= 10^6) {
-    formatC(x, format = "e", digits = 2)
-  } else if (abs(x) >= 10000) {
-    formatC(round(x), format = "f", digits = 0)
-  } else if (abs(x) >= 1) {
-    if ((x %% floor(x)) != 0) {
-      formatC(x, format = "f", digits = 2)
-    } else {
-      formatC(x, format = "f", digits = 0)
-    }
-  } else {
-    formatC(x, format = "f", digits = 2)
-  }
-}
-
 # create aa plot dataframe with padding offset
 AAPadding <- function(len, offset = 0, aa.seq) {
   aa.seq.full <- rep(aa.seq, each = 3)

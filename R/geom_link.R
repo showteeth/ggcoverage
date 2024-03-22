@@ -26,18 +26,24 @@
 #'
 #' @examples
 #' library(ggcoverage)
-#' # create test dataframe (random)
+#' # create test dataframe
+#' # (random, but use seed to obtain same result every time)
+#' set.seed(123)
 #' df <- data.frame(
-#'   seqnames = "chr9", start = seq(from = 4000000, to = 5999000, by = 1000),
-#'   end = seq(from = 4001000, to = 6000000, by = 1000), score = sample(1:100, 2000, replace = TRUE),
+#'   seqnames = "chr2L", start = seq(from = 8000000, to = 8300000, by = 1000),
+#'   end = seq(from = 8001000, to = 8301000, by = 1000), score = sample(1:100, 301, replace = TRUE),
 #'   Type = "Example", Group = "Example"
 #' )
+#' # get links
+#' link.file = system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage")
+#'
 #' # create plot
 #' ggcoverage(
-#'   data = df, color = "grey", region = "chr9:4000000-6000000",
+#'   data = df, color = "grey",
 #'   mark.region = NULL, range.position = "out"
 #' ) +
 #'   geom_link(link.file = link.file, file.type = "bedpe", show.rect = TRUE)
+#'
 geom_link <- function(link.file, file.type = "bedpe", score.col = NULL, score.threshold = NULL,
                       score.color = c("blue", "grey", "red"), scale.range = 10,
                       plot.space = 0.1, plot.height = 0.2, show.rect = FALSE) {

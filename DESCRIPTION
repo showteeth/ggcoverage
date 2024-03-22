@@ -14,7 +14,7 @@ Description: The goal of 'ggcoverage' is to simplify the process of visualizing 
     peak annotation, contact map annotation, link annotation and peotein feature annotation.
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.0
 biocViews:
 Imports: 
     dplyr,
@@ -56,6 +56,5 @@ Suggests:
     htmltools,
     BSgenome.Hsapiens.UCSC.hg19,
     graphics,
-    HiCDataHumanIMR90,
-    GenomeMatrix
+    HiCDataHumanIMR90
 VignetteBuilder: knitr

@@ -20,7 +20,10 @@ theme_coverage <- function(space = 0.2) {
       axis.title = element_blank()
     ),
     ggplot2::annotate("segment", x = -Inf, xend = Inf, y = -Inf, yend = -Inf, size = rel(1)),
-    scale_y_continuous(expand = expansion(mult = c(0))),
+    scale_y_continuous(
+      limits = ~ c(pretty(.x)[1], tail(pretty(.x), 1)),
+      expand = expansion(mult = c(0))
+    ),
     scale_x_continuous(labels = scales::comma, expand = c(0, 0))
   )
 }
@@ -39,7 +42,7 @@ theme_coverage <- function(space = 0.2) {
 theme_coverage2 <- function(space = 0.2) {
   list(
     scale_y_continuous(
-      limits = ~ c(0, CeilingNumber(max(.x))),
+      limits = ~ range(pretty(.x)),
       breaks = ~ .x[2],
       expand = expansion(mult = c(0))
     ),
@@ -484,7 +487,7 @@ theme_cnv <- function(x.range, margin.len) {
   )
 }
 
-# theme for ggprotein: suitable for range position is in
+# theme for ggprotein: suitable for range.position = "in"
 #' Theme for geom_protein.
 #'
 #' @return List of layers.
@@ -508,7 +511,7 @@ theme_protein <- function() {
   )
 }
 
-# theme for ggprotein: suitable for range position is out
+# theme for ggprotein: suitable for range.position = "out"
 #' Theme for geom_protein.
 #'
 #' @return List of layers.
@@ -520,7 +523,7 @@ theme_protein <- function() {
 theme_protein2 <- function() {
   list(
     scale_y_continuous(
-      limits = ~ c(0, CeilingNumber(max(.x)), digits = 2),
+      limits = ~ range(pretty(.x)),
       breaks = ~ .x[2],
       expand = expansion(mult = c(0)),
       labels = function(x) format(x, scientific = TRUE, digits = 2)

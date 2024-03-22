@@ -35,13 +35,13 @@
 #' @export
 #'
 #' @examples
-#' # library(ggplot2)
-#' # library(ggcoverage)
-#' # coverage.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
-#' # fasta.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
-#' # protein.id = "sp|
-#' # ggplot() +
-#' #     geom_peptide(coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id)
+#' library(ggplot2)
+#' library(ggcoverage)
+#' coverage.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
+#' fasta.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
+#' protein.id = "sp|P02769|ALBU_BOVIN"
+#' ggplot() +
+#'   geom_protein(coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id)
 geom_protein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold = 2,
                          confidence = "High", contaminant = NULL, remove.na = TRUE,
                          color = "grey", mark.bare = TRUE, mark.color = "red", mark.alpha = 0.5,
@@ -187,7 +187,7 @@ geom_protein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold 
   # range position
   if (range.position == "in") {
     # prepare range
-    max.abundance <- CeilingNumber(max(coverage.final$abundance))
+    max.abundance <- max(pretty(coverage.final$abundance))
     abundance.range <- data.frame(label = paste0("[0, ", scales::scientific(max.abundance, digits = 2), "]"))
     range.text <- geom_text(
       data = abundance.range,
