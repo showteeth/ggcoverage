@@ -183,16 +183,16 @@ ggplot_add.base <- function(object, plot, object_name) {
   colnames(pos.nuc.freq.long) <- c("Chr", "Pos", "Ref", "Total", "Base", "Freq")
   # get position with alt
   alt.pos <- pos.nuc.freq.long %>%
-    dplyr::filter(Ref == Base & Total != Freq) %>%
-    dplyr::pull(Pos) %>%
+    dplyr::filter(.data$Ref == .data$Base & .data$Total != .data$Freq) %>%
+    dplyr::pull(.data$Pos) %>%
     unique()
-  alt.pos.nuc.freq.long <- pos.nuc.freq.long %>% dplyr::filter(Pos %in% c(alt.pos))
+  alt.pos.nuc.freq.long <- pos.nuc.freq.long %>% dplyr::filter(.data$Pos %in% c(alt.pos))
   # get position without alt
   ref.pos <- pos.nuc.freq.long %>%
-    dplyr::filter(Ref == Base & Total == Freq) %>%
-    dplyr::pull(Pos) %>%
+    dplyr::filter(.data$Ref == .data$Base & .data$Total == .data$Freq) %>%
+    dplyr::pull(.data$Pos) %>%
     unique()
-  ref.pos.nuc.freq.long <- pos.nuc.freq.long %>% dplyr::filter(Pos %in% c(ref.pos))
+  ref.pos.nuc.freq.long <- pos.nuc.freq.long %>% dplyr::filter(.data$Pos %in% c(ref.pos))
   # create label offset
   pos.nuc.freq$Offset <- nuc.offset
   # add guide line

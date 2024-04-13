@@ -17,14 +17,29 @@
 #'
 #' @examples
 #' # library(ggcoverage)
-#' # coverage.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
-#' # fasta.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
+#' # coverage.file <- system.file(
+#' #   "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
+#' # )
+#' # fasta.file <- system.file(
+#' #   "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
+#' # )
 #' # protein.id = "sp|P02769|ALBU_BOVIN"
-#' # protein.coverage = ggprotein(coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id)
-#' # feature.df = data.frame(ProteinID = protein.id, start = c(1, 19, 25), end = c(18, 24, 607),
-#' #                         Type = c("Signal", "Propeptide", "Chain"))
+#' # protein.coverage = ggprotein(
+#' #   coverage.file = coverage.file,
+#' #   fasta.file = fasta.file,
+#' #   protein.id = protein.id
+#' # )
+#' # feature.df = data.frame(
+#' #   ProteinID = protein.id,
+#' #   start = c(1, 19, 25),
+#' #   end = c(18, 24, 607),
+#' #   Type = c("Signal", "Propeptide", "Chain")
+#' # )
 #' # protein.coverage +
-#' #    geom_feature(feature.df = feature.df, feature.color = c("#4d81be","#173b5e","#6a521d"))
+#' #   geom_feature(
+#' #     feature.df = feature.df,
+#' #     feature.color = c("#4d81be","#173b5e","#6a521d")
+#' #   )
 geom_feature <- function(feature.file = NULL, feature.df = NULL, feature.color = "black", feature.size = 5,
                          plot.space = 0.1, plot.height = 0.1) {
   structure(list(

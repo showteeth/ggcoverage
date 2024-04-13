@@ -70,8 +70,12 @@ Layer for Protein Coverage Plot.
 \examples{
 library(ggplot2)
 library(ggcoverage)
-coverage.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
-fasta.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
+coverage.file <- system.file(
+  "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
+)
+fasta.file <- system.file(
+  "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
+)
 protein.id = "sp|P02769|ALBU_BOVIN"
 ggplot() +
   geom_protein(coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id)
