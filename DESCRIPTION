@@ -21,6 +21,8 @@ Description: The goal of 'ggcoverage' is to simplify the process of visualizing 
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.1
+URL: https://showteeth.github.io/ggcoverage/, https://github.com/showteeth/ggcoverage
+BugReports: https://github.com/showteeth/ggcoverage/issues
 biocViews:
 Imports: 
     dplyr,
