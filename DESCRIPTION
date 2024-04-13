@@ -2,11 +2,17 @@ Package: ggcoverage
 Type: Package
 Title: Visualize Genome/Protein Coverage with Various Annotations
 Version: 1.2.0
-Authors@R: 
+Authors@R: c(
     person(given = "Yabing",
            family = "Song",
            role = c("aut", "cre"),
-           email = "songyb0519@gmail.com")
+           email = "songyb0519@gmail.com"),
+    person(given = "Michael",
+           family = "Jahn", 
+           email = "jahn@mpusp.mpg.de",
+           role = "aut",
+           comment = c(ORCID = "0000-0002-3913-153X"))
+  )
 Maintainer: Yabing Song <songyb0519@gmail.com>
 Description: The goal of 'ggcoverage' is to simplify the process of visualizing genome/protein coverage. It contains functions to 
     load data from BAM, BigWig, BedGraph or txt/xlsx files, create genome/protein coverage plot, add various annotations to 
@@ -14,7 +20,7 @@ Description: The goal of 'ggcoverage' is to simplify the process of visualizing 
     peak annotation, contact map annotation, link annotation and peotein feature annotation.
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 biocViews:
 Imports: 
     dplyr,
