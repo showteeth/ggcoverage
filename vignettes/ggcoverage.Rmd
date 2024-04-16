@@ -26,14 +26,12 @@ BiocStyle::markdown()
 ```
 
 ```{r setup, echo=FALSE, warning=FALSE}
-library(knitr)
-htmltools::tagList(rmarkdown::html_dependency_font_awesome())
-
-# set dpi
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  dpi = 60
+  dpi = 60,
+  fig.path = "png/",
+  crop = NULL
 )
 ```
 
@@ -256,16 +254,24 @@ basic_coverage +
 
 ### Add ideogram
 
-```{r ideogram_coverage_1, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r ideogram_coverage_1, eval = FALSE}
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr) +
   geom_ideogram(genome = "hg19", plot.space = 0)
 ```
 
-```{r ideogram_coverage_2, warning=FALSE, fig.height = 14, fig.width = 12, fig.align = "center"}
+```{r ideogram_coverage_1_plot, echo = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-ideogram_coverage_1-1.png")
+```
+
+```{r ideogram_coverage_2, eval = FALSE}
 basic_coverage +
   geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5) +
   geom_ideogram(genome = "hg19", plot.space = 0)
+```
+
+```{r ideogram_coverage_2_plot, echo = FALSE, fig.height = 14, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-ideogram_coverage_2-1.png")
 ```
 
 ## DNA-seq data
@@ -311,6 +317,7 @@ basic_coverage <- ggcoverage(
   mark.region = NULL,
   range.position = "out"
 )
+
 basic_coverage
 ```
 
@@ -318,7 +325,7 @@ basic_coverage
 
 Add **GC**, **ideogram** and **gene** annotaions.
 
-```{r gc_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r gc_coverage, eval = FALSE}
 # load genome data
 library("BSgenome.Hsapiens.UCSC.hg19")
 
@@ -327,6 +334,11 @@ basic_coverage +
   geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
   geom_gene(gtf.gr = gtf_gr) +
   geom_ideogram(genome = "hg19")
+```
+
+
+```{r gc_coverage_plot, echo = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-gc_coverage-1.png")
 ```
 
 #### Example 2
@@ -384,7 +396,7 @@ head(cnv_df)
 
 Add **GC**, **ideogram** and **CNV** annotations.
 
-```{r cnv_gc_coverage}
+```{r cnv_gc_coverage, eval=FALSE}
 # create plot
 basic_coverage +
   geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
@@ -396,6 +408,10 @@ basic_coverage +
     plot.space = 0,
     highlight.centromere = TRUE
   )
+```
+
+```{r cnv_gc_coverage_plot, echo = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-cnv_gc_coverage-1.png")
 ```
 
 
@@ -506,13 +522,7 @@ graphics::par(opar)
 
 **Use twill to mark position with SNV**:
 
-```{r, echo = FALSE}
-# wait some time to avoid 'Too Many Requests' error
-Sys.sleep(60)
-```
-
-
-```{r base_aa_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r base_aa_coverage, eval =FALSE}
 # create plot with twill mark
 ggcoverage(
   data = track_df,
@@ -527,14 +537,14 @@ ggcoverage(
   geom_ideogram(genome = "hg19", plot.space = 0)
 ```
 
-**Use star to mark position with SNV**:
 
-```{r, echo = FALSE}
-# wait some time to avoid 'Too Many Requests' error
-Sys.sleep(60)
+```{r base_aa_coverage_plot, echo = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-base_aa_coverage-1.png")
 ```
 
-```{r base_aa_coverage_star, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+**Use star to mark position with SNV**:
+
+```{r base_aa_coverage_star, eval = FALSE}
 # create plot with star mark
 ggcoverage(
   data = track_df,
@@ -549,14 +559,14 @@ ggcoverage(
   geom_ideogram(genome = "hg19", plot.space = 0)
 ```
 
-**Highlight position with SNV**:
 
-```{r, echo = FALSE}
-# wait some time to avoid 'Too Many Requests' error
-Sys.sleep(60)
+```{r base_aa_coverage_star_plot, echo = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-base_aa_coverage_star-1.png")
 ```
 
-```{r base_aa_coverage_highlight, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+**Highlight position with SNV**:
+
+```{r base_aa_coverage_highlight, eval = FALSE}
 # highlight one base
 ggcoverage(
   data = track_df,
@@ -569,6 +579,11 @@ ggcoverage(
             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
             mark.type = "highlight") +
   geom_ideogram(genome = "hg19", plot.space = 0)
+```
+
+
+```{r base_aa_coverage_highlight_plot, echo = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-base_aa_coverage_highlight-1.png")
 ```
 
 ## ChIP-seq data
@@ -638,12 +653,7 @@ basic_coverage
 
 Add **gene**, **ideogram** and **peak** annotations. To create peak annotation, we first **get consensus peaks** with [MSPC](https://github.com/Genometric/MSPC).
 
-```{r, echo = FALSE}
-# wait some time to avoid 'Too Many Requests' error
-Sys.sleep(60)
-```
-
-```{r peak_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r peak_coverage, eval = FALSE}
 # get consensus peak file
 peak_file <- system.file("extdata",
                          "ChIP-seq",
@@ -654,6 +664,10 @@ basic_coverage +
   geom_gene(gtf.gr = gtf_gr) +
   geom_peak(bed.file = peak_file) +
   geom_ideogram(genome = "hg19", plot.space = 0)
+```
+
+```{r peak_coverage_plot, echo = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-peak_coverage-1.png")
 ```
 
 ## Hi-C data
@@ -739,7 +753,7 @@ basic_coverage
 
 Add **link**, **contact map**annotations:
 
-```{r hic_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r hic_coverage, eval = FALSE}
 basic_coverage +
   geom_tad(
     matrix = hic_mat,
@@ -753,6 +767,10 @@ basic_coverage +
   geom_link(link.file = link_file,
             file.type = "bedpe",
             show.rect = TRUE)
+```
+
+```{r hic_coverage_plot, echo = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-hic_coverage-1.png")
 ```
 
 ## Mass spectrometry protein coverage
@@ -790,7 +808,7 @@ protein_set
 
 ### Protein coverage
 
-```{r basic_coverage_protein, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_protein, eval = FALSE}
 protein_coverage <- ggprotein(
   coverage.file = coverage_file,
   fasta.file = fasta_file,
@@ -801,11 +819,15 @@ protein_coverage <- ggprotein(
 protein_coverage
 ```
 
+```{r basic_coverage_protein_plot, echo = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-basic_coverage_protein-1.png")
+```
+
 ### Add annotation
 
 We can obtain features of the protein from [UniProt](https://www.uniprot.org/). For example, the above protein coverage plot shows that there is empty region in 1-24, and this empty region in [UniProt](https://www.uniprot.org/uniprotkb/P02769/entry) is annotated as Signal peptide and Propeptide peptide. When the protein is mature and released extracellular, these peptides will be cleaved. This is the reason why there is empty region in 1-24.
 
-```{r basic_coverage_protein_feature, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_protein_feature, eval = FALSE}
 # protein feature obtained from UniProt
 protein_feature_df <- data.frame(
   ProteinID = "sp|P02769|ALBU_BOVIN",
@@ -818,6 +840,10 @@ protein_feature_df <- data.frame(
 protein_coverage +
   geom_feature(feature.df = protein_feature_df,
                feature.color = c("#4d81be", "#173b5e", "#6a521d"))
+```
+
+```{r basic_coverage_protein_feature_plot, echo = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+knitr::include_graphics("../man/figures/README-basic_coverage_protein_feature-1.png")
 ```
 
 ## Code of Conduct
