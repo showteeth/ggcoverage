@@ -19,11 +19,15 @@ knitr::opts_chunk$set(
 <img src = "man/figures/ggcoverage.png" align = "right" width = "200"/>
 
 [![CRAN](https://www.r-pkg.org/badges/version/ggcoverage?color=orange)](https://cran.r-project.org/package=ggcoverage)
+[![R-CMD-check](https://github.com/showteeth/ggcoverage/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/showteeth/ggcoverage/actions/workflows/R-CMD-check.yaml)
+![GitHub issues](https://img.shields.io/github/issues/showteeth/ggcoverage)
+![GitHub last commit](https://img.shields.io/github/last-commit/showteeth/ggcoverage)
 ![License](https://img.shields.io/badge/license-MIT-green)
 [![CODE_SIZE](https://img.shields.io/github/languages/code-size/showteeth/ggcoverage.svg)](https://github.com/showteeth/ggcoverage)
 
 ## Introduction
-  The goal of `ggcoverage` is simplify the process of visualizing omics coverage. It contains three main parts:
+
+The goal of `ggcoverage` is simplify the process of visualizing omics coverage. It contains three main parts:
 
 * **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph, txt/xlsx files from various omics data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, proteomics, et al.
 * **Create omics coverage plot**
@@ -67,6 +71,7 @@ library("ggpattern")
 ```
 
 ## Manual
+
 `ggcoverage` provides two [vignettes](https://showteeth.github.io/ggcoverage/): 
 
 * **detailed manual**: step-by-step usage

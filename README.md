@@ -6,6 +6,11 @@
 <img src = "man/figures/ggcoverage.png" align = "right" width = "200"/>
 
 [![CRAN](https://www.r-pkg.org/badges/version/ggcoverage?color=orange)](https://cran.r-project.org/package=ggcoverage)
+[![R-CMD-check](https://github.com/showteeth/ggcoverage/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/showteeth/ggcoverage/actions/workflows/R-CMD-check.yaml)
+![GitHub
+issues](https://img.shields.io/github/issues/showteeth/ggcoverage)
+![GitHub last
+commit](https://img.shields.io/github/last-commit/showteeth/ggcoverage)
 ![License](https://img.shields.io/badge/license-MIT-green)
 [![CODE_SIZE](https://img.shields.io/github/languages/code-size/showteeth/ggcoverage.svg)](https://github.com/showteeth/ggcoverage)
 
@@ -117,13 +122,13 @@ track_df <- LoadTrackFile(
 )
 # check data
 head(track_df)
-#>   seqnames    start      end score    Type Group
-#> 1    chr14 21675306 21675950     0 KO_rep1    KO
-#> 2    chr14 21675951 21676000     1 KO_rep1    KO
-#> 3    chr14 21676001 21676100     2 KO_rep1    KO
-#> 4    chr14 21676101 21676150     1 KO_rep1    KO
-#> 5    chr14 21676151 21677100     0 KO_rep1    KO
-#> 6    chr14 21677101 21677200     2 KO_rep1    KO
+#>   seqnames    start      end width strand score    Type Group
+#> 1    chr14 21675306 21675950   645      *     0 KO_rep1    KO
+#> 2    chr14 21675951 21676000    50      *     1 KO_rep1    KO
+#> 3    chr14 21676001 21676100   100      *     2 KO_rep1    KO
+#> 4    chr14 21676101 21676150    50      *     1 KO_rep1    KO
+#> 5    chr14 21676151 21677100   950      *     0 KO_rep1    KO
+#> 6    chr14 21677101 21677200   100      *     2 KO_rep1    KO
 ```
 
 Prepare mark region:
@@ -414,20 +419,20 @@ track_file <-
 track_df <- LoadTrackFile(track.file = track_file,
                           format = "bw",
                           region = "4:1-160000000")
-#> Sample without metadata!
+#> No metadata provided, returning coverage as is.
 
 # add chr prefix
 track_df$seqnames <- paste0("chr", track_df$seqnames)
 
 # check data
 head(track_df)
-#>   seqnames  start    end score         Type        Group
-#> 1     chr4      1  50000   197 SRR054616.bw SRR054616.bw
-#> 2     chr4  50001 100000   598 SRR054616.bw SRR054616.bw
-#> 3     chr4 100001 150000   287 SRR054616.bw SRR054616.bw
-#> 4     chr4 150001 200000   179 SRR054616.bw SRR054616.bw
-#> 5     chr4 200001 250000   282 SRR054616.bw SRR054616.bw
-#> 6     chr4 250001 300000   212 SRR054616.bw SRR054616.bw
+#>   seqnames  start    end width strand score         Type        Group
+#> 1     chr4      1  50000 50000      *   197 SRR054616.bw SRR054616.bw
+#> 2     chr4  50001 100000 50000      *   598 SRR054616.bw SRR054616.bw
+#> 3     chr4 100001 150000 50000      *   287 SRR054616.bw SRR054616.bw
+#> 4     chr4 150001 200000 50000      *   179 SRR054616.bw SRR054616.bw
+#> 5     chr4 200001 250000 50000      *   282 SRR054616.bw SRR054616.bw
+#> 6     chr4 250001 300000 50000      *   212 SRR054616.bw SRR054616.bw
 ```
 
 ##### Basic coverage
@@ -514,15 +519,18 @@ track_df <- LoadTrackFile(
   single.nuc = TRUE,
   single.nuc.region = "chr4:62474235-62474295"
 )
+#> No 'region' specified; extracting coverage for an example range
+#> (<=100,000 bases, first annotated sequence)
+#> Coverage extracted from sequence/chromosome: chr10
 
 head(track_df)
-#>   seqnames    start      end score   Type  Group
-#> 1     chr4 62474235 62474236     5 tumorA tumorA
-#> 2     chr4 62474236 62474237     5 tumorA tumorA
-#> 3     chr4 62474237 62474238     5 tumorA tumorA
-#> 4     chr4 62474238 62474239     6 tumorA tumorA
-#> 5     chr4 62474239 62474240     6 tumorA tumorA
-#> 6     chr4 62474240 62474241     6 tumorA tumorA
+#>   seqnames    start      end width strand score   Type  Group
+#> 1     chr4 62474235 62474236     1      *     5 tumorA tumorA
+#> 2     chr4 62474236 62474237     1      *     5 tumorA tumorA
+#> 3     chr4 62474237 62474238     1      *     5 tumorA tumorA
+#> 4     chr4 62474238 62474239     1      *     6 tumorA tumorA
+#> 5     chr4 62474239 62474240     1      *     6 tumorA tumorA
+#> 6     chr4 62474240 62474241     1      *     6 tumorA tumorA
 ```
 
 #### Default color scheme
@@ -566,6 +574,7 @@ graphics::mtext(
 <img src="man/figures/README-base_color_scheme-1.png" width="100%" style="display: block; margin: auto;" />
 
 ``` r
+
 # reset par default
 graphics::par(opar)
 ```
@@ -734,13 +743,13 @@ track_df <- LoadTrackFile(
 
 # check data
 head(track_df)
-#>   seqnames    start      end      score      Type Group
-#> 1    chr18 76820285 76820400 219.658005 MCF7_ER_1    IP
-#> 2    chr18 76820401 76820700   0.000000 MCF7_ER_1    IP
-#> 3    chr18 76820701 76821000 439.316010 MCF7_ER_1    IP
-#> 4    chr18 76821001 76821300 219.658005 MCF7_ER_1    IP
-#> 5    chr18 76821301 76821600   0.000000 MCF7_ER_1    IP
-#> 6    chr18 76821601 76821900 219.658005 MCF7_ER_1    IP
+#>   seqnames    start      end width strand      score      Type Group
+#> 1    chr18 76820285 76820400   116      * 219.658005 MCF7_ER_1    IP
+#> 2    chr18 76820401 76820700   300      *   0.000000 MCF7_ER_1    IP
+#> 3    chr18 76820701 76821000   300      * 439.316010 MCF7_ER_1    IP
+#> 4    chr18 76821001 76821300   300      * 219.658005 MCF7_ER_1    IP
+#> 5    chr18 76821301 76821600   300      *   0.000000 MCF7_ER_1    IP
+#> 6    chr18 76821601 76821900   300      * 219.658005 MCF7_ER_1    IP
 ```
 
 Prepare mark region:
@@ -817,19 +826,19 @@ track_df <- LoadTrackFile(
   region = "chr2L:8050000-8300000",
   extend = 0
 )
-#> Sample without metadata!
+#> No metadata provided, returning coverage as is.
 
 track_df$score <- ifelse(track_df$score < 0, 0, track_df$score)
 
 # check the data
 head(track_df)
-#>   seqnames   start     end      score        Type       Group
-#> 1    chr2L 8050000 8050009 1.66490245 H3K36me3.bw H3K36me3.bw
-#> 2    chr2L 8050015 8050049 1.59976900 H3K36me3.bw H3K36me3.bw
-#> 3    chr2L 8050057 8050091 1.60730922 H3K36me3.bw H3K36me3.bw
-#> 4    chr2L 8050097 8050131 1.65555012 H3K36me3.bw H3K36me3.bw
-#> 5    chr2L 8050137 8050171 1.71025538 H3K36me3.bw H3K36me3.bw
-#> 6    chr2L 8050176 8050210 1.75198197 H3K36me3.bw H3K36me3.bw
+#>   seqnames   start     end width strand      score        Type       Group
+#> 1    chr2L 8050000 8050009    10      * 1.66490245 H3K36me3.bw H3K36me3.bw
+#> 2    chr2L 8050015 8050049    35      * 1.59976900 H3K36me3.bw H3K36me3.bw
+#> 3    chr2L 8050057 8050091    35      * 1.60730922 H3K36me3.bw H3K36me3.bw
+#> 4    chr2L 8050097 8050131    35      * 1.65555012 H3K36me3.bw H3K36me3.bw
+#> 5    chr2L 8050137 8050171    35      * 1.71025538 H3K36me3.bw H3K36me3.bw
+#> 6    chr2L 8050176 8050210    35      * 1.75198197 H3K36me3.bw H3K36me3.bw
 ```
 
 ### Load Hi-C data
