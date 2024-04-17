@@ -17,8 +17,8 @@ ggprotein(
   mark.color = "red",
   mark.alpha = 0.5,
   show.table = TRUE,
-  table.position = c("right_top", "left_top", "left_bottom", "right_bottom"),
-  table.size = 4,
+  table.position = c("top_right", "top_left", "bottom_left", "bottom_right"),
+  table.size = 10,
   table.color = "black",
   range.size = 3,
   range.position = c("in", "out")
@@ -68,18 +68,18 @@ A ggplot2 object.
 Create Mass Spectrometry Protein Coverage Plot.
 }
 \examples{
-# library(ggcoverage)
-# coverage.file <- system.file(
-#   "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
-# )
-# fasta.file <- system.file(
-#   "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
-# )
-# protein.id = "sp|P02769|ALBU_BOVIN"
-#
-# ggprotein(
-#   coverage.file = coverage.file,
-#   fasta.file = fasta.file,
-#   protein.id = protein.id
-# )
+library(ggcoverage)
+coverage.file <- system.file(
+  "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
+)
+fasta.file <- system.file(
+  "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
+)
+protein.id = "sp|P02769|ALBU_BOVIN"
+
+ggprotein(
+  coverage.file = coverage.file,
+  fasta.file = fasta.file,
+  protein.id = protein.id
+)
 }

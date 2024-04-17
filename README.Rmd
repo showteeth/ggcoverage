@@ -779,7 +779,7 @@ protein_set
 
 ### Protein coverage
 
-```{r basic_coverage_protein, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_protein, warning=FALSE, fig.height = 6, fig.width = 10, fig.align = "center"}
 protein_coverage <- ggprotein(
   coverage.file = coverage_file,
   fasta.file = fasta_file,
@@ -794,7 +794,7 @@ protein_coverage
 
 We can obtain features of the protein from [UniProt](https://www.uniprot.org/). For example, the above protein coverage plot shows that there is empty region in 1-24, and this empty region in [UniProt](https://www.uniprot.org/uniprotkb/P02769/entry) is annotated as Signal peptide and Propeptide peptide. When the protein is mature and released extracellular, these peptides will be cleaved. This is the reason why there is empty region in 1-24.
 
-```{r basic_coverage_protein_feature, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_protein_feature, warning=FALSE, fig.height = 6, fig.width = 10, fig.align = "center"}
 # protein feature obtained from UniProt
 protein_feature_df <- data.frame(
   ProteinID = "sp|P02769|ALBU_BOVIN",

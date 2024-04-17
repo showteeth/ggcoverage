@@ -17,7 +17,7 @@ geom_protein(
   mark.color = "red",
   mark.alpha = 0.5,
   show.table = TRUE,
-  table.position = c("right_top", "left_top", "left_bottom", "right_bottom"),
+  table.position = c("top_right", "top_left", "bottom_right", "bottom_left"),
   table.size = 4,
   table.color = "black",
   range.size = 3,
@@ -52,7 +52,7 @@ geom_protein(
 \item{table.position}{The position of the coverage summary table, choose from right_top, left_top, left_bottom, right_bottom.
 Default: right_top.}
 
-\item{table.size}{The font size of coverage summary table. Default: 4.}
+\item{table.size}{The font size of coverage summary table. Default: 12.}
 
 \item{table.color}{The font color of coverage summary table. Default: black.}
 

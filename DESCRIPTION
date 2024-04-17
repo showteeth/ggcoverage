@@ -56,7 +56,7 @@ Imports:
     BiocParallel,
     openxlsx,
     stringr,
-    ggpp
+    gridExtra
 Suggests: 
     rmarkdown,
     knitr,
