@@ -1,0 +1,13 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.github$
+^LICENSE\.md$
+^CODE_OF_CONDUCT\.md$
+^CONTRIBUTING\.md$
+^README\.Rmd$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+^_pkgdown\.yml$
+^docs$
+^vignettes/CustomizeThePlot\.Rmd$
+^vignettes/TimeAndMemory\.Rmd$
