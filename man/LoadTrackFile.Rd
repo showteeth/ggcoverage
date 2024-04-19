@@ -8,7 +8,7 @@ LoadTrackFile(
   track.file,
   track.folder = NULL,
   format = c("bam", "wig", "bw", "bedgraph", "txt"),
-  region = "chr14:21,677,306-21,737,601",
+  region = NULL,
   extend = 2000,
   gtf.gr = NULL,
   gene.name = "HNRNPC",
@@ -31,8 +31,8 @@ LoadTrackFile(
 
 \item{format}{Track file format, chosen from bam, wig, bw(bigwig), bedgraph(bedGraph) and txt.}
 
-\item{region}{Region used to create coverage plot, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.
-Default: "chr14:21,677,306-21,737,601"}
+\item{region}{Region to extract coverage for, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.
+Default: NULL, coverage is extracted from the first annotated chromosome/sequence.}
 
 \item{extend}{Extend length of \code{region}. Default: 2000.}
 
@@ -58,11 +58,12 @@ Default: RPKM.}
 
 \item{single.nuc.region}{Region for \code{single.nuc}. Default: NULL}
 
-\item{bin.size}{Size of the bins, in bases. Default: 50.}
+\item{bin.size}{Size of the bins, in bases. Default: 10. Only used for BAM files, ignored for Wig, Bigwig, etc.
+Set to NULL to turn binning off.}
 
 \item{bc.extra.para}{Extra parameters for \code{bamCoverage}, eg: "--effectiveGenomeSize 2700000000 --ignoreForNormalization chrX"}
 
-\item{n.cores}{The number of cores to be used for this job. Default:1.}
+\item{n.cores}{The number of cores to be used for this job. Default: 1.}
 }
 \value{
 A dataframe.
@@ -73,13 +74,19 @@ Load Track File to Dataframe.
 \examples{
 library(ggcoverage)
 library(utils)
+
 meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
 sample.meta <- utils::read.csv(meta.file)
+
 # track folder
 track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+
 # load bigwig file
 track.df <- LoadTrackFile(
-  track.folder = track.folder, format = "bw", region = "chr14:21,677,306-21,737,601",
-  extend = 2000, meta.info = sample.meta
+  track.folder = track.folder,
+  format = "bw",
+  region = "chr14:21,677,306-21,737,601",
+  extend = 2000,
+  meta.info = sample.meta
 )
 }

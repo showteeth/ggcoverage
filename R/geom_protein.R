@@ -14,7 +14,7 @@
 #' @param show.table Logical value, whether to show coverage summary table. Default: TRUE.
 #' @param table.position The position of the coverage summary table, choose from right_top, left_top, left_bottom, right_bottom.
 #' Default: right_top.
-#' @param table.size The font size of coverage summary table. Default: 4.
+#' @param table.size The font size of coverage summary table. Default: 12.
 #' @param table.color The font color of coverage summary table. Default: black.
 #' @param range.size The label size of range text, used when \code{range.position} is in. Default: 3.
 #' @param range.position The position of y axis range, chosen from in (move y axis in the plot) and
@@ -30,22 +30,26 @@
 #' @importFrom GenomicRanges reduce GRanges setdiff
 #' @importFrom IRanges IRanges
 #' @importFrom ggplot2 ggplot geom_rect geom_text aes aes_string
-#' @importFrom ggpp annotate
 #' @importFrom scales scientific
+#' @importFrom gridExtra ttheme_default tableGrob
 #' @export
 #'
 #' @examples
 #' library(ggplot2)
 #' library(ggcoverage)
-#' coverage.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
-#' fasta.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
+#' coverage.file <- system.file(
+#'   "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
+#' )
+#' fasta.file <- system.file(
+#'   "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
+#' )
 #' protein.id = "sp|P02769|ALBU_BOVIN"
 #' ggplot() +
 #'   geom_protein(coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id)
 geom_protein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold = 2,
                          confidence = "High", contaminant = NULL, remove.na = TRUE,
                          color = "grey", mark.bare = TRUE, mark.color = "red", mark.alpha = 0.5,
-                         show.table = TRUE, table.position = c("right_top", "left_top", "left_bottom", "right_bottom"),
+                         show.table = TRUE, table.position = c("top_right", "top_left", "bottom_right", "bottom_left"),
                          table.size = 4, table.color = "black", range.size = 3, range.position = c("in", "out")) {
   # check parameters
   table.position <- match.arg(arg = table.position)
@@ -165,22 +169,37 @@ geom_protein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold 
   # summary table
   if (show.table) {
     # table position
-    if (table.position == "left_top") {
-      table.x <- 0
-      table.y <- max(coverage.final[, "abundance"])
-    } else if (table.position == "right_top") {
-      table.x <- nchar(aa.seq.used)
-      table.y <- max(coverage.final[, "abundance"])
-    } else if (table.position == "left_bottom") {
-      table.x <- 0
-      table.y <- 0
-    } else if (table.position == "right_bottom") {
-      table.x <- nchar(aa.seq.used)
-      table.y <- 0
+
+    if (table.position == "top_left") {
+      table_xmin <- 0
+      table_xmax <- nchar(aa.seq.used) * 0.5
+      table_ymin <- max(coverage.final[, "abundance"]) * 0.5
+      table_ymax <- max(coverage.final[, "abundance"]) * 1.0
+    } else if (table.position == "top_right") {
+      table_xmin <- nchar(aa.seq.used) * 0.5
+      table_xmax <- nchar(aa.seq.used) * 1.0
+      table_ymin <- max(coverage.final[, "abundance"]) * 0.5
+      table_ymax <- max(coverage.final[, "abundance"]) * 1.0
+    } else if (table.position == "bottom_left") {
+      table_xmin <- 0
+      table_xmax <- nchar(aa.seq.used) * 0.5
+      table_ymin <- 0
+      table_ymax <- max(coverage.final[, "abundance"]) * 0.5
+    } else if (table.position == "bottom_right") {
+      table_xmin <- nchar(aa.seq.used) * 0.5
+      table_xmax <- nchar(aa.seq.used) * 1.0
+      table_ymin <- 0
+      table_ymax <- max(coverage.final[, "abundance"]) * 0.5
     }
-    summary.table <- ggpp::annotate(
-      geom = "table", label = list(coverage.summary), x = table.x, y = table.y,
-      color = table.color, size = table.size
+    table_theme <- gridExtra::ttheme_default(
+      base_size = table.size, base_colour = table.color
+    )
+    summary.table <- ggplot2::annotation_custom(
+      grob = gridExtra::tableGrob(
+        d = coverage.summary,
+        theme = table_theme),
+      xmin = table_xmin, xmax = table_xmax,
+      ymin = table_ymin, ymax = table_ymax
     )
     plot.ele <- append(plot.ele, summary.table)
   }

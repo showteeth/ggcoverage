@@ -1,3 +1,15 @@
+# ggcoverage 1.3.0
+## Major changes
+* Refactored `LoadTrack` function.
+* Added GH actions workflow to run automatic R CMD CHECK
+
+## Minor changes
+* Handle binning for bam files regardless if done via `bamCoverage` or `GenomicAlignments`.
+* Various small linting fixes.
+* Refactored `ggcoverage.Rmd` and `README.Rmd` in order to remove all lint errors, adhere to R code style
+
+-------------
+
 # ggcoverage 1.2.0
 ## Major changes
 * Support protein coverage and annotation plot (`ggprotein`, `geom_protein`, `geom_feature`).

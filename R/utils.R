@@ -1,5 +1,5 @@
 # prepare GR
-PrepareRegion <- function(region = "chr14:21,677,306-21,737,601",
+PrepareRegion <- function(region = NULL,
                           gtf.gr = NULL, gene.name = "HNRNPC", gene.name.type = c("gene_name", "gene_id"),
                           extend = 2000) {
   # check parameters
@@ -126,7 +126,7 @@ GetGeneGroup <- function(gene.gr, fc = "queryHits", sc = "subjectHits", overlap.
 GetGeneGroupTight <- function(gene.gr, overlap.gene.gap = 1) {
   # convert to dataframe
   gene.gr.df <- as.data.frame(gene.gr)
-  gene.gr.df$ID <- 1:nrow(gene.gr.df)
+  gene.gr.df$ID <- seq_len(nrow(gene.gr.df))
   # split to group
   group.flag <- 1
   group.list <- list()
@@ -142,12 +142,12 @@ GetGeneGroupTight <- function(gene.gr, overlap.gene.gap = 1) {
       }
     }
     group.list[[paste0("G", group.flag)]] <- vec
-    gene.gr.df <- gene.gr.df %>% dplyr::filter(!ID %in% vec)
+    gene.gr.df <- gene.gr.df %>% dplyr::filter(!.data$ID %in% vec)
     group.flag <- group.flag + 1
   }
   # get group index
   group.index <- c()
-  for (g in 1:length(group.list)) {
+  for (g in seq_along(group.list)) {
     g.index <- 1 + overlap.gene.gap * (g - 1)
     g.index.vec <- rep(g.index, length(group.list[[g]]))
     names(g.index.vec) <- group.list[[g]]
@@ -322,7 +322,7 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
 # used in geom_base
 PrepareRect <- function(df, y.center = -0.2) {
   valid.df <- df[df$aa == "B" | df$anno != "", ]
-  rect.li <- lapply(1:nrow(valid.df), function(x) {
+  rect.li <- lapply(seq_len(nrow(valid.df)), function(x) {
     row.info <- valid.df[x, ]
     if (row.info$aa == "B") {
       c(row.info$Pos - 0.5, row.info$Pos + 0.5, row.info$aa)

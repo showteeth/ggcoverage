@@ -6,37 +6,40 @@
 <img src = "man/figures/ggcoverage.png" align = "right" width = "200"/>
 
 [![CRAN](https://www.r-pkg.org/badges/version/ggcoverage?color=orange)](https://cran.r-project.org/package=ggcoverage)
+[![R-CMD-check](https://github.com/showteeth/ggcoverage/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/showteeth/ggcoverage/actions/workflows/R-CMD-check.yaml)
+![GitHub
+issues](https://img.shields.io/github/issues/showteeth/ggcoverage)
+![GitHub last
+commit](https://img.shields.io/github/last-commit/showteeth/ggcoverage)
 ![License](https://img.shields.io/badge/license-MIT-green)
-[![CODE\_SIZE](https://img.shields.io/github/languages/code-size/showteeth/ggcoverage.svg)](https://github.com/showteeth/ggcoverage)
+[![CODE_SIZE](https://img.shields.io/github/languages/code-size/showteeth/ggcoverage.svg)](https://github.com/showteeth/ggcoverage)
 
 ## Introduction
 
 The goal of `ggcoverage` is simplify the process of visualizing omics
 coverage. It contains three main parts:
 
--   **Load the data**: `ggcoverage` can load BAM, BigWig (.bw),
-    BedGraph, txt/xlsx files from various omics data, including WGS,
-    RNA-seq, ChIP-seq, ATAC-seq, proteomics, et al.
--   **Create omics coverage plot**
--   **Add annotations**: `ggcoverage` supports six different
-    annotations:
-    -   **base and amino acid annotation**: Visualize genome coverage at
-        single-nucleotide level with bases and amino acids.
-    -   **GC annotation**: Visualize genome coverage with GC content
-    -   **CNV annotation**: Visualize genome coverage with copy number
-        variation (CNV)
-    -   **gene annotation**: Visualize genome coverage across genes
-    -   **transcription annotation**: Visualize genome coverage across
-        different transcripts
-    -   **ideogram annotation**: Visualize the region showing on whole
-        chromosome
-    -   **peak annotation**: Visualize genome coverage and peak
-        identified
-    -   **contact map annotation**: Visualize genome coverage with Hi-C
-        contact map
-    -   **link annotation**: Visualize genome coverage with contacts
-    -   **peotein feature annotation**: Visualize protein coverage with
-        features
+- **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph,
+  txt/xlsx files from various omics data, including WGS, RNA-seq,
+  ChIP-seq, ATAC-seq, proteomics, et al.
+- **Create omics coverage plot**
+- **Add annotations**: `ggcoverage` supports six different annotations:
+  - **base and amino acid annotation**: Visualize genome coverage at
+    single-nucleotide level with bases and amino acids.
+  - **GC annotation**: Visualize genome coverage with GC content
+  - **CNV annotation**: Visualize genome coverage with copy number
+    variation (CNV)
+  - **gene annotation**: Visualize genome coverage across genes
+  - **transcription annotation**: Visualize genome coverage across
+    different transcripts
+  - **ideogram annotation**: Visualize the region showing on whole
+    chromosome
+  - **peak annotation**: Visualize genome coverage and peak identified
+  - **contact map annotation**: Visualize genome coverage with Hi-C
+    contact map
+  - **link annotation**: Visualize genome coverage with contacts
+  - **peotein feature annotation**: Visualize protein coverage with
+    features
 
 `ggcoverage` utilizes `ggplot2` plotting system, so its usage is
 **ggplot2-style**!
@@ -45,14 +48,14 @@ coverage. It contains three main parts:
 
 `ggcoverage` is an R package distributed as part of the
 [CRAN](https://cran.r-project.org/). To install the package, start R and
-enter:
+enter one of the following commands:
 
 ``` r
-# install via CRAN
+# install via CRAN (not yet available)
 install.packages("ggcoverage")
 
-# install via Github
-# install.package("remotes")   #In case you have not installed it.
+# OR install via Github
+install.package("remotes")
 remotes::install_github("showteeth/ggcoverage")
 ```
 
@@ -60,8 +63,8 @@ In general, it is **recommended** to install from [Github
 repository](https://github.com/showteeth/ggcoverage) (update more
 timely).
 
-Once `ggcoverage` is installed, it can be loaded by the following
-command.
+Once `ggcoverage` is installed, it can be loaded (together with other
+libraries) like this:
 
 ``` r
 library("rtracklayer")
@@ -74,8 +77,8 @@ library("ggpattern")
 `ggcoverage` provides two
 [vignettes](https://showteeth.github.io/ggcoverage/):
 
--   **detailed manual**: step-by-step usage
--   **customize the plot**: customize the plot and add additional layer
+- **detailed manual**: step-by-step usage
+- **customize the plot**: customize the plot and add additional layer
 
 ## RNA-seq data
 
@@ -84,18 +87,19 @@ library("ggpattern")
 The RNA-seq data used here are from [Transcription profiling by high
 throughput sequencing of HNRNPC knockdown and control HeLa
 cells](https://bioconductor.org/packages/release/data/experiment/html/RNAseqData.HNRNPC.bam.chr14.html),
-we select four sample to use as example: ERR127307\_chr14,
-ERR127306\_chr14, ERR127303\_chr14, ERR127302\_chr14, and all bam files
-are converted to bigwig file with
+we select four sample to use as example: ERR127307_chr14,
+ERR127306_chr14, ERR127303_chr14, ERR127302_chr14, and all bam files are
+converted to bigwig file with
 [deeptools](https://deeptools.readthedocs.io/en/develop/).
 
 Load metadata:
 
 ``` r
 # load metadata
-meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-sample.meta = read.csv(meta.file)
-sample.meta
+meta_file <-
+  system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+sample_meta <- read.csv(meta_file)
+sample_meta
 #>        SampleName    Type Group
 #> 1 ERR127302_chr14 KO_rep1    KO
 #> 2 ERR127303_chr14 KO_rep2    KO
@@ -107,31 +111,37 @@ Load track files:
 
 ``` r
 # track folder
-track.folder = system.file("extdata", "RNA-seq", package = "ggcoverage")
+track_folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
 # load bigwig file
-track.df = LoadTrackFile(track.folder = track.folder, format = "bw",
-                         region = "chr14:21,677,306-21,737,601", extend = 2000,
-                         meta.info = sample.meta)
+track_df <- LoadTrackFile(
+  track.folder = track_folder,
+  format = "bw",
+  region = "chr14:21,677,306-21,737,601",
+  extend = 2000,
+  meta.info = sample_meta
+)
 # check data
-head(track.df)
-#>   seqnames    start      end score    Type Group
-#> 1    chr14 21675306 21675950     0 KO_rep1    KO
-#> 2    chr14 21675951 21676000     1 KO_rep1    KO
-#> 3    chr14 21676001 21676100     2 KO_rep1    KO
-#> 4    chr14 21676101 21676150     1 KO_rep1    KO
-#> 5    chr14 21676151 21677100     0 KO_rep1    KO
-#> 6    chr14 21677101 21677200     2 KO_rep1    KO
+head(track_df)
+#>   seqnames    start      end width strand score    Type Group
+#> 1    chr14 21675306 21675950   645      *     0 KO_rep1    KO
+#> 2    chr14 21675951 21676000    50      *     1 KO_rep1    KO
+#> 3    chr14 21676001 21676100   100      *     2 KO_rep1    KO
+#> 4    chr14 21676101 21676150    50      *     1 KO_rep1    KO
+#> 5    chr14 21676151 21677100   950      *     0 KO_rep1    KO
+#> 6    chr14 21677101 21677200   100      *     2 KO_rep1    KO
 ```
 
 Prepare mark region:
 
 ``` r
 # create mark region
-mark.region=data.frame(start=c(21678900,21732001,21737590),
-                       end=c(21679900,21732400,21737650),
-                       label=c("M1", "M2", "M3"))
+mark_region <- data.frame(
+  start = c(21678900, 21732001, 21737590),
+  end = c(21679900, 21732400, 21737650),
+  label = c("M1", "M2", "M3")
+)
 # check data
-mark.region
+mark_region
 #>      start      end label
 #> 1 21678900 21679900    M1
 #> 2 21732001 21732400    M2
@@ -140,23 +150,24 @@ mark.region
 
 ### Load GTF
 
-To add **gene annotation**, the gtf file should contain **gene\_type**
-and **gene\_name** attributes in **column 9**; to add **transcript
-annotation**, the gtf file should contain **transcript\_name** attribute
+To add **gene annotation**, the gtf file should contain **gene_type**
+and **gene_name** attributes in **column 9**; to add **transcript
+annotation**, the gtf file should contain **transcript_name** attribute
 in **column 9**.
 
 ``` r
-gtf.file = system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-gtf.gr = rtracklayer::import.gff(con = gtf.file, format = 'gtf')
+gtf_file <-
+  system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
 ```
 
 ### Basic coverage
 
 The basic coverage plot has **two types**:
 
--   **facet**: Create subplot for every track (specified by
-    `facet.key`). This is default.
--   **joint**: Visualize all tracks in a single plot.
+- **facet**: Create subplot for every track (specified by `facet.key`).
+  This is default.
+- **joint**: Visualize all tracks in a single plot.
 
 #### joint view
 
@@ -164,10 +175,16 @@ Create line plot for **every sample** (`facet.key = "Type"`) and color
 by **every sample** (`group.key = "Type"`):
 
 ``` r
-basic.coverage = ggcoverage(data = track.df,
-                            plot.type = "joint", facet.key = "Type", group.key = "Type",
-                            mark.region = mark.region, range.position = "out")
-basic.coverage
+basic_coverage <- ggcoverage(
+  data = track_df,
+  plot.type = "joint",
+  facet.key = "Type",
+  group.key = "Type",
+  mark.region = mark_region,
+  range.position = "out"
+)
+
+basic_coverage
 ```
 
 <img src="man/figures/README-basic_coverage_joint-1.png" width="100%" style="display: block; margin: auto;" />
@@ -176,21 +193,32 @@ Create **group average line plot** (sample is indicated by
 `facet.key = "Type"`, group is indicated by `group.key = "Group"`):
 
 ``` r
-basic.coverage = ggcoverage(data = track.df,
-                            plot.type = "joint", facet.key = "Type", group.key = "Group", 
-                            joint.avg = TRUE,
-                            mark.region = mark.region, range.position = "out")
-basic.coverage
+basic_coverage <- ggcoverage(
+  data = track_df,
+  plot.type = "joint",
+  facet.key = "Type",
+  group.key = "Group",
+  joint.avg = TRUE,
+  mark.region = mark_region,
+  range.position = "out"
+)
+
+basic_coverage
 ```
 
 <img src="man/figures/README-basic_coverage_joint_avg-1.png" width="100%" style="display: block; margin: auto;" />
 
-#### facet view
+#### Facet view
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, plot.type = "facet",
-                            mark.region = mark.region, range.position = "out")
-basic.coverage
+basic_coverage <- ggcoverage(
+  data = track_df,
+  plot.type = "facet",
+  mark.region = mark_region,
+  range.position = "out"
+)
+
+basic_coverage
 ```
 
 <img src="man/figures/README-basic_coverage-1.png" width="100%" style="display: block; margin: auto;" />
@@ -201,9 +229,14 @@ basic.coverage
 `range.position`**:
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, plot.type = "facet",
-                            mark.region = mark.region, range.position = "in")
-basic.coverage
+basic_coverage <- ggcoverage(
+  data = track_df,
+  plot.type = "facet",
+  mark.region = mark_region,
+  range.position = "in"
+)
+
+basic_coverage
 ```
 
 <img src="man/figures/README-basic_coverage_2-1.png" width="100%" style="display: block; margin: auto;" />
@@ -211,10 +244,15 @@ basic.coverage
 **Shared/Free Y-axis scale with `facet.y.scale`**:
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, plot.type = "facet",
-                            mark.region = mark.region, range.position = "in", 
-                            facet.y.scale = "fixed")
-basic.coverage
+basic_coverage <- ggcoverage(
+  data = track_df,
+  plot.type = "facet",
+  mark.region = mark_region,
+  range.position = "in",
+  facet.y.scale = "fixed"
+)
+
+basic_coverage
 ```
 
 <img src="man/figures/README-basic_coverage_3-1.png" width="100%" style="display: block; margin: auto;" />
@@ -222,8 +260,8 @@ basic.coverage
 ### Add gene annotation
 
 ``` r
-basic.coverage + 
-  geom_gene(gtf.gr=gtf.gr)
+basic_coverage +
+  geom_gene(gtf.gr = gtf_gr)
 ```
 
 <img src="man/figures/README-gene_coverage-1.png" width="100%" style="display: block; margin: auto;" />
@@ -233,8 +271,8 @@ basic.coverage +
 **In “loose” stype (default style; each transcript occupies one line)**:
 
 ``` r
-basic.coverage +
-  geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5)
+basic_coverage +
+  geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5)
 ```
 
 <img src="man/figures/README-transcript_coverage-1.png" width="100%" style="display: block; margin: auto;" />
@@ -242,8 +280,10 @@ basic.coverage +
 **In “tight” style (place non-overlap transcripts in one line)**:
 
 ``` r
-basic.coverage +
-  geom_transcript(gtf.gr=gtf.gr, overlap.style = "tight", label.vjust = 1.5)
+basic_coverage +
+  geom_transcript(gtf.gr = gtf_gr,
+                  overlap.style = "tight",
+                  label.vjust = 1.5)
 ```
 
 <img src="man/figures/README-transcript_coverage_tight-1.png" width="100%" style="display: block; margin: auto;" />
@@ -251,9 +291,9 @@ basic.coverage +
 ### Add ideogram
 
 ``` r
-basic.coverage +
-  geom_gene(gtf.gr=gtf.gr) +
-  geom_ideogram(genome = "hg19",plot.space = 0)
+basic_coverage +
+  geom_gene(gtf.gr = gtf_gr) +
+  geom_ideogram(genome = "hg19", plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for x is already present.
@@ -263,9 +303,9 @@ basic.coverage +
 <img src="man/figures/README-ideogram_coverage_1-1.png" width="100%" style="display: block; margin: auto;" />
 
 ``` r
-basic.coverage +
-  geom_transcript(gtf.gr=gtf.gr,label.vjust = 1.5) +
-  geom_ideogram(genome = "hg19",plot.space = 0)
+basic_coverage +
+  geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5) +
+  geom_ideogram(genome = "hg19", plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for x is already present.
@@ -289,18 +329,26 @@ we select tumor sample, and get bin counts with
 
 ``` r
 # prepare metafile
-cnv.meta.info = data.frame(
+cnv_meta_info <- data.frame(
   SampleName = c("CNV_example"),
   Type = c("tumor"),
   Group = c("tumor")
 )
+
 # track file
-track.file = system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")
+track_file <- system.file("extdata",
+                          "DNA-seq", "CNV_example.txt", package = "ggcoverage")
+
 # load txt file
-track.df = LoadTrackFile(track.file = track.file, format = "txt", region = "chr4:61750000-62,700,000",
-                         meta.info = cnv.meta.info)
+track_df <- LoadTrackFile(
+  track.file = track_file,
+  format = "txt",
+  region = "chr4:61750000-62,700,000",
+  meta.info = cnv_meta_info
+)
+
 # check data
-head(track.df)
+head(track_df)
 #>   seqnames    start      end score  Type Group
 #> 1     chr4 61748000 61748000    25 tumor tumor
 #> 2     chr4 61748001 61749000    24 tumor tumor
@@ -313,9 +361,13 @@ head(track.df)
 ##### Basic coverage
 
 ``` r
-basic.coverage = ggcoverage(data = track.df,color = "grey", mark.region = NULL,
-                            range.position = "out")
-basic.coverage
+basic_coverage <- ggcoverage(
+  data = track_df,
+  color = "grey",
+  mark.region = NULL,
+  range.position = "out"
+)
+basic_coverage
 ```
 
 <img src="man/figures/README-basic_coverage_dna-1.png" width="100%" style="display: block; margin: auto;" />
@@ -335,10 +387,11 @@ library("BSgenome.Hsapiens.UCSC.hg19")
 #> The following object is masked from 'package:base':
 #> 
 #>     strsplit
+
 # create plot
-basic.coverage +
-  geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
-  geom_gene(gtf.gr=gtf.gr) +
+basic_coverage +
+  geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
+  geom_gene(gtf.gr = gtf_gr) +
   geom_ideogram(genome = "hg19")
 #> Loading ideogram...
 #> Loading ranges...
@@ -359,29 +412,40 @@ accession number is
 
 ``` r
 # track file
-track.file <- system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
+track_file <-
+  system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
+
 # load track
-track.df = LoadTrackFile(track.file = track.file, format = "bw", region = "4:1-160000000")
-#> Sample without metadata!
+track_df <- LoadTrackFile(track.file = track_file,
+                          format = "bw",
+                          region = "4:1-160000000")
+#> No metadata provided, returning coverage as is.
+
 # add chr prefix
-track.df$seqnames = paste0("chr", track.df$seqnames)
+track_df$seqnames <- paste0("chr", track_df$seqnames)
+
 # check data
-head(track.df)
-#>   seqnames  start    end score         Type        Group
-#> 1     chr4      1  50000   197 SRR054616.bw SRR054616.bw
-#> 2     chr4  50001 100000   598 SRR054616.bw SRR054616.bw
-#> 3     chr4 100001 150000   287 SRR054616.bw SRR054616.bw
-#> 4     chr4 150001 200000   179 SRR054616.bw SRR054616.bw
-#> 5     chr4 200001 250000   282 SRR054616.bw SRR054616.bw
-#> 6     chr4 250001 300000   212 SRR054616.bw SRR054616.bw
+head(track_df)
+#>   seqnames  start    end width strand score         Type        Group
+#> 1     chr4      1  50000 50000      *   197 SRR054616.bw SRR054616.bw
+#> 2     chr4  50001 100000 50000      *   598 SRR054616.bw SRR054616.bw
+#> 3     chr4 100001 150000 50000      *   287 SRR054616.bw SRR054616.bw
+#> 4     chr4 150001 200000 50000      *   179 SRR054616.bw SRR054616.bw
+#> 5     chr4 200001 250000 50000      *   282 SRR054616.bw SRR054616.bw
+#> 6     chr4 250001 300000 50000      *   212 SRR054616.bw SRR054616.bw
 ```
 
 ##### Basic coverage
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "grey",
-                            mark.region = NULL, range.position = "out")
-basic.coverage
+basic_coverage <- ggcoverage(
+  data = track_df,
+  color = "grey",
+  mark.region = NULL,
+  range.position = "out"
+)
+
+basic_coverage
 ```
 
 <img src="man/figures/README-cnv_basic_coverage_dna-1.png" width="100%" />
@@ -390,11 +454,15 @@ basic.coverage
 
 ``` r
 # prepare files
-cnv.file <- system.file("extdata", "DNA-seq", "SRR054616_copynumber.txt", package = "ggcoverage")
+cnv_file <-
+  system.file("extdata", "DNA-seq", "SRR054616_copynumber.txt",
+              package = "ggcoverage")
+
 # read CNV
-cnv.df = read.table(file = cnv.file, sep = "\t", header = TRUE)
+cnv_df <- read.table(file = cnv_file, sep = "\t", header = TRUE)
+
 # check data
-head(cnv.df)
+head(cnv_df)
 #>   chrom chrompos  cn.ratio copy.number
 #> 1  chr4        1 11.518554           5
 #> 2  chr4    90501  5.648878           5
@@ -409,13 +477,17 @@ head(cnv.df)
 Add **GC**, **ideogram** and **CNV** annotations.
 
 ``` r
-# load genome data
-library("BSgenome.Hsapiens.UCSC.hg19")
 # create plot
-basic.coverage +
-  geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
-  geom_cnv(cnv.df = cnv.df, bin.col = 3, cn.col = 4) +
-  geom_ideogram(genome = "hg19",plot.space = 0, highlight.centromere = TRUE)
+basic_coverage +
+  geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
+  geom_cnv(cnv.df = cnv_df,
+           bin.col = 3,
+           cn.col = 4) +
+  geom_ideogram(
+    genome = "hg19",
+    plot.space = 0,
+    highlight.centromere = TRUE
+  )
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for x is already present.
@@ -430,26 +502,35 @@ basic.coverage +
 
 ``` r
 # prepare sample metadata
-sample.meta <- data.frame(
+sample_meta <- data.frame(
   SampleName = c("tumorA.chr4.selected"),
   Type = c("tumorA"),
   Group = c("tumorA")
 )
+
 # load bam file
-bam.file = system.file("extdata", "DNA-seq", "tumorA.chr4.selected.bam", package = "ggcoverage")
-track.df <- LoadTrackFile(
-  track.file = bam.file,
-  meta.info = sample.meta,
-  single.nuc=TRUE, single.nuc.region="chr4:62474235-62474295"
+bam_file <- system.file("extdata",
+                        "DNA-seq", "tumorA.chr4.selected.bam",
+                        package = "ggcoverage")
+
+track_df <- LoadTrackFile(
+  track.file = bam_file,
+  meta.info = sample_meta,
+  single.nuc = TRUE,
+  single.nuc.region = "chr4:62474235-62474295"
 )
-head(track.df)
-#>   seqnames    start      end score   Type  Group
-#> 1     chr4 62474235 62474236     5 tumorA tumorA
-#> 2     chr4 62474236 62474237     5 tumorA tumorA
-#> 3     chr4 62474237 62474238     5 tumorA tumorA
-#> 4     chr4 62474238 62474239     6 tumorA tumorA
-#> 5     chr4 62474239 62474240     6 tumorA tumorA
-#> 6     chr4 62474240 62474241     6 tumorA tumorA
+#> No 'region' specified; extracting coverage for an example range
+#> (<=100,000 bases, first annotated sequence)
+#> Coverage extracted from sequence/chromosome: chr10
+
+head(track_df)
+#>   seqnames    start      end width strand score   Type  Group
+#> 1     chr4 62474235 62474236     1      *     5 tumorA tumorA
+#> 2     chr4 62474236 62474237     1      *     5 tumorA tumorA
+#> 3     chr4 62474237 62474238     1      *     5 tumorA tumorA
+#> 4     chr4 62474238 62474239     1      *     6 tumorA tumorA
+#> 5     chr4 62474239 62474240     1      *     6 tumorA tumorA
+#> 6     chr4 62474240 62474241     1      *     6 tumorA tumorA
 ```
 
 #### Default color scheme
@@ -463,18 +544,29 @@ popular color schemes is available
 
 ``` r
 # color scheme
-nuc.color = c("A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d")
-opar <- graphics::par() 
+nuc_color <- c(
+  "A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d"
+)
+opar <- graphics::par()
+
 # create plot
 graphics::par(mar = c(1, 5, 1, 1))
 graphics::image(
-  1:length(nuc.color), 1, as.matrix(1:length(nuc.color)),
-  col = nuc.color,
-  xlab = "", ylab = "", xaxt = "n", yaxt = "n", bty = "n"
+  seq_along(nuc_color),
+  1,
+  as.matrix(seq_along(nuc_color)),
+  col = nuc_color,
+  xlab = "",
+  ylab = "",
+  xaxt = "n",
+  yaxt = "n",
+  bty = "n"
 )
-graphics::text(1:length(nuc.color), 1, names(nuc.color))
+graphics::text(seq_along(nuc_color), 1, names(nuc_color))
 graphics::mtext(
-  text = "Base", adj = 1, las = 1,
+  text = "Base",
+  adj = 1,
+  las = 1,
   side = 2
 )
 ```
@@ -482,6 +574,7 @@ graphics::mtext(
 <img src="man/figures/README-base_color_scheme-1.png" width="100%" style="display: block; margin: auto;" />
 
 ``` r
+
 # reset par default
 graphics::par(opar)
 ```
@@ -491,23 +584,34 @@ colours: a proposal for
 aminochromography](https://academic.oup.com/peds/article/10/7/743/1593029?login=false):
 
 ``` r
-aa.color = c(
-  "D" = "#FF0000", "S" = "#FF2400", "T" = "#E34234", "G" = "#FF8000", "P" = "#F28500",
-  "C" = "#FFFF00", "A" = "#FDFF00", "V" = "#E3FF00", "I" = "#C0FF00", "L" = "#89318C",
-  "M" = "#00FF00", "F" = "#50C878", "Y" = "#30D5C8", "W" = "#00FFFF", "H" = "#0F2CB3",
-  "R" = "#0000FF", "K" = "#4b0082", "N" = "#800080", "Q" = "#FF00FF", "E" = "#8F00FF",
-  "*" = "#FFC0CB", " " = "#FFFFFF", " " = "#FFFFFF", " " = "#FFFFFF", " " = "#FFFFFF"
+aa_color <- c(
+  "D" = "#FF0000", "S" = "#FF2400", "T" = "#E34234", "G" = "#FF8000",
+  "P" = "#F28500", "C" = "#FFFF00", "A" = "#FDFF00", "V" = "#E3FF00",
+  "I" = "#C0FF00", "L" = "#89318C", "M" = "#00FF00", "F" = "#50C878",
+  "Y" = "#30D5C8", "W" = "#00FFFF", "H" = "#0F2CB3", "R" = "#0000FF",
+  "K" = "#4b0082", "N" = "#800080", "Q" = "#FF00FF", "E" = "#8F00FF",
+  "*" = "#FFC0CB", " " = "#FFFFFF", " " = "#FFFFFF", " " = "#FFFFFF",
+  " " = "#FFFFFF"
 )
 
 graphics::par(mar = c(1, 5, 1, 1))
 graphics::image(
-  1:5, 1:5, matrix(1:length(aa.color),nrow=5),
-  col = rev(aa.color),
-  xlab = "", ylab = "", xaxt = "n", yaxt = "n", bty = "n"
+  1:5,
+  1:5,
+  matrix(seq_along(aa_color), nrow = 5),
+  col = rev(aa_color),
+  xlab = "",
+  ylab = "",
+  xaxt = "n",
+  yaxt = "n",
+  bty = "n"
 )
-graphics::text(expand.grid(1:5,1:5), names(rev(aa.color)))
+
+graphics::text(expand.grid(1:5, 1:5), names(rev(aa_color)))
 graphics::mtext(
-  text = "Amino acids", adj = 1, las = 1,
+  text = "Amino acids",
+  adj = 1,
+  las = 1,
   side = 2
 )
 ```
@@ -515,6 +619,7 @@ graphics::mtext(
 <img src="man/figures/README-aa_color_scheme-1.png" width="100%" style="display: block; margin: auto;" />
 
 ``` r
+
 # reset par default
 graphics::par(opar)
 ```
@@ -524,14 +629,18 @@ graphics::par(opar)
 **Use twill to mark position with SNV**:
 
 ``` r
-library(ggpattern)
 # create plot with twill mark
-ggcoverage(data = track.df, color = "grey", range.position = "out", 
-           single.nuc=T, rect.color = "white") +
-  geom_base(bam.file = bam.file,
+ggcoverage(
+  data = track_df,
+  color = "grey",
+  range.position = "out",
+  single.nuc = TRUE,
+  rect.color = "white"
+) +
+  geom_base(bam.file = bam_file,
             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
             mark.type = "twill") +
-  geom_ideogram(genome = "hg19",plot.space = 0)
+  geom_ideogram(genome = "hg19", plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for x is already present.
@@ -544,12 +653,17 @@ ggcoverage(data = track.df, color = "grey", range.position = "out",
 
 ``` r
 # create plot with star mark
-ggcoverage(data = track.df, color = "grey", range.position = "out", 
-           single.nuc=T, rect.color = "white") +
-  geom_base(bam.file = bam.file,
+ggcoverage(
+  data = track_df,
+  color = "grey",
+  range.position = "out",
+  single.nuc = TRUE,
+  rect.color = "white"
+) +
+  geom_base(bam.file = bam_file,
             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
             mark.type = "star") +
-  geom_ideogram(genome = "hg19",plot.space = 0)
+  geom_ideogram(genome = "hg19", plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for x is already present.
@@ -561,13 +675,18 @@ ggcoverage(data = track.df, color = "grey", range.position = "out",
 **Highlight position with SNV**:
 
 ``` r
-# highlight
-ggcoverage(data = track.df, color = "grey", range.position = "out", 
-           single.nuc=T, rect.color = "white") +
-  geom_base(bam.file = bam.file,
+# highlight one base
+ggcoverage(
+  data = track_df,
+  color = "grey",
+  range.position = "out",
+  single.nuc = TRUE,
+  rect.color = "white"
+) +
+  geom_base(bam.file = bam_file,
             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
             mark.type = "highlight") +
-  geom_ideogram(genome = "hg19",plot.space = 0)
+  geom_ideogram(genome = "hg19", plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for x is already present.
@@ -580,19 +699,27 @@ ggcoverage(data = track.df, color = "grey", range.position = "out",
 
 The ChIP-seq data used here are from
 [DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html),
-I select four sample to use as example: Chr18\_MCF7\_input,
-Chr18\_MCF7\_ER\_1, Chr18\_MCF7\_ER\_3, Chr18\_MCF7\_ER\_2, and all bam
-files are converted to bigwig file with
+I select four sample to use as example: Chr18_MCF7_input,
+Chr18_MCF7_ER_1, Chr18_MCF7_ER_3, Chr18_MCF7_ER_2, and all bam files are
+converted to bigwig file with
 [deeptools](https://deeptools.readthedocs.io/en/develop/).
 
 Create metadata:
 
 ``` r
 # load metadata
-sample.meta = data.frame(SampleName=c('Chr18_MCF7_ER_1','Chr18_MCF7_ER_2','Chr18_MCF7_ER_3','Chr18_MCF7_input'),
-                         Type = c("MCF7_ER_1","MCF7_ER_2","MCF7_ER_3","MCF7_input"),
-                         Group = c("IP", "IP", "IP", "Input"))
-sample.meta
+sample_meta <- data.frame(
+  SampleName = c(
+    "Chr18_MCF7_ER_1",
+    "Chr18_MCF7_ER_2",
+    "Chr18_MCF7_ER_3",
+    "Chr18_MCF7_input"
+  ),
+  Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),
+  Group = c("IP", "IP", "IP", "Input")
+)
+
+sample_meta
 #>         SampleName       Type Group
 #> 1  Chr18_MCF7_ER_1  MCF7_ER_1    IP
 #> 2  Chr18_MCF7_ER_2  MCF7_ER_2    IP
@@ -604,30 +731,39 @@ Load track files:
 
 ``` r
 # track folder
-track.folder = system.file("extdata", "ChIP-seq", package = "ggcoverage")
+track_folder <- system.file("extdata", "ChIP-seq", package = "ggcoverage")
+
 # load bigwig file
-track.df = LoadTrackFile(track.folder = track.folder, format = "bw", region = "chr18:76822285-76900000",
-                         meta.info = sample.meta)
+track_df <- LoadTrackFile(
+  track.folder = track_folder,
+  format = "bw",
+  region = "chr18:76822285-76900000",
+  meta.info = sample_meta
+)
+
 # check data
-head(track.df)
-#>   seqnames    start      end      score      Type Group
-#> 1    chr18 76820285 76820400 219.658005 MCF7_ER_1    IP
-#> 2    chr18 76820401 76820700   0.000000 MCF7_ER_1    IP
-#> 3    chr18 76820701 76821000 439.316010 MCF7_ER_1    IP
-#> 4    chr18 76821001 76821300 219.658005 MCF7_ER_1    IP
-#> 5    chr18 76821301 76821600   0.000000 MCF7_ER_1    IP
-#> 6    chr18 76821601 76821900 219.658005 MCF7_ER_1    IP
+head(track_df)
+#>   seqnames    start      end width strand      score      Type Group
+#> 1    chr18 76820285 76820400   116      * 219.658005 MCF7_ER_1    IP
+#> 2    chr18 76820401 76820700   300      *   0.000000 MCF7_ER_1    IP
+#> 3    chr18 76820701 76821000   300      * 439.316010 MCF7_ER_1    IP
+#> 4    chr18 76821001 76821300   300      * 219.658005 MCF7_ER_1    IP
+#> 5    chr18 76821301 76821600   300      *   0.000000 MCF7_ER_1    IP
+#> 6    chr18 76821601 76821900   300      * 219.658005 MCF7_ER_1    IP
 ```
 
 Prepare mark region:
 
 ``` r
 # create mark region
-mark.region=data.frame(start=c(76822533),
-                       end=c(76823743),
-                       label=c("Promoter"))
+mark_region <- data.frame(
+  start = c(76822533),
+  end = c(76823743),
+  label = c("Promoter")
+)
+
 # check data
-mark.region
+mark_region
 #>      start      end    label
 #> 1 76822533 76823743 Promoter
 ```
@@ -635,9 +771,10 @@ mark.region
 ### Basic coverage
 
 ``` r
-basic.coverage = ggcoverage(data = track.df,
-                            mark.region=mark.region, show.mark.label = FALSE)
-basic.coverage
+basic_coverage <- ggcoverage(data = track_df,
+                             mark.region = mark_region,
+                             show.mark.label = FALSE)
+basic_coverage
 ```
 
 <img src="man/figures/README-basic_coverage_chip-1.png" width="100%" style="display: block; margin: auto;" />
@@ -650,12 +787,15 @@ annotation, we first **get consensus peaks** with
 
 ``` r
 # get consensus peak file
-peak.file = system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
+peak_file <- system.file("extdata",
+                         "ChIP-seq",
+                         "consensus.peak",
+                         package = "ggcoverage")
 
-basic.coverage +
-  geom_gene(gtf.gr=gtf.gr) +
-  geom_peak(bed.file = peak.file) +
-  geom_ideogram(genome = "hg19",plot.space = 0)
+basic_coverage +
+  geom_gene(gtf.gr = gtf_gr) +
+  geom_peak(bed.file = peak_file) +
+  geom_ideogram(genome = "hg19", plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
 #> Scale for x is already present.
@@ -676,23 +816,29 @@ The Hi-C matrix visualization is implemented by
 ### Load track data
 
 ``` r
-library(ggcoverage)
-library(GenomicRanges)
 # prepare track dataframe
-track.file = system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
-track.df = LoadTrackFile(track.file = track.file, format = "bw", 
-                         region = "chr2L:8050000-8300000", extend = 0)
-#> Sample without metadata!
-track.df$score = ifelse(track.df$score <0, 0, track.df$score)
+track_file <-
+  system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
+
+track_df <- LoadTrackFile(
+  track.file = track_file,
+  format = "bw",
+  region = "chr2L:8050000-8300000",
+  extend = 0
+)
+#> No metadata provided, returning coverage as is.
+
+track_df$score <- ifelse(track_df$score < 0, 0, track_df$score)
+
 # check the data
-head(track.df)
-#>   seqnames   start     end      score        Type       Group
-#> 1    chr2L 8050000 8050009 1.66490245 H3K36me3.bw H3K36me3.bw
-#> 2    chr2L 8050015 8050049 1.59976900 H3K36me3.bw H3K36me3.bw
-#> 3    chr2L 8050057 8050091 1.60730922 H3K36me3.bw H3K36me3.bw
-#> 4    chr2L 8050097 8050131 1.65555012 H3K36me3.bw H3K36me3.bw
-#> 5    chr2L 8050137 8050171 1.71025538 H3K36me3.bw H3K36me3.bw
-#> 6    chr2L 8050176 8050210 1.75198197 H3K36me3.bw H3K36me3.bw
+head(track_df)
+#>   seqnames   start     end width strand      score        Type       Group
+#> 1    chr2L 8050000 8050009    10      * 1.66490245 H3K36me3.bw H3K36me3.bw
+#> 2    chr2L 8050015 8050049    35      * 1.59976900 H3K36me3.bw H3K36me3.bw
+#> 3    chr2L 8050057 8050091    35      * 1.60730922 H3K36me3.bw H3K36me3.bw
+#> 4    chr2L 8050097 8050131    35      * 1.65555012 H3K36me3.bw H3K36me3.bw
+#> 5    chr2L 8050137 8050171    35      * 1.71025538 H3K36me3.bw H3K36me3.bw
+#> 6    chr2L 8050176 8050210    35      * 1.75198197 H3K36me3.bw H3K36me3.bw
 ```
 
 ### Load Hi-C data
@@ -701,49 +847,51 @@ Matrix:
 
 ``` r
 ## matrix
-hic.mat.file = system.file("extdata", "HiC", "HiC_mat.txt", package = "ggcoverage")
-hic.mat = read.table(file = hic.mat.file, sep = "\t")
-hic.mat = as.matrix(hic.mat)
+hic_mat_file <- system.file("extdata",
+                            "HiC", "HiC_mat.txt", package = "ggcoverage")
+hic_mat <- read.table(file = hic_mat_file, sep = "\t")
+hic_mat <- as.matrix(hic_mat)
 ```
 
 Bin table:
 
 ``` r
 ## bin
-hic.bin.file = system.file("extdata", "HiC", "HiC_bin.txt", package = "ggcoverage")
-hic.bin = read.table(file = hic.bin.file, sep = "\t")
-colnames(hic.bin) = c("chr", "start", "end")
-hic.bin.gr = GenomicRanges::makeGRangesFromDataFrame(df = hic.bin)
+hic_bin_file <-
+  system.file("extdata", "HiC", "HiC_bin.txt", package = "ggcoverage")
+hic_bin <- read.table(file = hic_bin_file, sep = "\t")
+colnames(hic_bin) <- c("chr", "start", "end")
+hic_bin_gr <- GenomicRanges::makeGRangesFromDataFrame(df = hic_bin)
+
 ## transfrom func
-FailSafe_log10 <- function(x){
+failsafe_log10 <- function(x) {
   x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
-  return(log10(x+1))
+  return(log10(x + 1))
 }
 ```
 
 Data transfromation method:
 
-``` r
-## transfrom func
-FailSafe_log10 <- function(x){
-  x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
-  return(log10(x+1))
-}
-```
-
 ### Load link
 
 ``` r
 # prepare arcs
-link.file = system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage")
+link_file <-
+  system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage")
 ```
 
 ### Basic coverage
 
 ``` r
-basic.coverage = ggcoverage(data = track.df, color = "grey",
-                            mark.region = NULL, range.position = "out")
-basic.coverage
+basic_coverage <-
+  ggcoverage(
+    data = track_df,
+    color = "grey",
+    mark.region = NULL,
+    range.position = "out"
+  )
+
+basic_coverage
 ```
 
 <img src="man/figures/README-basic_coverage_hic-1.png" width="100%" style="display: block; margin: auto;" />
@@ -753,11 +901,19 @@ basic.coverage
 Add **link**, **contact map**annotations:
 
 ``` r
-basic.coverage +
-  geom_tad(matrix = hic.mat, granges = hic.bin.gr, value.cut = 0.99,
-           color.palette = "viridis", transform.fun = FailSafe_log10,
-           top = FALSE, show.rect = TRUE) +
-  geom_link(link.file = link.file, file.type = "bedpe", show.rect = TRUE)
+basic_coverage +
+  geom_tad(
+    matrix = hic_mat,
+    granges = hic_bin_gr,
+    value.cut = 0.99,
+    color.palette = "viridis",
+    transform.fun = failsafe_log10,
+    top = FALSE,
+    show.rect = TRUE
+  ) +
+  geom_link(link.file = link_file,
+            file.type = "bedpe",
+            show.rect = TRUE)
 #> Read 534 lines after Skipping 0 lines
 #> Inserting Data at location: 1
 #> Data length: 534
@@ -789,10 +945,12 @@ Discoverer](https://www.thermofisher.cn/cn/zh/home/industrial/mass-spectrometry/
 ``` r
 library(openxlsx)
 # prepare coverage dataframe
-coverage.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
-coverage.df <- openxlsx::read.xlsx(coverage.file)
+coverage_file <-
+  system.file("extdata",
+              "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
+coverage_df <- openxlsx::read.xlsx(coverage_file, sheet = "Sheet1")
 # check the data
-head(coverage.df)
+head(coverage_df)
 #>   Confidence                            Annotated.Sequence
 #> 1       High  [K].ATEEQLKTVMENFVAFVDKCCAADDKEACFAVEGPK.[L]
 #> 2       High  [K].ATEEQLKTVMENFVAFVDKCCAADDKEACFAVEGPK.[L]
@@ -847,12 +1005,15 @@ head(coverage.df)
 The input protein fasta:
 
 ``` r
-library(Biostrings)
-fasta.file <- system.file("extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
+fasta_file <-
+  system.file("extdata",
+              "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
+
 # prepare track dataframe
-protein.set <- Biostrings::readAAStringSet(fasta.file)
+protein_set <- Biostrings::readAAStringSet(fasta_file)
+
 # check the data
-protein.set
+protein_set
 #> AAStringSet object of length 2:
 #>     width seq                                               names               
 #> [1]   607 MKWVTFISLLLLFSSAYSRGVFR...DDKEACFAVEGPKLVVSTQTALA sp|P02769|ALBU_BOVIN
@@ -862,9 +1023,14 @@ protein.set
 ### Protein coverage
 
 ``` r
-protein.coverage = ggprotein(coverage.file = coverage.file, fasta.file = fasta.file, 
-                             protein.id = "sp|P02769|ALBU_BOVIN", range.position = "out")
-protein.coverage
+protein_coverage <- ggprotein(
+  coverage.file = coverage_file,
+  fasta.file = fasta_file,
+  protein.id = "sp|P02769|ALBU_BOVIN",
+  range.position = "out"
+)
+
+protein_coverage
 ```
 
 <img src="man/figures/README-basic_coverage_protein-1.png" width="100%" style="display: block; margin: auto;" />
@@ -881,12 +1047,17 @@ is the reason why there is empty region in 1-24.
 
 ``` r
 # protein feature obtained from UniProt
-protein.feature.df = data.frame(ProteinID = "sp|P02769|ALBU_BOVIN", start = c(1, 19, 25), 
-                                end = c(18, 24, 607), 
-                                Type = c("Signal", "Propeptide", "Chain"))
+protein_feature_df <- data.frame(
+  ProteinID = "sp|P02769|ALBU_BOVIN",
+  start = c(1, 19, 25),
+  end = c(18, 24, 607),
+  Type = c("Signal", "Propeptide", "Chain")
+)
+
 # add annotation
-protein.coverage + 
-  geom_feature(feature.df = protein.feature.df, feature.color = c("#4d81be","#173b5e","#6a521d"))
+protein_coverage +
+  geom_feature(feature.df = protein_feature_df,
+               feature.color = c("#4d81be", "#173b5e", "#6a521d"))
 ```
 
 <img src="man/figures/README-basic_coverage_protein_feature-1.png" width="100%" style="display: block; margin: auto;" />
