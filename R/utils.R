@@ -77,27 +77,6 @@ AAPadding <- function(len, offset = 0, aa.seq) {
   return(final.aa.df)
 }
 
-# get gene and transcript group
-# divide genes to non-overlap groups (V1)
-# GetGeneGroup = function(gene.gr, fc = "queryHits",sc= "subjectHits", overlap.gene.gap=1){
-#   overlap.df = IRanges::findOverlaps(gene.gr,gene.gr, ignore.strand=TRUE) %>% as.data.frame()
-#   overlap.list = lapply(split(overlap.df,overlap.df[,fc]), function(x){
-#     x[, sc]
-#   })
-#   group.idx = rep(1, length(unique(overlap.df[,fc])))
-#   for (i in seq_along(overlap.list)) {
-#     ovrlap.vec <- overlap.list[[i]]
-#     curr.group = group.idx[i]
-#     remain.vec = setdiff(ovrlap.vec, i)
-#     for (j in remain.vec) {
-#       if(group.idx[j] == curr.group){
-#         group.idx[j] = curr.group + overlap.gene.gap
-#       }
-#     }
-#   }
-#   return(group.idx)
-# }
-
 # divide genes to non-overlap groups (V2)
 GetGeneGroup <- function(gene.gr, fc = "queryHits", sc = "subjectHits", overlap.gene.gap = 1) {
   overlap.df <- IRanges::findOverlaps(gene.gr, gene.gr, ignore.strand = TRUE) %>%
@@ -106,13 +85,13 @@ GetGeneGroup <- function(gene.gr, fc = "queryHits", sc = "subjectHits", overlap.
   overlap.list <- lapply(split(overlap.df, overlap.df[, fc]), function(x) {
     x[, sc]
   })
-  overlap.list <- overlap.list[order(sapply(overlap.list, length))]
+  overlap.list <- overlap.list[order(sapply(overlap.list, length), decreasing = TRUE)]
   group.idx <- rep(1, length(unique(overlap.df[, fc])))
   for (i in names(overlap.list)) {
+    overlap.vec <- overlap.list[[i]]
     i <- as.numeric(i)
-    ovrlap.vec <- overlap.list[[i]]
     curr.group <- group.idx[i]
-    remain.vec <- setdiff(ovrlap.vec, i)
+    remain.vec <- setdiff(overlap.vec, i)
     for (j in remain.vec) {
       if (group.idx[j] == curr.group) {
         group.idx[j] <- curr.group + overlap.gene.gap
