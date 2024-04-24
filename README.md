@@ -332,7 +332,7 @@ basic_coverage +
 ##### Load the data
 
 The DNA-seq data used here are from [Copy number work
-flow](http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html),
+flow](https://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html),
 we select tumor sample, and get bin counts with
 `cn.mops::getReadCountsFromBAM` with `WL` 1000.
 
@@ -948,8 +948,7 @@ experiment.
 
 ### Load coverage
 
-The exported coverage from [Proteome
-Discoverer](https://www.thermofisher.cn/cn/zh/home/industrial/mass-spectrometry/liquid-chromatography-mass-spectrometry-lc-ms/lc-ms-software/multi-omics-data-analysis/proteome-discoverer-software.html?adobe_mc=MCMID%7C90228073352279367993013412919222863692%7CMCAID%3D3208C32C269355DE-4000028116B65FEB%7CMCORGID%3D5B135A0C5370E6B40A490D44%40AdobeOrg%7CTS=1614293705):
+The exported coverage from [Proteome Discoverer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8006021/):
 
 ``` r
 library(openxlsx)
