@@ -101,7 +101,7 @@ GetGeneGroup <- function(gene.gr, fc = "queryHits", sc = "subjectHits", overlap.
   return(group.idx)
 }
 
-# V3: place non-overlap transcripts together
+# place non-overlapping transcripts together
 GetGeneGroupTight <- function(gene.gr, overlap.gene.gap = 1) {
   # convert to dataframe
   gene.gr.df <- as.data.frame(gene.gr)
@@ -136,7 +136,6 @@ GetGeneGroupTight <- function(gene.gr, overlap.gene.gap = 1) {
   return(group.index)
 }
 
-# SplitExonUTR(exon.df = gene.info.used.exon, utr.df = gene.info.used.utr)
 # substract UTR from exon
 SplitExonUTR <- function(exon.df, utr.df) {
   # get metadata
@@ -236,13 +235,11 @@ SplitTxExonUTR <- function(exon.df, utr.df) {
 }
 
 # From: https://github.com/jorainer/biovizBase/blob/master/R/ideogram.R
-# Fix bug: the names on the supplied 'seqlengths' vector must be identical to the seqnames
+# Fix bug: the names on the supplied 'seqlengths' vector must be
+# identical to the seqnames
 getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
   .gnm <- genome
   lst <- lapply(.gnm, function(genome) {
-    # print(genome)
-    ## to remove the "heavy dependency" we put require here.
-    # require(rtracklayer)
     if (!(exists("session") && extends(class(session), "BrowserSession"))) {
       session <- rtracklayer::browserSession()
     }
@@ -341,3 +338,76 @@ GetPlotData <- function(plot, layer.num = 1) {
   plot.data <- eval(parse(text = paste0(plot.layer.str, "$layers[[1]]$data")))
   return(plot.data)
 }
+
+#' Plot genomic features as arrows.
+#' @description
+#' This function is a variation of geom_segment to plot (gene) features
+#' as arrows. Mainly meant for internal use, not to be called directly.
+#'
+#' @param data data frame describing arrow position, with columns
+#'   start, end, group, and a custom 'color' column
+#' @param color name of the color column in the data frame
+#' @param line_width line_width of the (arrow) segment
+#' @param arrow_size size of the arrow
+#' @param arrow_angle angle of the arrow. Default: 35°
+#' @param intermittent If TRUE, arrows are only drawn intermittently in
+#'   half-transparent white color. Default: FALSE.
+#' @importFrom grDevices grey
+#' @return A geom layer for ggplot2 objects.
+#' @export
+geom_arrows <-
+  function(data,
+           color,
+           line_width,
+           arrow_size,
+           arrow_angle = 35,
+           intermittent = FALSE) {
+    if (nrow(data)) {
+      if (!"strand" %in% colnames(data)) {
+        data$strand <- "+"
+      }
+      if (!intermittent) {
+        geom_segment(
+          data = data,
+          mapping = aes_string(
+            x = "start",
+            y = "group",
+            xend = "end",
+            yend = "group",
+            color = color
+          ),
+          arrow = arrow(
+            ends = ifelse(data$strand == "+", "last", "first"),
+            angle = arrow_angle,
+            length = unit(arrow_size, "points"),
+            type = "open"
+          ),
+          lineend = "butt",
+          linejoin = "mitre",
+          show.legend = FALSE,
+          linewidth = line_width
+        )
+      } else {
+        geom_segment(
+          data = data,
+          mapping = aes_string(
+            x = "start",
+            y = "group",
+            xend = "end",
+            yend = "group"
+          ),
+          arrow = arrow(
+            ends = ifelse(data$strand == "+", "last", "first"),
+            angle = arrow_angle,
+            length = unit(arrow_size, "points"),
+            type = "closed"
+          ),
+          lineend = "butt",
+          linejoin = "mitre",
+          show.legend = FALSE,
+          linewidth = line_width,
+          color = grDevices::grey(1, alpha = 0.5)
+        )
+      }
+    }
+  }

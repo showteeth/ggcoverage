@@ -259,6 +259,15 @@ basic_coverage
 
 ### Add gene annotation
 
+- default behavior is to draw genes (transcripts), exons and UTRs with
+  different line width
+- can bec adjusted using `gene.size`, `exon.size` and `utr.size`
+  parameters
+- frequency of intermittent arrows (light color) can be adjusted using
+  the `arrow.num` and `arrow.gap` parameters
+- genomic features are colored by `strand` by default, which can be
+  changed using the `color.by` parameter
+
 ``` r
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr)

@@ -65,7 +65,7 @@ In general, it is **recommended** to install from [Github repository](https://gi
 
 Once `ggcoverage` is installed, it can be loaded (together with other libraries) like this:
 
-```{r library, message=FALSE, warning=FALSE}
+```{r library, message=FALSE, warning = FALSE}
 library("rtracklayer")
 library("ggcoverage")
 library("ggpattern")
@@ -146,7 +146,7 @@ The basic coverage plot has **two types**:
 
 Create line plot for **every sample** (`facet.key = "Type"`) and color by **every sample** (`group.key = "Type"`):
 
-```{r basic_coverage_joint, warning=FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_joint, warning = FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "joint",
@@ -161,7 +161,7 @@ basic_coverage
 
 Create **group average line plot** (sample is indicated by `facet.key = "Type"`, group is indicated by `group.key = "Group"`):
 
-```{r basic_coverage_joint_avg, warning=FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_joint_avg, warning = FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "joint",
@@ -177,7 +177,7 @@ basic_coverage
 
 #### Facet view
 
-```{r basic_coverage, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "facet",
@@ -192,7 +192,7 @@ basic_coverage
 
 **Change the Y-axis scale label in/out of plot region with `range.position`**:
 
-```{r basic_coverage_2, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_2, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "facet",
@@ -205,7 +205,7 @@ basic_coverage
 
 **Shared/Free Y-axis scale with `facet.y.scale`**:
 
-```{r basic_coverage_3, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_3, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "facet",
@@ -219,7 +219,12 @@ basic_coverage
 
 ### Add gene annotation
 
-```{r gene_coverage, warning=FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+- default behavior is to draw genes (transcripts), exons and UTRs with different line width
+- can bec adjusted using `gene.size`, `exon.size` and `utr.size` parameters
+- frequency of intermittent arrows (light color) can be adjusted using the `arrow.num` and `arrow.gap` parameters
+- genomic features are colored by `strand` by default, which can be changed using the `color.by` parameter
+
+```{r gene_coverage, warning = FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr)
 ```
@@ -229,14 +234,14 @@ basic_coverage +
 
 **In "loose" stype (default style; each transcript occupies one line)**:
 
-```{r transcript_coverage, warning=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
+```{r transcript_coverage, warning = FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5)
 ```
 
 **In "tight" style (place non-overlap transcripts in one line)**:
 
-```{r transcript_coverage_tight, warning=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
+```{r transcript_coverage_tight, warning = FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_transcript(gtf.gr = gtf_gr,
                   overlap.style = "tight",
@@ -245,13 +250,13 @@ basic_coverage +
 
 ### Add ideogram
 
-```{r ideogram_coverage_1, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r ideogram_coverage_1, warning = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr) +
   geom_ideogram(genome = "hg19", plot.space = 0)
 ```
 
-```{r ideogram_coverage_2, warning=FALSE, fig.height = 14, fig.width = 12, fig.align = "center"}
+```{r ideogram_coverage_2, warning = FALSE, fig.height = 14, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5) +
   geom_ideogram(genome = "hg19", plot.space = 0)
@@ -293,7 +298,7 @@ head(track_df)
 
 ##### Basic coverage
 
-```{r basic_coverage_dna, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_dna, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   color = "grey",
@@ -307,7 +312,7 @@ basic_coverage
 
 Add **GC**, **ideogram** and **gene** annotaions.
 
-```{r gc_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r gc_coverage, warning = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 # load genome data
 library("BSgenome.Hsapiens.UCSC.hg19")
 
@@ -421,7 +426,7 @@ For base and amino acid annotation, we have following default color schemes, you
 
 Default color scheme for base annotation is `Clustal-style`, more popular color schemes is available [here](https://www.biostars.org/p/171056/).
 
-```{r base_color_scheme, warning=FALSE, fig.height = 2, fig.width = 6, fig.align = "center"}
+```{r base_color_scheme, warning = FALSE, fig.height = 2, fig.width = 6, fig.align = "center"}
 # color scheme
 nuc_color <- c(
   "A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d"
@@ -455,7 +460,7 @@ graphics::par(opar)
 
 Default color scheme for amino acid annotation is from [Residual colours: a proposal for aminochromography](https://academic.oup.com/peds/article/10/7/743/1593029?login=false):
 
-```{r aa_color_scheme, warning=FALSE, fig.height = 9, fig.width = 10, fig.align = "center"}
+```{r aa_color_scheme, warning = FALSE, fig.height = 9, fig.width = 10, fig.align = "center"}
 aa_color <- c(
   "D" = "#FF0000", "S" = "#FF2400", "T" = "#E34234", "G" = "#FF8000",
   "P" = "#F28500", "C" = "#FFFF00", "A" = "#FDFF00", "V" = "#E3FF00",
@@ -501,7 +506,7 @@ Sys.sleep(60)
 ```
 
 
-```{r base_aa_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r base_aa_coverage, warning = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 # create plot with twill mark
 ggcoverage(
   data = track_df,
@@ -523,7 +528,7 @@ ggcoverage(
 Sys.sleep(60)
 ```
 
-```{r base_aa_coverage_star, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r base_aa_coverage_star, warning = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 # create plot with star mark
 ggcoverage(
   data = track_df,
@@ -545,7 +550,7 @@ ggcoverage(
 Sys.sleep(60)
 ```
 
-```{r base_aa_coverage_highlight, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r base_aa_coverage_highlight, warning = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 # highlight one base
 ggcoverage(
   data = track_df,
@@ -616,7 +621,7 @@ mark_region
 
 ### Basic coverage
 
-```{r basic_coverage_chip, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_chip, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(data = track_df,
                              mark.region = mark_region,
                              show.mark.label = FALSE)
@@ -632,7 +637,7 @@ Add **gene**, **ideogram** and **peak** annotations. To create peak annotation, 
 Sys.sleep(60)
 ```
 
-```{r peak_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r peak_coverage, warning = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 # get consensus peak file
 peak_file <- system.file("extdata",
                          "ChIP-seq",
@@ -712,7 +717,7 @@ link_file <-
 
 ### Basic coverage
 
-```{r basic_coverage_hic, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_hic, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <-
   ggcoverage(
     data = track_df,
@@ -728,7 +733,7 @@ basic_coverage
 
 Add **link**, **contact map**annotations:
 
-```{r hic_coverage, warning=FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
+```{r hic_coverage, warning = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_tad(
     matrix = hic_mat,
@@ -779,7 +784,7 @@ protein_set
 
 ### Protein coverage
 
-```{r basic_coverage_protein, warning=FALSE, fig.height = 6, fig.width = 10, fig.align = "center"}
+```{r basic_coverage_protein, warning = FALSE, fig.height = 6, fig.width = 10, fig.align = "center"}
 protein_coverage <- ggprotein(
   coverage.file = coverage_file,
   fasta.file = fasta_file,
@@ -794,7 +799,7 @@ protein_coverage
 
 We can obtain features of the protein from [UniProt](https://www.uniprot.org/). For example, the above protein coverage plot shows that there is empty region in 1-24, and this empty region in [UniProt](https://www.uniprot.org/uniprotkb/P02769/entry) is annotated as Signal peptide and Propeptide peptide. When the protein is mature and released extracellular, these peptides will be cleaved. This is the reason why there is empty region in 1-24.
 
-```{r basic_coverage_protein_feature, warning=FALSE, fig.height = 6, fig.width = 10, fig.align = "center"}
+```{r basic_coverage_protein_feature, warning = FALSE, fig.height = 6, fig.width = 10, fig.align = "center"}
 # protein feature obtained from UniProt
 protein_feature_df <- data.frame(
   ProteinID = "sp|P02769|ALBU_BOVIN",

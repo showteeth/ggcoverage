@@ -25,7 +25,7 @@ vignette: >
 BiocStyle::markdown()
 ```
 
-```{r setup, echo=FALSE, warning=FALSE}
+```{r setup, echo=FALSE, warning = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -74,7 +74,7 @@ In general, it is **recommended** to install from [Github repository](https://gi
 
 Once `ggcoverage` is installed, it can be loaded (together with other libraries) like this:
 
-```{r library, message=FALSE, warning=FALSE}
+```{r library, message=FALSE, warning = FALSE}
 library("rtracklayer")
 library("ggcoverage")
 library("ggpattern")
@@ -155,7 +155,7 @@ The basic coverage plot has **two types**:
 
 Create line plot for **every sample** (`facet.key = "Type"`) and color by **every sample** (`group.key = "Type"`):
 
-```{r basic_coverage_joint, warning=FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_joint, warning = FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "joint",
@@ -170,7 +170,7 @@ basic_coverage
 
 Create **group average line plot** (sample is indicated by `facet.key = "Type"`, group is indicated by `group.key = "Group"`):
 
-```{r basic_coverage_joint_avg, warning=FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_joint_avg, warning = FALSE, fig.height = 4, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "joint",
@@ -186,7 +186,7 @@ basic_coverage
 
 #### Facet view
 
-```{r basic_coverage, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "facet",
@@ -201,7 +201,7 @@ basic_coverage
 
 **Change the Y-axis scale label in/out of plot region with `range.position`**:
 
-```{r basic_coverage_2, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_2, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "facet",
@@ -214,7 +214,7 @@ basic_coverage
 
 **Shared/Free Y-axis scale with `facet.y.scale`**:
 
-```{r basic_coverage_3, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_3, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   plot.type = "facet",
@@ -228,7 +228,12 @@ basic_coverage
 
 ### Add gene annotation
 
-```{r gene_coverage, warning=FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+- default behavior is to draw genes (transcripts), exons and UTRs with different line width
+- can bec adjusted using `gene.size`, `exon.size` and `utr.size` parameters
+- frequency of intermittent arrows (light color) can be adjusted using the `arrow.num` and `arrow.gap` parameters
+- genomic features are colored by `strand` by default, which can be changed using the `color.by` parameter
+
+```{r gene_coverage, warning = FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr)
 ```
@@ -238,14 +243,14 @@ basic_coverage +
 
 **In "loose" stype (default style; each transcript occupies one line)**:
 
-```{r transcript_coverage, warning=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
+```{r transcript_coverage, warning = FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5)
 ```
 
 **In "tight" style (place non-overlap transcripts in one line)**:
 
-```{r transcript_coverage_tight, warning=FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
+```{r transcript_coverage_tight, warning = FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_transcript(gtf.gr = gtf_gr,
                   overlap.style = "tight",
@@ -310,7 +315,7 @@ head(track_df)
 
 ##### Basic coverage
 
-```{r basic_coverage_dna, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_dna, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(
   data = track_df,
   color = "grey",
@@ -448,7 +453,7 @@ For base and amino acid annotation, we have following default color schemes, you
 
 Default color scheme for base annotation is `Clustal-style`, more popular color schemes is available [here](https://www.biostars.org/p/171056/).
 
-```{r base_color_scheme, warning=FALSE, fig.height = 2, fig.width = 6, fig.align = "center"}
+```{r base_color_scheme, warning = FALSE, fig.height = 2, fig.width = 6, fig.align = "center"}
 # color scheme
 nuc_color <- c(
   "A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d"
@@ -482,7 +487,7 @@ graphics::par(opar)
 
 Default color scheme for amino acid annotation is from [Residual colours: a proposal for aminochromography](https://academic.oup.com/peds/article/10/7/743/1593029?login=false):
 
-```{r aa_color_scheme, warning=FALSE, fig.height = 9, fig.width = 10, fig.align = "center"}
+```{r aa_color_scheme, warning = FALSE, fig.height = 9, fig.width = 10, fig.align = "center"}
 aa_color <- c(
   "D" = "#FF0000", "S" = "#FF2400", "T" = "#E34234", "G" = "#FF8000",
   "P" = "#F28500", "C" = "#FFFF00", "A" = "#FDFF00", "V" = "#E3FF00",
@@ -642,7 +647,7 @@ mark_region
 
 ### Basic coverage
 
-```{r basic_coverage_chip, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_chip, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <- ggcoverage(data = track_df,
                              mark.region = mark_region,
                              show.mark.label = FALSE)
@@ -737,7 +742,7 @@ link_file <-
 
 ### Basic coverage
 
-```{r basic_coverage_hic, warning=FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
+```{r basic_coverage_hic, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
 basic_coverage <-
   ggcoverage(
     data = track_df,
