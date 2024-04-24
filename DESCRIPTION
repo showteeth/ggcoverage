@@ -1,68 +1,68 @@
-Package: ggcoverage
 Type: Package
+Package: ggcoverage
 Title: Visualize Genome/Protein Coverage with Various Annotations
 Version: 1.3.0
 Authors@R: c(
-    person(given = "Yabing",
-           family = "Song",
-           role = c("aut", "cre"),
-           email = "songyb0519@gmail.com"),
-    person(given = "Michael",
-           family = "Jahn", 
-           email = "jahn@mpusp.mpg.de",
-           role = "aut",
+    person("Yabing", "Song", , "songyb0519@gmail.com", role = c("aut", "cre", "cph")),
+    person("Michael", "Jahn", , "jahn@mpusp.mpg.de", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0002-3913-153X"))
   )
 Maintainer: Yabing Song <songyb0519@gmail.com>
-Description: The goal of 'ggcoverage' is to simplify the process of visualizing genome/protein coverage. It contains functions to 
-    load data from BAM, BigWig, BedGraph or txt/xlsx files, create genome/protein coverage plot, add various annotations to 
-    the coverage plot, including base and amino acid annotation, GC annotation, gene annotation, transcript annotation, ideogram annotation,
-    peak annotation, contact map annotation, link annotation and peotein feature annotation.
+Description: The goal of 'ggcoverage' is to simplify the process of
+    visualizing genome/protein coverage. It contains functions to load
+    data from BAM, BigWig, BedGraph or txt/xlsx files, create
+    genome/protein coverage plots, add various annotations to the coverage
+    plot, including base and amino acid annotation, GC annotation, gene
+    annotation, transcript annotation, ideogram annotation, peak
+    annotation, contact map annotation, link annotation and protein
+    feature annotation.
 License: MIT + file LICENSE
-Encoding: UTF-8
-RoxygenNote: 7.3.1
-URL: https://showteeth.github.io/ggcoverage/, https://github.com/showteeth/ggcoverage
+URL: https://showteeth.github.io/ggcoverage/,
+    https://github.com/showteeth/ggcoverage
 BugReports: https://github.com/showteeth/ggcoverage/issues
-biocViews:
 Imports: 
+    BiocParallel,
+    Biostrings,
+    BSgenome,
     dplyr,
+    GenomeInfoDb,
+    GenomicAlignments,
     GenomicRanges,
     ggbio,
+    ggforce,
     ggh4x,
+    ggpattern,
     ggplot2,
     ggrepel,
     grDevices,
+    gridExtra,
+    HiCBricks,
     IRanges,
     magrittr,
+    methods,
+    openxlsx,
     patchwork,
     RColorBrewer,
+    reshape2,
     rlang,
     Rsamtools,
     rtracklayer,
-    scales,
-    stats,
-    utils,
-    methods,
-    GenomeInfoDb,
     S4Vectors,
-    Biostrings,
-    BSgenome,
-    GenomicAlignments,
-    reshape2,
+    scales,
     seqinr,
-    ggforce,
-    HiCBricks,
-    ggpattern,
-    BiocParallel,
-    openxlsx,
+    stats,
     stringr,
-    gridExtra
+    utils
 Suggests: 
-    rmarkdown,
-    knitr,
     BiocStyle,
-    htmltools,
     BSgenome.Hsapiens.UCSC.hg19,
     graphics,
-    HiCDataHumanIMR90
-VignetteBuilder: knitr
+    HiCDataHumanIMR90,
+    htmltools,
+    knitr,
+    rmarkdown
+VignetteBuilder: 
+    knitr
+biocViews:
+Encoding: UTF-8
+RoxygenNote: 7.3.1
