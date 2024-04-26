@@ -21,18 +21,21 @@
 #'
 #' @return Plot.
 #' @importFrom dplyr %>%
-#' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame
+#' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame trim
 #' @importFrom IRanges IRanges subsetByOverlaps
-#' @importFrom ggplot2 ggplot_add ggplot geom_rect aes_string geom_polygon theme_classic theme element_blank
-#' scale_x_continuous scale_y_continuous margin
+#' @importFrom ggplot2 ggplot_add ggplot geom_rect aes_string geom_polygon
+#'   theme_classic theme element_blank scale_x_continuous scale_y_continuous
+#'   margin
 #' @importFrom patchwork wrap_plots
 #' @importFrom methods extends
 #' @importFrom utils menu
+#' @importFrom rtracklayer ucscGenomes ucscTableQuery tableName getTable
+#'   GRangesForUCSCGenome browserSession
 #' @importFrom GenomeInfoDb seqlengths seqlengths<- seqnames
-#' @importFrom GenomicRanges trim GRanges
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' library(ggbio)
 #'
 #' # load metadata
@@ -68,6 +71,7 @@
 #' basic_coverage +
 #'   geom_gene(gtf.gr = gtf_gr) +
 #'   geom_ideogram(genome = "hg19", plot.space = 0)
+#' }
 #'
 geom_ideogram <- function(genome = "hg19", mark.color = "red", mark.alpha = 0.7, mark.line.size = 1,
                           add.shadow = TRUE, shadow.color = "grey", shadow.alpha = 0.7, shadow.line.size = 1,

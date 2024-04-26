@@ -275,7 +275,7 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
         suppressWarnings(GenomeInfoDb::seqlengths(gr) <- new.seqlength)
         gr <- GenomicRanges::trim(gr)
       } else {
-        message("cytoBand informatin is not available, only get ranges.")
+        message("cytoBand information is not available, only getting ranges.")
         message("Loading ranges...")
         gr <- rtracklayer::GRangesForUCSCGenome(genome)
         message("Done")

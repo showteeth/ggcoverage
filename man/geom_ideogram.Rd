@@ -67,6 +67,7 @@ Plot.
 Add Ideogram Annotation to Coverage Plot.
 }
 \examples{
+\dontrun{
 library(ggbio)
 
 # load metadata
@@ -102,5 +103,6 @@ basic_coverage <- ggcoverage(
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr) +
   geom_ideogram(genome = "hg19", plot.space = 0)
+}
 
 }
