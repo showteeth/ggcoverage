@@ -34,14 +34,12 @@
 #' @param plot.height The relative height of base and amino acid annotation to coverage plot. Default: 0.5.
 #'
 #' @return Plot.
+#' @importFrom stats reshape
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges
 #' @importFrom GenomicAlignments alphabetFrequencyFromBam
-#' @importFrom magrittr %>%
-#' @importFrom Biostrings readDNAStringSet
-#' @importFrom BSgenome getSeq
-#' @importFrom reshape2 melt
-#' @importFrom seqinr translate
+#' @importFrom dplyr %>%
+#' @importFrom Biostrings readDNAStringSet getSeq translate
 #' @importFrom ggplot2 ggplot_add ggplot geom_bar geom_label unit aes_string geom_hline labs
 #' geom_tile geom_text theme_classic theme element_blank scale_fill_manual
 #' element_text element_rect margin scale_x_continuous scale_y_continuous coord_cartesian
@@ -49,29 +47,38 @@
 #' @export
 #'
 #' @examples
-#' # library(ggcoverage)
-#' # library("BSgenome.Hsapiens.UCSC.hg19")
+#' library("BSgenome.Hsapiens.UCSC.hg19")
+#'
 #' # get sample metadata
-#' # sample.meta <- data.frame(
-#' #   SampleName = c("tumorA.chr4.selected"),
-#' #   Type = c("tumorA"), Group = c("tumorA")
-#' # )
+#' sample.meta <- data.frame(
+#'   SampleName = c("tumorA.chr4.selected"),
+#'   Type = c("tumorA"),
+#'   Group = c("tumorA")
+#' )
+#'
 #' # get bam file
-#' # bam.file <- system.file("extdata", "DNA-seq", "tumorA.chr4.selected.bam", package = "ggcoverage")
+#' bam.file <-
+#'   system.file("extdata", "DNA-seq", "tumorA.chr4.selected.bam", package = "ggcoverage")
+#'
 #' # load bam file
-#' # track.df <- LoadTrackFile(
-#' #   track.file = bam.file,
-#' #   meta.info = sample.meta, single.nuc = TRUE,
-#' #   single.nuc.region = "chr4:62474235-62474295"
-#' # )
-#' # ggcoverage(
-#' #   data = track.df, color = "grey", range.position = "out",
-#' #   single.nuc = TRUE, rect.color = "white"
-#' # ) +
-#' #   geom_base(
-#' #     bam.file = bam.file,
-#' #     bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19
-#' #   )
+#' track.df <- LoadTrackFile(
+#'   track.file = bam.file,
+#'   meta.info = sample.meta,
+#'   single.nuc = TRUE,
+#'   single.nuc.region = "chr4:62474235-62474295"
+#' )
+#'
+#' # plot
+#' ggcoverage(
+#'   data = track.df,
+#'   color = "grey",
+#'   range.position = "out",
+#'   single.nuc = TRUE,
+#'   rect.color = "white"
+#' ) +
+#'   geom_base(bam.file = bam.file,
+#'             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
+#'
 geom_base <- function(bam.file, fa.file = NULL, bs.fa.seq = NULL, chr.split = "[[:space:]]",
                       nuc.offset = -0.1, nuc.size = 4, nuc.padding = 0.05, nuc.padding.r = 0,
                       nuc.color = c("A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d"),
@@ -114,7 +121,9 @@ ggplot_add.base <- function(object, plot, object_name) {
   # notice that this is start, because the use of geom_bar instead of geom_rect
   # plot.region.end <- plot.data[nrow(plot.data), "start"]
   plot.region.end <- max(plot.data[, "start"])
-  region <- GenomicRanges::GRanges(plot.chr, IRanges::IRanges(plot.region.start, plot.region.end))
+  region <-
+    GenomicRanges::GRanges(plot.chr,
+                           IRanges::IRanges(plot.region.start, plot.region.end))
 
   # get parameters
   bam.file <- object$bam.file
@@ -145,12 +154,13 @@ ggplot_add.base <- function(object, plot, object_name) {
   plot.height <- object$plot.height
 
   # get position AGCT frequency
-  pos.nuc.freq <- GenomicAlignments::alphabetFrequencyFromBam(bam.file,
-    param = region,
-    baseOnly = TRUE
-  )
+  pos.nuc.freq <-
+    GenomicAlignments::alphabetFrequencyFromBam(bam.file,
+                                                param = region,
+                                                baseOnly = TRUE)
   # filter out others
-  pos.nuc.freq <- pos.nuc.freq[, c("A", "G", "C", "T")] %>% as.data.frame()
+  pos.nuc.freq <-
+    pos.nuc.freq[, c("A", "G", "C", "T")] %>% as.data.frame()
   # add chromosome and position
   pos.nuc.freq$Chr <- plot.chr
   pos.nuc.freq$Pos <- plot.region.start:plot.region.end
@@ -162,37 +172,49 @@ ggplot_add.base <- function(object, plot, object_name) {
     } else {
       fa.seq <- Biostrings::readDNAStringSet(fa.file)
       # change fasta name
-      names(fa.seq) <- sapply(strsplit(x = names(fa.seq), split = chr.split), "[", 1)
+      names(fa.seq) <-
+        sapply(strsplit(x = names(fa.seq), split = chr.split), "[", 1)
     }
   } else {
     fa.seq <- bs.fa.seq
   }
-  region.seq <- BSgenome::getSeq(fa.seq, region) %>% as.character()
-  region.seq.sc <- unlist(strsplit(region.seq, split = ""))
+  region.seq <- Biostrings::getSeq(fa.seq, region)
 
   # get reference nuc
-  pos.nuc.freq$Ref <- region.seq.sc
+  pos.nuc.freq$Ref <- as.character(region.seq) %>%
+    strsplit("") %>%
+    unlist()
   # add fill column
-  pos.nuc.freq$Total <- rowSums(pos.nuc.freq[, c("A", "G", "C", "T")])
+  pos.nuc.freq$Total <-
+    rowSums(pos.nuc.freq[, c("A", "G", "C", "T")])
   pos.nuc.freq$Fill <- ifelse(pos.nuc.freq$Total == 0, 1, 0)
-  # pos.nuc.freq$Total <- NULL
-  # convert wide to long dataframe
-  # pos.nuc.freq.long <- reshape2::melt(pos.nuc.freq, id.vars = c("Chr", "Pos", "Ref"))
-  # colnames(pos.nuc.freq.long) <- c("Chr", "Pos", "Ref", "Base", "Freq")
-  pos.nuc.freq.long <- reshape2::melt(pos.nuc.freq, id.vars = c("Chr", "Pos", "Ref", "Total"))
-  colnames(pos.nuc.freq.long) <- c("Chr", "Pos", "Ref", "Total", "Base", "Freq")
+  pos.nuc.freq.long <- reshape(
+    pos.nuc.freq,
+    varying = c("A", "G", "C", "T"),
+    times = c("A", "G", "C", "T"),
+    timevar = "Base",
+    idvar = "id",
+    v.names = "Freq",
+    direction = "long",
+    sep = "",
+    new.row.names = 1:(nrow(pos.nuc.freq) * 4)
+  )
   # get position with alt
   alt.pos <- pos.nuc.freq.long %>%
-    dplyr::filter(.data$Ref == .data$Base & .data$Total != .data$Freq) %>%
+    dplyr::filter(.data$Ref == .data$Base &
+                    .data$Total != .data$Freq) %>%
     dplyr::pull(.data$Pos) %>%
     unique()
-  alt.pos.nuc.freq.long <- pos.nuc.freq.long %>% dplyr::filter(.data$Pos %in% c(alt.pos))
+  alt.pos.nuc.freq.long <-
+    pos.nuc.freq.long %>% dplyr::filter(.data$Pos %in% c(alt.pos))
   # get position without alt
   ref.pos <- pos.nuc.freq.long %>%
-    dplyr::filter(.data$Ref == .data$Base & .data$Total == .data$Freq) %>%
+    dplyr::filter(.data$Ref == .data$Base &
+                    .data$Total == .data$Freq) %>%
     dplyr::pull(.data$Pos) %>%
     unique()
-  ref.pos.nuc.freq.long <- pos.nuc.freq.long %>% dplyr::filter(.data$Pos %in% c(ref.pos))
+  ref.pos.nuc.freq.long <-
+    pos.nuc.freq.long %>% dplyr::filter(.data$Pos %in% c(ref.pos))
   # create label offset
   pos.nuc.freq$Offset <- nuc.offset
   # add guide line
@@ -207,151 +229,174 @@ ggplot_add.base <- function(object, plot, object_name) {
       # create plot
       base.plot <- ggplot() +
         geom_bar(
-          data = pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq", fill = "Base"),
-          position = "fill", stat = "identity", color = "white"
+          data = pos.nuc.freq.long,
+          aes_string(x = "Pos", y = "Freq", fill = "Base"),
+          position = "fill",
+          stat = "identity",
+          color = "white"
         )
       if (mark.type == "twill") {
         base.plot <- base.plot +
           ggpattern::geom_col_pattern(
             data = alt.pos.nuc.freq.long,
             aes_string(
-              x = "Pos", y = "Freq", pattern = "Base", fill = "Base",
-              pattern_fill = "Base", pattern_angle = "Base"
+              x = "Pos",
+              y = "Freq",
+              pattern = "Base",
+              fill = "Base",
+              pattern_fill = "Base",
+              pattern_angle = "Base"
             ),
-            position = "fill", colour = "black",
-            pattern_density = 0.35, pattern_key_scale_factor = 1.3
+            position = "fill",
+            colour = "black",
+            pattern_density = 0.35,
+            pattern_key_scale_factor = 1.3
           ) +
           ggpattern::scale_pattern_fill_manual(values = c(nuc.color, "white"))
       } else if (mark.type == "star") {
         base.plot <- base.plot +
           geom_point(
-            data = alt.pos.nuc.freq.long, aes_string(x = "Pos", y = "1.01"),
-            shape = 8, show.legend = FALSE, size = star.size
+            data = alt.pos.nuc.freq.long,
+            aes_string(x = "Pos", y = "1.01"),
+            shape = 8,
+            show.legend = FALSE,
+            size = star.size
           )
       }
     } else if (mark.type == "highlight") {
       base.plot <- ggplot() +
         geom_bar(
-          data = ref.pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq"),
-          position = "fill", stat = "identity", color = "white", fill = "grey"
+          data = ref.pos.nuc.freq.long,
+          aes_string(x = "Pos", y = "Freq"),
+          position = "fill",
+          stat = "identity",
+          color = "white",
+          fill = "grey"
         ) +
         geom_bar(
-          data = alt.pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq", fill = "Base"),
-          position = "fill", stat = "identity", color = "white"
+          data = alt.pos.nuc.freq.long,
+          aes_string(x = "Pos", y = "Freq", fill = "Base"),
+          position = "fill",
+          stat = "identity",
+          color = "white"
         )
     } else {
-      stop("The mark.type you provided is not valid, please choose from twill, star, highlight.")
+      stop(
+        "The mark.type you provided is not valid, please choose from twill, star, highlight."
+      )
     }
   } else {
     message("No SNV detected, do not add mark!")
     # create plot
     base.plot <- ggplot() +
       geom_bar(
-        data = pos.nuc.freq.long, aes_string(x = "Pos", y = "Freq", fill = "Base"),
-        position = "fill", stat = "identity", color = "white"
+        data = pos.nuc.freq.long,
+        aes_string(x = "Pos", y = "Freq", fill = "Base"),
+        position = "fill",
+        stat = "identity",
+        color = "white"
       )
   }
 
   if (show.aa) {
-    # translate
-    region.aa.0 <- seqinr::translate(
-      seq = region.seq.sc, frame = 0, sens = sens,
-      numcode = numcode, NAstring = NAstring, ambiguous = ambiguous
-    )
-    region.aa.1 <- seqinr::translate(
-      seq = region.seq.sc, frame = 1, sens = sens,
-      numcode = numcode, NAstring = NAstring, ambiguous = ambiguous
-    )
-    region.aa.2 <- seqinr::translate(
-      seq = region.seq.sc, frame = 2, sens = sens,
-      numcode = numcode, NAstring = NAstring, ambiguous = ambiguous
-    )
-    region.aa.0.df <- AAPadding(len = length(region.seq.sc), offset = 0, aa.seq = region.aa.0)
-    region.aa.0.df$Pos <- pos.nuc.freq$Pos
-    region.aa.0.df$y <- -0.2
-    region.aa.1.df <- AAPadding(len = length(region.seq.sc), offset = 1, aa.seq = region.aa.1)
-    region.aa.1.df$Pos <- pos.nuc.freq$Pos
-    region.aa.1.df$y <- -0.4
-    region.aa.2.df <- AAPadding(len = length(region.seq.sc), offset = 2, aa.seq = region.aa.2)
-    region.aa.2.df$Pos <- pos.nuc.freq$Pos
-    region.aa.2.df$y <- -0.6
+    # translate the three different reading frames
+    list_translated <- lapply(c(0, 1, 2), function(reading_frame) {
+      region_remain <- (width(region.seq) - reading_frame) %% 3
+      region_framed <- Biostrings::subseq(
+        x = region.seq,
+        start = 1 + reading_frame,
+        end = width(region.seq) - region_remain
+      )
+      region_aa <-
+        Biostrings::translate(x = region_framed, no.init.codon = TRUE)
+      region_aa_df <- AAPadding(
+        len = width(region.seq),
+        offset = reading_frame,
+        aa.seq = strsplit(as.character(region_aa), "")[[1]]
+      )
+      region_aa_df$Pos <- pos.nuc.freq$Pos
+      region_aa_df$y <- -0.2 * (1 + reading_frame)
+      return(region_aa_df)
+    })
+
     # get base plot
     base.plot <- base.plot +
       theme_base2(fill.color = nuc.color) +
       geom_label(
-        data = pos.nuc.freq, aes_string(
-          x = "Pos", y = "Offset",
-          label = "Ref", fill = "Ref"
+        data = pos.nuc.freq,
+        aes_string(
+          x = "Pos",
+          y = "Offset",
+          label = "Ref",
+          fill = "Ref"
         ),
-        show.legend = FALSE, size = nuc.size,
+        show.legend = FALSE,
+        size = nuc.size,
         label.padding = unit(nuc.padding, "lines"),
         label.r = unit(nuc.padding.r, "lines")
       ) +
       labs(y = "Base") +
-      geom_hline(yintercept = guide.line, color = guide.line.color, linetype = guide.line.type)
-    # create aa plot
-    options(digits = nchar(max(region.aa.0.df$Pos)) + 1)
-    # get rect dataframe used to plot
-    region.aa.0.rect <- PrepareRect(df = region.aa.0.df, y.center = -0.2)
-    region.aa.1.rect <- PrepareRect(df = region.aa.1.df, y.center = -0.4)
-    region.aa.2.rect <- PrepareRect(df = region.aa.2.df, y.center = -0.6)
-    # aa.plot <- ggplot() +
-    #   geom_tile(
-    #     data = region.aa.0.df, aes_string(x = "Pos", y = "y", fill = "aa"),
-    #     colour = NA, height = 0.2
-    #   ) +
-    #   geom_tile(
-    #     data = region.aa.1.df, aes_string(x = "Pos", y = "y", fill = "aa"),
-    #     colour = NA, height = 0.2
-    #   ) +
-    #   geom_tile(
-    #     data = region.aa.2.df, aes_string(x = "Pos", y = "y", fill = "aa"),
-    #     colour = NA, height = 0.2
-    #   ) +
-    #   labs(y = "AA") +
-    #   geom_text(data = region.aa.0.df, aes_string(x = "Pos", y = "y", label = "anno"), size = aa.size) +
-    #   geom_text(data = region.aa.1.df, aes_string(x = "Pos", y = "y", label = "anno"), size = aa.size) +
-    #   geom_text(data = region.aa.2.df, aes_string(x = "Pos", y = "y", label = "anno"), size = aa.size) +
-    #   theme_aa(margin.len = aa.margin, fill.color = aa.color)
-    aa.plot <- ggplot() +
-      geom_rect(data = region.aa.0.rect, aes_string(
-        xmin = "xmin", xmax = "xmax",
-        ymin = "ymin", ymax = "ymax", fill = "aa"
-      ), color = aa.border.color) +
-      geom_rect(data = region.aa.1.rect, aes_string(
-        xmin = "xmin", xmax = "xmax",
-        ymin = "ymin", ymax = "ymax", fill = "aa"
-      ), color = aa.border.color) +
-      geom_rect(data = region.aa.2.rect, aes_string(
-        xmin = "xmin", xmax = "xmax",
-        ymin = "ymin", ymax = "ymax", fill = "aa"
-      ), color = aa.border.color) +
+      geom_hline(yintercept = guide.line,
+                 color = guide.line.color,
+                 linetype = guide.line.type)
+
+    # make final AA plot
+    options(digits = nchar(max(list_translated[[1]]$Pos)) + 1)
+    aa_plot <- ggplot()
+    for (reading_frame in seq_along(list_translated)) {
+      region_aa_rect <-
+        PrepareRect(df = list_translated[[reading_frame]], y.center = -0.2 * reading_frame)
+      aa_plot <- aa_plot +
+        geom_rect(
+          data = region_aa_rect,
+          aes_string(
+            xmin = "xmin",
+            xmax = "xmax",
+            ymin = "ymin",
+            ymax = "ymax",
+            fill = "aa"
+          ),
+          color = aa.border.color
+        ) +
+        geom_text(data = list_translated[[reading_frame]],
+                  aes_string(x = "Pos", y = "y", label = "anno"))
+    }
+    aa_plot <- aa_plot +
       labs(y = "AA") +
-      geom_text(data = region.aa.0.df, aes_string(x = "Pos", y = "y", label = "anno")) +
-      geom_text(data = region.aa.1.df, aes_string(x = "Pos", y = "y", label = "anno")) +
-      geom_text(data = region.aa.2.df, aes_string(x = "Pos", y = "y", label = "anno")) +
       theme_aa(margin.len = aa.margin, fill.color = aa.color)
-    final.plot <- patchwork::wrap_plots(base.plot, aa.plot, ncol = 1, heights = c(1, aa.height))
+    final.plot <-
+      patchwork::wrap_plots(base.plot,
+                            aa_plot,
+                            ncol = 1,
+                            heights = c(1, aa.height))
   } else {
     # create plot without amino acid
     final.plot <- base.plot +
       theme_base(margin.len = plot.space, fill.color = nuc.color) +
       geom_label(
-        data = pos.nuc.freq, aes_string(
-          x = "Pos", y = "Offset",
-          label = "Ref", fill = "Ref"
+        data = pos.nuc.freq,
+        aes_string(
+          x = "Pos",
+          y = "Offset",
+          label = "Ref",
+          fill = "Ref"
         ),
-        show.legend = FALSE, size = nuc.size,
+        show.legend = FALSE,
+        size = nuc.size,
         label.padding = unit(nuc.padding, "lines"),
         label.r = unit(nuc.padding.r, "lines")
       ) +
       labs(y = "Base") +
-      geom_hline(yintercept = guide.line, color = guide.line.color, linetype = guide.line.type)
+      geom_hline(yintercept = guide.line,
+                 color = guide.line.color,
+                 linetype = guide.line.type)
   }
 
   # assemble plot
-  patchwork::wrap_plots(plot + theme(plot.margin = margin(t = plot.space, b = plot.space)),
+  patchwork::wrap_plots(
+    plot + theme(plot.margin = margin(t = plot.space, b = plot.space)),
     final.plot,
-    ncol = 1, heights = c(1, plot.height)
+    ncol = 1,
+    heights = c(1, plot.height)
   )
 }

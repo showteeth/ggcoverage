@@ -56,7 +56,12 @@ PrepareRegion <- function(region = NULL,
 
 # select color automatically
 AutoColor <- function(data, n, name, key) {
-  getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(n, name))
+  palettes <- list(
+    Set1 = c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"),
+    Set2 = c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"),
+    Set3 = c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#D9D9D9")
+  )
+  getPalette <- grDevices::colorRampPalette(palettes[[name]])
   # sample group with same color
   group.info <- unique(data[, key])
   fill.color <- getPalette(length(group.info))
@@ -259,7 +264,8 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
           seqnames = df$chrom,
           IRanges(start = df$chromStart, end = df$chromEnd)
         )
-        S4Vectors::values(gr) <- df[, c("name", "gieStain")]
+        gr@elementMetadata$name <- df$name
+        gr@elementMetadata$gieStain <- df$gieStain
         message("Loading ranges...")
 
         gr.r <- rtracklayer::GRangesForUCSCGenome(genome)

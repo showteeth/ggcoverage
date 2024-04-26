@@ -5,7 +5,7 @@
 \title{Layer for Protein Coverage Plot.}
 \usage{
 geom_protein(
-  coverage.file,
+  coverage.df,
   fasta.file,
   protein.id,
   XCorr.threshold = 2,
@@ -25,7 +25,7 @@ geom_protein(
 )
 }
 \arguments{
-\item{coverage.file}{Exported protein coverage file, should be in excel.}
+\item{coverage.df}{Protein coverage, for example output from Proteome Discoverer.}
 
 \item{fasta.file}{Input reference protein fasta file.}
 
@@ -68,15 +68,26 @@ A ggplot2 object.
 Layer for Protein Coverage Plot.
 }
 \examples{
+\dontrun{
 library(ggplot2)
-library(ggcoverage)
+library(openxlsx)
+
+# import coverage dataframe with function from openxlsx
 coverage.file <- system.file(
   "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
 )
+coverage.df <- read.xlsx(coverage.file)
+head(coverage.df)
+
+# get fasta file
 fasta.file <- system.file(
   "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
 )
+
 protein.id = "sp|P02769|ALBU_BOVIN"
 ggplot() +
-  geom_protein(coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id)
+  geom_protein(coverage.df = coverage.df,
+               fasta.file = fasta.file,
+               protein.id = protein.id)
+}
 }

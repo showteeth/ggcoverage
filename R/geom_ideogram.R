@@ -20,8 +20,7 @@
 #' @param plot.height The relative height of ideogram annotation to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
-#' @importFrom magrittr %>%
-#' @importFrom ggbio layout_karyogram
+#' @importFrom dplyr %>%
 #' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame
 #' @importFrom IRanges IRanges subsetByOverlaps
 #' @importFrom ggplot2 ggplot_add ggplot geom_rect aes_string geom_polygon theme_classic theme element_blank
@@ -31,14 +30,54 @@
 #' @importFrom utils menu
 #' @importFrom GenomeInfoDb seqlengths seqlengths<- seqnames
 #' @importFrom GenomicRanges trim GRanges
-#' @importFrom S4Vectors values<-
 #' @export
+#'
+#' @examples
+#' library(ggbio)
+#'
+#' # load metadata
+#' meta_file <-
+#'   system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#' sample_meta <- read.csv(meta_file)
+#'
+#' # track folder
+#' track_folder <-
+#'   system.file("extdata", "RNA-seq", package = "ggcoverage")
+#' # load bigwig file
+#' track_df <- LoadTrackFile(
+#'   track.folder = track_folder,
+#'   format = "bw",
+#'   region = "chr14:21,677,306-21,737,601",
+#'   extend = 2000,
+#'   meta.info = sample_meta
+#' )
+#'
+#' # gene annotation
+#' gtf_file <-
+#'   system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#' gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
+#'
+#' # coverage plot + ideogram
+#' basic_coverage <- ggcoverage(
+#'   data = track_df,
+#'   plot.type = "facet",
+#'   range.position = "in",
+#'   facet.y.scale = "fixed"
+#' )
+#'
+#' basic_coverage +
+#'   geom_gene(gtf.gr = gtf_gr) +
+#'   geom_ideogram(genome = "hg19", plot.space = 0)
 #'
 geom_ideogram <- function(genome = "hg19", mark.color = "red", mark.alpha = 0.7, mark.line.size = 1,
                           add.shadow = TRUE, shadow.color = "grey", shadow.alpha = 0.7, shadow.line.size = 1,
                           highlight.centromere = FALSE, highlight.color = "green", highlight.alpha = 0.7, highlight.line.size = 1,
                           highlight.shadow.color = "black", highlight.shadow.alpha = 0.7, highlight.shadow.line.size = 1,
                           plot.space = 0.1, plot.height = 0.1) {
+
+  # test if suggested package is installed
+  requireNamespace("ggbio", quietly = TRUE)
+
   structure(list(
     genome = genome, mark.color = mark.color, mark.alpha = mark.alpha, mark.line.size = mark.line.size,
     add.shadow = add.shadow, shadow.color = shadow.color, shadow.alpha = shadow.alpha, shadow.line.size = shadow.line.size,

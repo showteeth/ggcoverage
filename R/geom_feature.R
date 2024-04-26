@@ -10,7 +10,7 @@
 #' @return Plot.
 #' @importFrom utils read.table
 #' @importFrom dplyr arrange
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom ggplot2 ggplot_add ggplot geom_segment aes_string theme_classic theme element_blank element_text
 #' element_rect margin scale_x_continuous scale_y_continuous coord_cartesian scale_color_manual
 #' @export

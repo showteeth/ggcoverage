@@ -3,21 +3,20 @@
 #' @param matrix Matrix (n x n) contains contact map information.
 #' @param granges The rownames and colnames information of matrix.
 #' @param color.palette One of the RColorbrewer or viridis colour palettes.
-#' Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.
+#' Parameter of \code{HiCBricks::Brick_vizart_plot_heatmap}. Default: NULL.
 #' @param value.cut If present, values beyond a certain quantile will be capped to that quantile.
-#' Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.
+#' Parameter of \code{HiCBricks::Brick_vizart_plot_heatmap}. Default: NULL.
 #' @param transform.fun If any sort of transformations should be applied to the data before plotting.
-#' Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.
+#' Parameter of \code{HiCBricks::Brick_vizart_plot_heatmap}. Default: NULL.
 #' @param plot.space Top and bottom margin. Default: 0.1.
 #' @param plot.height The relative height of contact map to coverage plot. Default: 1.
 #' @param top Logical value, whether to place this plot on the coverage plot. Default: TRUE.
 #' @param show.rect Logical value, whether to add rect border to the plot. Default: FALSE.
 #'
 #' @return Plot.
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges findOverlaps subsetByOverlaps
-#' @import HiCBricks
 #' @importFrom ggplot2 ggplot_add ggplot labs theme_classic theme element_blank element_rect
 #' element_text margin scale_y_continuous scale_x_continuous
 #' @importFrom patchwork wrap_plots
@@ -25,7 +24,7 @@
 #'
 #' @examples
 #' library(ggcoverage)
-#' library(GenomicRanges)
+#' library(HiCBricks)
 #'
 #' # prepare track dataframe
 #' track.file = system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
@@ -47,7 +46,7 @@
 #' hic.bin.gr = GenomicRanges::makeGRangesFromDataFrame(df = hic.bin)
 #'
 #' # transfrom function
-#' FailSafe_log10 <- function(x){
+#' failsafe_log10 <- function(x){
 #'   x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
 #'   return(log10(x+1))
 #' }
@@ -64,7 +63,7 @@
 #' # add annotations
 #' basic.coverage +
 #'   geom_tad(matrix = hic.mat, granges = hic.bin.gr, value.cut = 0.99,
-#'            color.palette = "viridis", transform.fun = FailSafe_log10,
+#'            color.palette = "viridis", transform.fun = failsafe_log10,
 #'            top = FALSE, show.rect = TRUE) +
 #'   geom_link(link.file = link.file, file.type = "bedpe", show.rect = TRUE)
 #'
@@ -72,6 +71,10 @@
 geom_tad <- function(matrix, granges, color.palette = NULL, value.cut = NULL,
                      transform.fun = NULL, plot.space = 0.1, plot.height = 1,
                      top = TRUE, show.rect = FALSE) {
+
+  # test if suggested package is installed
+  requireNamespace("HiCBricks", quietly = TRUE)
+
   structure(list(
     matrix = matrix, granges = granges, color.palette = color.palette,
     value.cut = value.cut, transform.fun = transform.fun,

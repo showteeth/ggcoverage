@@ -31,7 +31,7 @@
 #' @importFrom GenomicAlignments alphabetFrequencyFromBam readGAlignments coverage
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges subsetByOverlaps
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom dplyr select filter mutate all_of group_by summarize
 #' @importFrom BiocParallel register MulticoreParam bplapply
 #' @importFrom ggplot2 cut_width

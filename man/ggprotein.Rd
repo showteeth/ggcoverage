@@ -5,7 +5,7 @@
 \title{Create Mass Spectrometry Protein Coverage Plot.}
 \usage{
 ggprotein(
-  coverage.file,
+  coverage.df,
   fasta.file,
   protein.id,
   XCorr.threshold = 2,
@@ -25,7 +25,7 @@ ggprotein(
 )
 }
 \arguments{
-\item{coverage.file}{Exported protein coverage file, should be in excel.}
+\item{coverage.df}{Protein coverage, for example output from Proteome Discoverer.}
 
 \item{fasta.file}{Input reference protein fasta file.}
 
@@ -68,18 +68,27 @@ A ggplot2 object.
 Create Mass Spectrometry Protein Coverage Plot.
 }
 \examples{
-library(ggcoverage)
+\dontrun{
+library(ggplot2)
+library(openxlsx)
+
+# import coverage dataframe with function from openxlsx
 coverage.file <- system.file(
   "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
 )
+coverage.df <- read.xlsx(coverage.file)
+head(coverage.df)
+
+# get fasta file
 fasta.file <- system.file(
   "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
 )
-protein.id = "sp|P02769|ALBU_BOVIN"
 
+protein.id = "sp|P02769|ALBU_BOVIN"
 ggprotein(
-  coverage.file = coverage.file,
+  coverage.df = coverage.df,
   fasta.file = fasta.file,
   protein.id = protein.id
 )
+}
 }

@@ -27,12 +27,11 @@
 #' @importFrom ggplot2 aes_string scale_fill_manual geom_rect geom_text aes geom_step
 #' @importFrom rlang .data
 #' @importFrom grDevices colorRampPalette col2rgb
-#' @importFrom RColorBrewer brewer.pal
 #' @importFrom rlang as_label
 #' @importFrom stats as.formula
 #' @importFrom ggh4x facet_wrap2 strip_themed elem_list_rect
 #' @importFrom dplyr group_by summarise
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom utils tail
 #'

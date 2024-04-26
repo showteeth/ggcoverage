@@ -22,13 +22,13 @@ geom_tad(
 \item{granges}{The rownames and colnames information of matrix.}
 
 \item{color.palette}{One of the RColorbrewer or viridis colour palettes.
-Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.}
+Parameter of \code{HiCBricks::Brick_vizart_plot_heatmap}. Default: NULL.}
 
 \item{value.cut}{If present, values beyond a certain quantile will be capped to that quantile.
-Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.}
+Parameter of \code{HiCBricks::Brick_vizart_plot_heatmap}. Default: NULL.}
 
 \item{transform.fun}{If any sort of transformations should be applied to the data before plotting.
-Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.}
+Parameter of \code{HiCBricks::Brick_vizart_plot_heatmap}. Default: NULL.}
 
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
@@ -46,7 +46,7 @@ Add Contact Map to Coverage Plot.
 }
 \examples{
 library(ggcoverage)
-library(GenomicRanges)
+library(HiCBricks)
 
 # prepare track dataframe
 track.file = system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
@@ -68,7 +68,7 @@ colnames(hic.bin) = c("chr", "start", "end")
 hic.bin.gr = GenomicRanges::makeGRangesFromDataFrame(df = hic.bin)
 
 # transfrom function
-FailSafe_log10 <- function(x){
+failsafe_log10 <- function(x){
   x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
   return(log10(x+1))
 }
@@ -85,7 +85,7 @@ basic.coverage = ggcoverage(
 # add annotations
 basic.coverage +
   geom_tad(matrix = hic.mat, granges = hic.bin.gr, value.cut = 0.99,
-           color.palette = "viridis", transform.fun = FailSafe_log10,
+           color.palette = "viridis", transform.fun = failsafe_log10,
            top = FALSE, show.rect = TRUE) +
   geom_link(link.file = link.file, file.type = "bedpe", show.rect = TRUE)
 

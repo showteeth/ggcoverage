@@ -13,7 +13,7 @@
 #' @param plot.height The relative height of contact map to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame start end
 #' @importFrom IRanges IRanges subsetByOverlaps
 #' @importFrom ggplot2 ggplot_add ggplot geom_point geom_line geom_hline aes_string labs theme_classic theme element_blank element_rect

@@ -1,6 +1,6 @@
 #' Create Mass Spectrometry Protein Coverage Plot.
 #'
-#' @param coverage.file Exported protein coverage file, should be in excel.
+#' @param coverage.df Protein coverage, for example output from Proteome Discoverer.
 #' @param fasta.file Input reference protein fasta file.
 #' @param protein.id The protein ID of exported coverage file. This should be unique and in \code{fasta.file}.
 #' @param XCorr.threshold The cross-correlation threshold. Default: 2.
@@ -24,21 +24,30 @@
 #' @export
 #'
 #' @examples
-#' library(ggcoverage)
+#' \dontrun{
+#' library(ggplot2)
+#' library(openxlsx)
+#'
+#' # import coverage dataframe with function from openxlsx
 #' coverage.file <- system.file(
 #'   "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
 #' )
+#' coverage.df <- read.xlsx(coverage.file)
+#' head(coverage.df)
+#'
+#' # get fasta file
 #' fasta.file <- system.file(
 #'   "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
 #' )
-#' protein.id = "sp|P02769|ALBU_BOVIN"
 #'
+#' protein.id = "sp|P02769|ALBU_BOVIN"
 #' ggprotein(
-#'   coverage.file = coverage.file,
+#'   coverage.df = coverage.df,
 #'   fasta.file = fasta.file,
 #'   protein.id = protein.id
 #' )
-ggprotein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold = 2,
+#' }
+ggprotein <- function(coverage.df, fasta.file, protein.id, XCorr.threshold = 2,
                       confidence = "High", contaminant = NULL, remove.na = TRUE,
                       color = "grey", mark.bare = TRUE, mark.color = "red", mark.alpha = 0.5,
                       show.table = TRUE, table.position = c("top_right", "top_left", "bottom_left", "bottom_right"),
@@ -50,7 +59,7 @@ ggprotein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold = 2
   # ms protein plot
   protein.plot <- ggplot() +
     geom_protein(
-      coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id,
+      coverage.df = coverage.df, fasta.file = fasta.file, protein.id = protein.id,
       XCorr.threshold = XCorr.threshold, confidence = confidence, contaminant = contaminant,
       remove.na = remove.na, color = color, mark.bare = mark.bare, mark.color = mark.color,
       mark.alpha = mark.alpha, show.table = show.table, table.position = table.position,

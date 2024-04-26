@@ -22,7 +22,7 @@
 #' @param plot.height The relative height of gene annotation to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom rlang .data
 #' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame setdiff
 #' @importFrom IRanges IRanges subsetByOverlaps findOverlaps

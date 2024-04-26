@@ -12,10 +12,9 @@
 #'
 #' @return Plot.
 #' @importFrom dplyr filter
-#' @importFrom magrittr %>%
-#' @importFrom Biostrings readDNAStringSet letterFrequency
+#' @importFrom dplyr %>%
+#' @importFrom Biostrings readDNAStringSet letterFrequency getSeq
 #' @importFrom GenomicRanges makeGRangesFromDataFrame
-#' @importFrom BSgenome getSeq
 #' @importFrom ggplot2 ggplot_add ggplot geom_line aes_string geom_hline labs theme_classic theme element_blank
 #' element_text element_rect margin scale_x_continuous scale_y_continuous coord_cartesian
 #' @export
@@ -102,7 +101,7 @@ ggplot_add.gc <- function(object, plot, object_name) {
     end.field = "end"
   )
   # get GRanges' sequence
-  range.seqs <- BSgenome::getSeq(fa.seq.selected, plot.data.gr)
+  range.seqs <- Biostrings::getSeq(fa.seq.selected, plot.data.gr)
   # calculate GC content
   plot.data$GC <- as.numeric(Biostrings::letterFrequency(x = range.seqs, letters = "GC", as.prob = TRUE))
 
