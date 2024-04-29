@@ -88,9 +88,10 @@
 #'   geom_coverage(
 #'     data = track.df, facet.key = "Type",
 #'     mark.region = data.frame(
-#'       start = c(21678900,21732001,21737590),
-#'       end = c(21679900,21732400,21737650),
-#'       label=c("M1", "M2", "M3")),
+#'       start = c(21678900, 21732001, 21737590),
+#'       end = c(21679900, 21732400, 21737650),
+#'       label = c("M1", "M2", "M3")
+#'     ),
 #'     mark.color = grey(0.4)
 #'   )
 #'
@@ -112,7 +113,8 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
       if (!is.null(color)) {
         testcolors <- sapply(color, function(x) {
           tryCatch(is.matrix(col2rgb(x)),
-                   error = function(e) FALSE)
+            error = function(e) FALSE
+          )
         })
         if (length(color) < length(unique(data[, group.key]))) {
           warning("Fewer colors provided than there are groups in ", group.key, " variable, falling back to default colors")
@@ -259,9 +261,10 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
 
     if (range.position == "in") {
       data.range <- data.range %>%
-        dplyr::summarise(.groups = "drop_last",
-                         min_score = pretty(.data[[ymax.str]])[1],
-                         max_score = tail(pretty(.data[[ymax.str]]), 1)
+        dplyr::summarise(
+          .groups = "drop_last",
+          min_score = pretty(.data[[ymax.str]])[1],
+          max_score = tail(pretty(.data[[ymax.str]]), 1)
         )
       data.range$label <- paste0("[", data.range$min_score, ", ", data.range$max_score, "]")
       region.range <- geom_text(

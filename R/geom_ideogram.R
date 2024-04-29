@@ -78,18 +78,18 @@ geom_ideogram <- function(genome = "hg19", mark.color = "red", mark.alpha = 0.7,
                           highlight.centromere = FALSE, highlight.color = "green", highlight.alpha = 0.7, highlight.line.size = 1,
                           highlight.shadow.color = "black", highlight.shadow.alpha = 0.7, highlight.shadow.line.size = 1,
                           plot.space = 0.1, plot.height = 0.1) {
-
   # test if suggested package is installed
   requireNamespace("ggbio", quietly = TRUE)
 
-  structure(list(
-    genome = genome, mark.color = mark.color, mark.alpha = mark.alpha, mark.line.size = mark.line.size,
-    add.shadow = add.shadow, shadow.color = shadow.color, shadow.alpha = shadow.alpha, shadow.line.size = shadow.line.size,
-    highlight.centromere = highlight.centromere, highlight.color = highlight.color, highlight.alpha = highlight.alpha,
-    highlight.line.size = highlight.line.size, highlight.shadow.color = highlight.shadow.color, highlight.shadow.alpha = highlight.shadow.alpha,
-    highlight.shadow.line.size = highlight.shadow.line.size, plot.space = plot.space, plot.height = plot.height
-  ),
-  class = "ideogram"
+  structure(
+    list(
+      genome = genome, mark.color = mark.color, mark.alpha = mark.alpha, mark.line.size = mark.line.size,
+      add.shadow = add.shadow, shadow.color = shadow.color, shadow.alpha = shadow.alpha, shadow.line.size = shadow.line.size,
+      highlight.centromere = highlight.centromere, highlight.color = highlight.color, highlight.alpha = highlight.alpha,
+      highlight.line.size = highlight.line.size, highlight.shadow.color = highlight.shadow.color, highlight.shadow.alpha = highlight.shadow.alpha,
+      highlight.shadow.line.size = highlight.shadow.line.size, plot.space = plot.space, plot.height = plot.height
+    ),
+    class = "ideogram"
   )
 }
 

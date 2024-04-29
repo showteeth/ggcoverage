@@ -126,9 +126,10 @@ ggplot() +
   geom_coverage(
     data = track.df, facet.key = "Type",
     mark.region = data.frame(
-      start = c(21678900,21732001,21737590),
-      end = c(21679900,21732400,21737650),
-      label=c("M1", "M2", "M3")),
+      start = c(21678900, 21732001, 21737590),
+      end = c(21679900, 21732400, 21737650),
+      label = c("M1", "M2", "M3")
+    ),
     mark.color = grey(0.4)
   )
 

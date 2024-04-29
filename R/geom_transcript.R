@@ -73,8 +73,10 @@ geom_transcript <-
            arrow.gap = NULL,
            arrow.num = 50,
            color.by = "strand",
-           fill.color = c("-" = "cornflowerblue",
-                          "+" = "darkolivegreen3"),
+           fill.color = c(
+             "-" = "cornflowerblue",
+             "+" = "darkolivegreen3"
+           ),
            label.size = 3,
            label.vjust = 2,
            plot.space = 0.1,

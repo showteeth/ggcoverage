@@ -42,11 +42,12 @@
 #' #   )
 geom_feature <- function(feature.file = NULL, feature.df = NULL, feature.color = "black", feature.size = 5,
                          plot.space = 0.1, plot.height = 0.1) {
-  structure(list(
-    feature.file = feature.file, feature.df = feature.df, feature.color = feature.color, feature.size = feature.size,
-    plot.space = plot.space, plot.height = plot.height
-  ),
-  class = "feature"
+  structure(
+    list(
+      feature.file = feature.file, feature.df = feature.df, feature.color = feature.color, feature.size = feature.size,
+      plot.space = plot.space, plot.height = plot.height
+    ),
+    class = "feature"
   )
 }
 

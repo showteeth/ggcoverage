@@ -39,8 +39,9 @@
 #'   Type = "Example", Group = "Example"
 #' )
 #' # get links
-#' link.file = system.file(
-#'   "extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage"
+#' link.file <- system.file(
+#'   "extdata", "HiC", "HiC_link.bedpe",
+#'   package = "ggcoverage"
 #' )
 #'
 #' # create plot
@@ -130,16 +131,16 @@ ggplot_add.link <- function(object, plot, object_name) {
       colnames(link.df) <- col_names
     }
     # filter link dataframe
-    link.df <- link.df[link.df$chr1 == link.df$chr2,]
+    link.df <- link.df[link.df$chr1 == link.df$chr2, ]
     # detect chrs
     if (length(unique(link.df$chr1)) > 1) {
       warning("The bedpe file provided contains multi-chromosomes, use first!")
-      link.df <- link.df[link.df$chr1 == link.df$chr1[1],]
+      link.df <- link.df[link.df$chr1 == link.df$chr1[1], ]
     }
     # filter threshold
     if ("score" %in% colnames(link.df)) {
       if (!is.null(score.threshold)) {
-        link.df <- link.df[link.df$score > score.threshold,]
+        link.df <- link.df[link.df$score > score.threshold, ]
       }
     }
     # calculate center
@@ -151,9 +152,11 @@ ggplot_add.link <- function(object, plot, object_name) {
     point.end.vec <-
       ifelse(r1.center < r2.center, r2.center, r1.center)
     # create link point dataframe
-    link.point.df <- data.frame(chr = unique(link.df$chr1),
-                                start = point.start.vec,
-                                end = point.end.vec)
+    link.point.df <- data.frame(
+      chr = unique(link.df$chr1),
+      start = point.start.vec,
+      end = point.end.vec
+    )
     # add score
     if ("score" %in% colnames(link.df)) {
       link.point.df$score <- link.df$score
@@ -166,25 +169,29 @@ ggplot_add.link <- function(object, plot, object_name) {
     link.df <- link.df[, c(2, 3, 4, 5)]
     colnames(link.df) <- c("chr1", "start1", "chr2", "start2")
     # filter link dataframe
-    link.df <- link.df[link.df$chr1 == link.df$chr2,]
+    link.df <- link.df[link.df$chr1 == link.df$chr2, ]
     # detect chrs
     if (length(unique(link.df$chr1)) > 1) {
       warning("The bedpe file provided contains multi-chromosomes, use first!")
-      link.df <- link.df[link.df$chr1 == link.df$chr1[1],]
+      link.df <- link.df[link.df$chr1 == link.df$chr1[1], ]
     }
     # change position
     point.start.vec <-
       ifelse(link.df$start1 < link.df$start2,
-             link.df$start1,
-             link.df$start2)
+        link.df$start1,
+        link.df$start2
+      )
     point.end.vec <-
       ifelse(link.df$start1 < link.df$start2,
-             link.df$start2,
-             link.df$start1)
+        link.df$start2,
+        link.df$start1
+      )
     # create link point dataframe
-    link.point.df <- data.frame(chr = unique(link.df$chr1),
-                                start = point.start.vec,
-                                end = point.end.vec)
+    link.point.df <- data.frame(
+      chr = unique(link.df$chr1),
+      start = point.start.vec,
+      end = point.end.vec
+    )
   }
   # convert link.point.df to genomic ranges
   link.point.gr <-
@@ -195,7 +202,7 @@ ggplot_add.link <- function(object, plot, object_name) {
   # remove links outside region
   link.point.df <-
     link.point.df[link.point.df$start >= GenomicRanges::start(x = plot.range.gr) &
-                    link.point.df$end <= GenomicRanges::end(x = plot.range.gr),]
+      link.point.df$end <= GenomicRanges::end(x = plot.range.gr), ]
   rownames(link.point.df) <- 1:nrow(link.point.df)
   # check dataframe
   if (nrow(link.point.df) < 1) {

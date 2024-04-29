@@ -58,8 +58,9 @@ df <- data.frame(
   Type = "Example", Group = "Example"
 )
 # get links
-link.file = system.file(
-  "extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage"
+link.file <- system.file(
+  "extdata", "HiC", "HiC_link.bedpe",
+  package = "ggcoverage"
 )
 
 # create plot

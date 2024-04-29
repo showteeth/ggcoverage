@@ -56,17 +56,16 @@
 #'   meta.info = sample.meta
 #' )
 LoadTrackFile <- function(
-  track.file, track.folder = NULL,
-  format = c("bam", "wig", "bw", "bedgraph", "txt"),
-  region = NULL, extend = 2000,
-  gtf.gr = NULL, gene.name = "HNRNPC",
-  gene.name.type = c("gene_name", "gene_id"),
-  meta.info = NULL, meta.file = "",
-  bamcoverage.path = NULL,
-  norm.method = c("RPKM", "CPM", "BPM", "RPGC", "None"),
-  single.nuc = FALSE, single.nuc.region = NULL,
-  bin.size = 10, bc.extra.para = NULL, n.cores = 1
-) {
+    track.file, track.folder = NULL,
+    format = c("bam", "wig", "bw", "bedgraph", "txt"),
+    region = NULL, extend = 2000,
+    gtf.gr = NULL, gene.name = "HNRNPC",
+    gene.name.type = c("gene_name", "gene_id"),
+    meta.info = NULL, meta.file = "",
+    bamcoverage.path = NULL,
+    norm.method = c("RPKM", "CPM", "BPM", "RPGC", "None"),
+    single.nuc = FALSE, single.nuc.region = NULL,
+    bin.size = 10, bc.extra.para = NULL, n.cores = 1) {
   # check parameters
   format <- match.arg(arg = format)
   gene.name.type <- match.arg(arg = gene.name.type)
@@ -83,8 +82,8 @@ LoadTrackFile <- function(
     if (format == "bam") {
       seqnames <- Rsamtools::scanBamHeader(track.file[1]) %>%
         lapply(function(x) x$targets) %>%
-        unname %>%
-        unlist
+        unname() %>%
+        unlist()
       gr <- GenomicRanges::GRanges(
         seqnames = names(seqnames[1]),
         IRanges(start = 1, end = min(100000, seqnames[1]))
@@ -128,20 +127,20 @@ LoadTrackFile <- function(
       BiocParallel::bplapply(track.file, BPPARAM = BiocParallel::MulticoreParam(), FUN = index_bam)
     }
     if (single.nuc) {
-        if (is.null(n.cores) || n.cores == 1) {
-          track.list <- lapply(
-            track.file,
-            single_nuc_cov,
-            single.nuc.region
-          )
-        } else {
-          track.list <- BiocParallel::bplapply(
-            track.file,
-            BPPARAM = BiocParallel::MulticoreParam(),
-            FUN = single_nuc_cov,
-            single.nuc.region
-          )
-        }
+      if (is.null(n.cores) || n.cores == 1) {
+        track.list <- lapply(
+          track.file,
+          single_nuc_cov,
+          single.nuc.region
+        )
+      } else {
+        track.list <- BiocParallel::bplapply(
+          track.file,
+          BPPARAM = BiocParallel::MulticoreParam(),
+          FUN = single_nuc_cov,
+          single.nuc.region
+        )
+      }
     } else {
       if (norm.method == "None") {
         message("Calculating coverage with GenomicAlignments when 'norm.method = None'")
@@ -310,8 +309,7 @@ single_nuc_cov <- function(x, single.nuc.region) {
 }
 
 bam_coverage <- function(
-  x, bamcoverage.path, bin.size, norm.method, bc.extra.para, gr
-) {
+    x, bamcoverage.path, bin.size, norm.method, bc.extra.para, gr) {
   # bigwig file
   out.bw.file <- tempfile(fileext = c(".bw"))
   # prepare bamCoverage cmd

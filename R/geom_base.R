@@ -76,8 +76,10 @@
 #'   single.nuc = TRUE,
 #'   rect.color = "white"
 #' ) +
-#'   geom_base(bam.file = bam.file,
-#'             bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
+#'   geom_base(
+#'     bam.file = bam.file,
+#'     bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19
+#'   )
 #'
 geom_base <- function(bam.file, fa.file = NULL, bs.fa.seq = NULL, chr.split = "[[:space:]]",
                       nuc.offset = -0.1, nuc.size = 4, nuc.padding = 0.05, nuc.padding.r = 0,
@@ -93,16 +95,17 @@ geom_base <- function(bam.file, fa.file = NULL, bs.fa.seq = NULL, chr.split = "[
                         "*" = "#FFC0CB"
                       ), aa.border.color = "white", aa.size = 4, aa.margin = 2, aa.height = 0.4,
                       plot.space = 2.5, plot.height = 0.5) {
-  structure(list(
-    bam.file = bam.file, fa.file = fa.file, bs.fa.seq = bs.fa.seq, chr.split = chr.split,
-    nuc.offset = nuc.offset, nuc.size = nuc.size, nuc.padding = nuc.padding, nuc.padding.r = nuc.padding.r,
-    nuc.color = nuc.color, guide.line = guide.line, guide.line.color = guide.line.color, guide.line.type = guide.line.type,
-    mark.type = mark.type, star.size = star.size,
-    show.aa = show.aa, sens = sens, numcode = numcode, NAstring = NAstring, ambiguous = ambiguous,
-    aa.color = aa.color, aa.border.color = aa.border.color, aa.size = aa.size, aa.margin = aa.margin, aa.height = aa.height,
-    plot.space = plot.space, plot.height = plot.height
-  ),
-  class = "base"
+  structure(
+    list(
+      bam.file = bam.file, fa.file = fa.file, bs.fa.seq = bs.fa.seq, chr.split = chr.split,
+      nuc.offset = nuc.offset, nuc.size = nuc.size, nuc.padding = nuc.padding, nuc.padding.r = nuc.padding.r,
+      nuc.color = nuc.color, guide.line = guide.line, guide.line.color = guide.line.color, guide.line.type = guide.line.type,
+      mark.type = mark.type, star.size = star.size,
+      show.aa = show.aa, sens = sens, numcode = numcode, NAstring = NAstring, ambiguous = ambiguous,
+      aa.color = aa.color, aa.border.color = aa.border.color, aa.size = aa.size, aa.margin = aa.margin, aa.height = aa.height,
+      plot.space = plot.space, plot.height = plot.height
+    ),
+    class = "base"
   )
 }
 
@@ -122,8 +125,10 @@ ggplot_add.base <- function(object, plot, object_name) {
   # plot.region.end <- plot.data[nrow(plot.data), "start"]
   plot.region.end <- max(plot.data[, "start"])
   region <-
-    GenomicRanges::GRanges(plot.chr,
-                           IRanges::IRanges(plot.region.start, plot.region.end))
+    GenomicRanges::GRanges(
+      plot.chr,
+      IRanges::IRanges(plot.region.start, plot.region.end)
+    )
 
   # get parameters
   bam.file <- object$bam.file
@@ -155,9 +160,11 @@ ggplot_add.base <- function(object, plot, object_name) {
 
   # get position AGCT frequency
   pos.nuc.freq <-
-    GenomicAlignments::alphabetFrequencyFromBam(bam.file,
-                                                param = region,
-                                                baseOnly = TRUE)
+    GenomicAlignments::alphabetFrequencyFromBam(
+      bam.file,
+      param = region,
+      baseOnly = TRUE
+    )
   # filter out others
   pos.nuc.freq <-
     pos.nuc.freq[, c("A", "G", "C", "T")] %>% as.data.frame()
@@ -202,7 +209,7 @@ ggplot_add.base <- function(object, plot, object_name) {
   # get position with alt
   alt.pos <- pos.nuc.freq.long %>%
     dplyr::filter(.data$Ref == .data$Base &
-                    .data$Total != .data$Freq) %>%
+      .data$Total != .data$Freq) %>%
     dplyr::pull(.data$Pos) %>%
     unique()
   alt.pos.nuc.freq.long <-
@@ -210,7 +217,7 @@ ggplot_add.base <- function(object, plot, object_name) {
   # get position without alt
   ref.pos <- pos.nuc.freq.long %>%
     dplyr::filter(.data$Ref == .data$Base &
-                    .data$Total == .data$Freq) %>%
+      .data$Total == .data$Freq) %>%
     dplyr::pull(.data$Pos) %>%
     unique()
   ref.pos.nuc.freq.long <-
@@ -336,9 +343,11 @@ ggplot_add.base <- function(object, plot, object_name) {
         label.r = unit(nuc.padding.r, "lines")
       ) +
       labs(y = "Base") +
-      geom_hline(yintercept = guide.line,
-                 color = guide.line.color,
-                 linetype = guide.line.type)
+      geom_hline(
+        yintercept = guide.line,
+        color = guide.line.color,
+        linetype = guide.line.type
+      )
 
     # make final AA plot
     options(digits = nchar(max(list_translated[[1]]$Pos)) + 1)
@@ -358,17 +367,20 @@ ggplot_add.base <- function(object, plot, object_name) {
           ),
           color = aa.border.color
         ) +
-        geom_text(data = list_translated[[reading_frame]],
-                  aes_string(x = "Pos", y = "y", label = "anno"))
+        geom_text(
+          data = list_translated[[reading_frame]],
+          aes_string(x = "Pos", y = "y", label = "anno")
+        )
     }
     aa_plot <- aa_plot +
       labs(y = "AA") +
       theme_aa(margin.len = aa.margin, fill.color = aa.color)
     final.plot <-
       patchwork::wrap_plots(base.plot,
-                            aa_plot,
-                            ncol = 1,
-                            heights = c(1, aa.height))
+        aa_plot,
+        ncol = 1,
+        heights = c(1, aa.height)
+      )
   } else {
     # create plot without amino acid
     final.plot <- base.plot +
@@ -387,9 +399,11 @@ ggplot_add.base <- function(object, plot, object_name) {
         label.r = unit(nuc.padding.r, "lines")
       ) +
       labs(y = "Base") +
-      geom_hline(yintercept = guide.line,
-                 color = guide.line.color,
-                 linetype = guide.line.type)
+      geom_hline(
+        yintercept = guide.line,
+        color = guide.line.color,
+        linetype = guide.line.type
+      )
   }
 
   # assemble plot

@@ -39,22 +39,26 @@
 #'
 #' # import coverage dataframe with function from openxlsx
 #' coverage.file <- system.file(
-#'   "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
+#'   "extdata", "Proteomics", "MS_BSA_coverage.xlsx",
+#'   package = "ggcoverage"
 #' )
 #' coverage.df <- read.xlsx(coverage.file)
 #' head(coverage.df)
 #'
 #' # get fasta file
 #' fasta.file <- system.file(
-#'   "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
+#'   "extdata", "Proteomics", "MS_BSA_coverage.fasta",
+#'   package = "ggcoverage"
 #' )
 #'
-#' protein.id = "sp|P02769|ALBU_BOVIN"
+#' protein.id <- "sp|P02769|ALBU_BOVIN"
 #' ggplot() +
-#'   geom_protein(coverage.df = coverage.df,
-#'                fasta.file = fasta.file,
-#'                protein.id = protein.id)
-#'}
+#'   geom_protein(
+#'     coverage.df = coverage.df,
+#'     fasta.file = fasta.file,
+#'     protein.id = protein.id
+#'   )
+#' }
 geom_protein <- function(coverage.df, fasta.file, protein.id, XCorr.threshold = 2,
                          confidence = "High", contaminant = NULL, remove.na = TRUE,
                          color = "grey", mark.bare = TRUE, mark.color = "red", mark.alpha = 0.5,
@@ -205,7 +209,8 @@ geom_protein <- function(coverage.df, fasta.file, protein.id, XCorr.threshold = 
     summary.table <- ggplot2::annotation_custom(
       grob = gridExtra::tableGrob(
         d = coverage.summary,
-        theme = table_theme),
+        theme = table_theme
+      ),
       xmin = table_xmin, xmax = table_xmax,
       ymin = table_ymin, ymax = table_ymax
     )

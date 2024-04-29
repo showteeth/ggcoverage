@@ -71,8 +71,10 @@ geom_gene <- function(gtf.gr,
                       arrow.gap = NULL,
                       arrow.num = 50,
                       color.by = "strand",
-                      fill.color = c("-" = "cornflowerblue",
-                                     "+" = "darkolivegreen3"),
+                      fill.color = c(
+                        "-" = "cornflowerblue",
+                        "+" = "darkolivegreen3"
+                      ),
                       show.utr = FALSE,
                       label.size = 3,
                       label.vjust = 2,

@@ -250,9 +250,11 @@ basic_coverage +
 
 ```{r transcript_coverage_tight, warning = FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
 basic_coverage +
-  geom_transcript(gtf.gr = gtf_gr,
-                  overlap.style = "tight",
-                  label.vjust = 1.5)
+  geom_transcript(
+    gtf.gr = gtf_gr,
+    overlap.style = "tight",
+    label.vjust = 1.5
+  )
 ```
 
 ### Add ideogram
@@ -303,7 +305,9 @@ cnv_meta_info <- data.frame(
 
 # track file
 track_file <- system.file("extdata",
-                          "DNA-seq", "CNV_example.txt", package = "ggcoverage")
+  "DNA-seq", "CNV_example.txt",
+  package = "ggcoverage"
+)
 
 # load txt file
 track_df <- LoadTrackFile(
@@ -362,9 +366,11 @@ track_file <-
   system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
 
 # load track
-track_df <- LoadTrackFile(track.file = track_file,
-                          format = "bw",
-                          region = "4:1-160000000")
+track_df <- LoadTrackFile(
+  track.file = track_file,
+  format = "bw",
+  region = "4:1-160000000"
+)
 
 # add chr prefix
 track_df$seqnames <- paste0("chr", track_df$seqnames)
@@ -392,7 +398,8 @@ basic_coverage
 # prepare files
 cnv_file <-
   system.file("extdata", "DNA-seq", "SRR054616_copynumber.txt",
-              package = "ggcoverage")
+    package = "ggcoverage"
+  )
 
 # read CNV
 cnv_df <- read.table(file = cnv_file, sep = "\t", header = TRUE)
@@ -409,9 +416,11 @@ Add **GC**, **ideogram** and **CNV** annotations.
 # create plot
 basic_coverage +
   geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
-  geom_cnv(cnv.df = cnv_df,
-           bin.col = 3,
-           cn.col = 4) +
+  geom_cnv(
+    cnv.df = cnv_df,
+    bin.col = 3,
+    cn.col = 4
+  ) +
   geom_ideogram(
     genome = "hg19",
     plot.space = 0,
@@ -438,8 +447,9 @@ sample_meta <- data.frame(
 
 # load bam file
 bam_file <- system.file("extdata",
-                        "DNA-seq", "tumorA.chr4.selected.bam",
-                        package = "ggcoverage")
+  "DNA-seq", "tumorA.chr4.selected.bam",
+  package = "ggcoverage"
+)
 
 track_df <- LoadTrackFile(
   track.file = bam_file,
@@ -540,9 +550,11 @@ ggcoverage(
   single.nuc = TRUE,
   rect.color = "white"
 ) +
-  geom_base(bam.file = bam_file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
-            mark.type = "twill") +
+  geom_base(
+    bam.file = bam_file,
+    bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+    mark.type = "twill"
+  ) +
   geom_ideogram(genome = "hg19", plot.space = 0)
 ```
 
@@ -562,9 +574,11 @@ ggcoverage(
   single.nuc = TRUE,
   rect.color = "white"
 ) +
-  geom_base(bam.file = bam_file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
-            mark.type = "star") +
+  geom_base(
+    bam.file = bam_file,
+    bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+    mark.type = "star"
+  ) +
   geom_ideogram(genome = "hg19", plot.space = 0)
 ```
 
@@ -584,9 +598,11 @@ ggcoverage(
   single.nuc = TRUE,
   rect.color = "white"
 ) +
-  geom_base(bam.file = bam_file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
-            mark.type = "highlight") +
+  geom_base(
+    bam.file = bam_file,
+    bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+    mark.type = "highlight"
+  ) +
   geom_ideogram(genome = "hg19", plot.space = 0)
 ```
 
@@ -652,9 +668,11 @@ mark_region
 ### Basic coverage
 
 ```{r basic_coverage_chip, warning = FALSE, fig.height = 6, fig.width = 12, fig.align = "center"}
-basic_coverage <- ggcoverage(data = track_df,
-                             mark.region = mark_region,
-                             show.mark.label = FALSE)
+basic_coverage <- ggcoverage(
+  data = track_df,
+  mark.region = mark_region,
+  show.mark.label = FALSE
+)
 basic_coverage
 ```
 
@@ -665,9 +683,10 @@ Add **gene**, **ideogram** and **peak** annotations. To create peak annotation, 
 ```{r peak_coverage, eval = FALSE}
 # get consensus peak file
 peak_file <- system.file("extdata",
-                         "ChIP-seq",
-                         "consensus.peak",
-                         package = "ggcoverage")
+  "ChIP-seq",
+  "consensus.peak",
+  package = "ggcoverage"
+)
 
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr) +
@@ -717,7 +736,9 @@ Matrix:
 ```{r hic_load_hic_matrix}
 ## matrix
 hic_mat_file <- system.file("extdata",
-                            "HiC", "HiC_mat.txt", package = "ggcoverage")
+  "HiC", "HiC_mat.txt",
+  package = "ggcoverage"
+)
 hic_mat <- read.table(file = hic_mat_file, sep = "\t")
 hic_mat <- as.matrix(hic_mat)
 ```
@@ -780,9 +801,11 @@ basic_coverage +
     top = FALSE,
     show.rect = TRUE
   ) +
-  geom_link(link.file = link_file,
-            file.type = "bedpe",
-            show.rect = TRUE)
+  geom_link(
+    link.file = link_file,
+    file.type = "bedpe",
+    show.rect = TRUE
+  )
 ```
 
 ```{r hic_coverage_plot, echo = FALSE, fig.height = 10, fig.width = 12, fig.align = "center"}
@@ -802,7 +825,9 @@ library(openxlsx)
 # prepare coverage dataframe
 coverage_file <-
   system.file("extdata",
-              "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
+    "Proteomics", "MS_BSA_coverage.xlsx",
+    package = "ggcoverage"
+  )
 coverage_df <- openxlsx::read.xlsx(coverage_file, sheet = "Sheet1")
 # check the data
 head(coverage_df)
@@ -813,7 +838,9 @@ The input protein fasta:
 ```{r ms_coverage_fasta, eval = FALSE}
 fasta_file <-
   system.file("extdata",
-              "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
+    "Proteomics", "MS_BSA_coverage.fasta",
+    package = "ggcoverage"
+  )
 
 # prepare track dataframe
 protein_set <- Biostrings::readAAStringSet(fasta_file)
@@ -854,8 +881,10 @@ protein_feature_df <- data.frame(
 
 # add annotation
 protein_coverage +
-  geom_feature(feature.df = protein_feature_df,
-               feature.color = c("#4d81be", "#173b5e", "#6a521d"))
+  geom_feature(
+    feature.df = protein_feature_df,
+    feature.color = c("#4d81be", "#173b5e", "#6a521d")
+  )
 ```
 
 ```{r basic_coverage_protein_feature_plot, echo = FALSE, fig.height = 6, fig.width = 10, fig.align = "center"}

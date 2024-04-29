@@ -30,17 +30,19 @@
 #'
 #' # import coverage dataframe with function from openxlsx
 #' coverage.file <- system.file(
-#'   "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
+#'   "extdata", "Proteomics", "MS_BSA_coverage.xlsx",
+#'   package = "ggcoverage"
 #' )
 #' coverage.df <- read.xlsx(coverage.file)
 #' head(coverage.df)
 #'
 #' # get fasta file
 #' fasta.file <- system.file(
-#'   "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
+#'   "extdata", "Proteomics", "MS_BSA_coverage.fasta",
+#'   package = "ggcoverage"
 #' )
 #'
-#' protein.id = "sp|P02769|ALBU_BOVIN"
+#' protein.id <- "sp|P02769|ALBU_BOVIN"
 #' ggprotein(
 #'   coverage.df = coverage.df,
 #'   fasta.file = fasta.file,

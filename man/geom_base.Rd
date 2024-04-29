@@ -131,7 +131,9 @@ ggcoverage(
   single.nuc = TRUE,
   rect.color = "white"
 ) +
-  geom_base(bam.file = bam.file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
+  geom_base(
+    bam.file = bam.file,
+    bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19
+  )
 
 }

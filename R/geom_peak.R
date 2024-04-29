@@ -43,11 +43,12 @@
 #' # basic.coverage + geom_gene(gtf.gr = gtf.gr) + geom_peak(bed.file = peak.file)
 geom_peak <- function(bed.file = NULL, peak.df = NULL, peak.color = "black", peak.size = 5,
                       plot.space = 0.1, plot.height = 0.1) {
-  structure(list(
-    bed.file = bed.file, peak.df = peak.df, peak.color = peak.color, peak.size = peak.size,
-    plot.space = plot.space, plot.height = plot.height
-  ),
-  class = "peak"
+  structure(
+    list(
+      bed.file = bed.file, peak.df = peak.df, peak.color = peak.color, peak.size = peak.size,
+      plot.space = plot.space, plot.height = plot.height
+    ),
+    class = "peak"
   )
 }
 
