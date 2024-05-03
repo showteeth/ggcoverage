@@ -3,9 +3,11 @@ title: >
   ggcoverage User Guide
 author: 
 - name: Yabing Song
-  affiliation: 
-  - &id1 School of Life Sciences, Tsinghua University
+  affiliation: School of Life Sciences, Tsinghua University
   email: songyb18@mails.tsinghua.edu.cn
+- name: Michael Jahn
+  affiliation: Max Planck Unit for the Science of Pathogens, Berlin
+  email: jahn@mpusp.mpg.de
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('ggcoverage')`"
 abstract: >

@@ -1,13 +1,13 @@
 Type: Package
 Package: ggcoverage
 Title: Visualize Genome/Protein Coverage with Various Annotations
-Version: 1.3.0
+Version: 1.4.0
 Authors@R: c(
     person("Yabing", "Song", , "songyb0519@gmail.com", role = c("aut", "cre", "cph")),
     person("Michael", "Jahn", , "jahn@mpusp.mpg.de", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0002-3913-153X"))
   )
-Maintainer: Yabing Song <songyb0519@gmail.com>
+Maintainer: Michael Jahn <jahn@mpusp.mpg.de>
 Description: The goal of 'ggcoverage' is to simplify the process of
     visualizing genome/protein coverage. It contains functions to load
     data from BAM, BigWig, BedGraph or txt/xlsx files, create
