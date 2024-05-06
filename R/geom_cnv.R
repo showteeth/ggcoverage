@@ -13,7 +13,7 @@
 #' @param plot.height The relative height of contact map to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame start end
 #' @importFrom IRanges IRanges subsetByOverlaps
 #' @importFrom ggplot2 ggplot_add ggplot geom_point geom_line geom_hline aes_string labs theme_classic theme element_blank element_rect
@@ -42,12 +42,13 @@
 geom_cnv <- function(cnv.df, bin.col = 3, cn.col = 4, ref.cn = 2,
                      bin.point.color = "grey", bin.point.alpha = 0.6, cn.line.color = "red",
                      ref.line.color = "black", plot.space = 0.1, plot.height = 0.2) {
-  structure(list(
-    cnv.df = cnv.df, bin.col = bin.col, cn.col = cn.col, ref.cn = ref.cn,
-    bin.point.color = bin.point.color, bin.point.alpha = bin.point.alpha, cn.line.color = cn.line.color,
-    ref.line.color = ref.line.color, plot.space = plot.space, plot.height = plot.height
-  ),
-  class = "cnv"
+  structure(
+    list(
+      cnv.df = cnv.df, bin.col = bin.col, cn.col = cn.col, ref.cn = ref.cn,
+      bin.point.color = bin.point.color, bin.point.alpha = bin.point.alpha, cn.line.color = cn.line.color,
+      ref.line.color = ref.line.color, plot.space = plot.space, plot.height = plot.height
+    ),
+    class = "cnv"
   )
 }
 

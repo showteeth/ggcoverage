@@ -3,21 +3,20 @@
 #' @param matrix Matrix (n x n) contains contact map information.
 #' @param granges The rownames and colnames information of matrix.
 #' @param color.palette One of the RColorbrewer or viridis colour palettes.
-#' Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.
+#' Parameter of \code{HiCBricks::Brick_vizart_plot_heatmap}. Default: NULL.
 #' @param value.cut If present, values beyond a certain quantile will be capped to that quantile.
-#' Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.
+#' Parameter of \code{HiCBricks::Brick_vizart_plot_heatmap}. Default: NULL.
 #' @param transform.fun If any sort of transformations should be applied to the data before plotting.
-#' Parameter of \code{\link{Brick_vizart_plot_heatmap}}. Default: NULL.
+#' Parameter of \code{HiCBricks::Brick_vizart_plot_heatmap}. Default: NULL.
 #' @param plot.space Top and bottom margin. Default: 0.1.
 #' @param plot.height The relative height of contact map to coverage plot. Default: 1.
 #' @param top Logical value, whether to place this plot on the coverage plot. Default: TRUE.
 #' @param show.rect Logical value, whether to add rect border to the plot. Default: FALSE.
 #'
 #' @return Plot.
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges findOverlaps subsetByOverlaps
-#' @import HiCBricks
 #' @importFrom ggplot2 ggplot_add ggplot labs theme_classic theme element_blank element_rect
 #' element_text margin scale_y_continuous scale_x_continuous
 #' @importFrom patchwork wrap_plots
@@ -25,59 +24,67 @@
 #'
 #' @examples
 #' library(ggcoverage)
-#' library(GenomicRanges)
+#' library(HiCBricks)
 #'
 #' # prepare track dataframe
-#' track.file = system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
-#' track.df = LoadTrackFile(track.file = track.file, format = "bw",
-#'                          region = "chr2L:8050000-8300000", extend = 0)
-#' track.df$score = ifelse(track.df$score <0, 0, track.df$score)
+#' track.file <- system.file("extdata", "HiC", "H3K36me3.bw", package = "ggcoverage")
+#' track.df <- LoadTrackFile(
+#'   track.file = track.file, format = "bw",
+#'   region = "chr2L:8050000-8300000", extend = 0
+#' )
+#' track.df$score <- ifelse(track.df$score < 0, 0, track.df$score)
 #' # check the data
 #' head(track.df)
 #'
 #' # Load Hi-C data
-#' hic.mat.file = system.file("extdata", "HiC", "HiC_mat.txt", package = "ggcoverage")
-#' hic.mat = read.table(file = hic.mat.file, sep = "\t")
-#' hic.mat = as.matrix(hic.mat)
+#' hic.mat.file <- system.file("extdata", "HiC", "HiC_mat.txt", package = "ggcoverage")
+#' hic.mat <- read.table(file = hic.mat.file, sep = "\t")
+#' hic.mat <- as.matrix(hic.mat)
 #'
 #' # bin data
-#' hic.bin.file = system.file("extdata", "HiC", "HiC_bin.txt", package = "ggcoverage")
-#' hic.bin = read.table(file = hic.bin.file, sep = "\t")
-#' colnames(hic.bin) = c("chr", "start", "end")
-#' hic.bin.gr = GenomicRanges::makeGRangesFromDataFrame(df = hic.bin)
+#' hic.bin.file <- system.file("extdata", "HiC", "HiC_bin.txt", package = "ggcoverage")
+#' hic.bin <- read.table(file = hic.bin.file, sep = "\t")
+#' colnames(hic.bin) <- c("chr", "start", "end")
+#' hic.bin.gr <- GenomicRanges::makeGRangesFromDataFrame(df = hic.bin)
 #'
 #' # transfrom function
-#' FailSafe_log10 <- function(x){
+#' failsafe_log10 <- function(x) {
 #'   x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
-#'   return(log10(x+1))
+#'   return(log10(x + 1))
 #' }
 #'
 #' # load link data: prepare arcs
-#' link.file = system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage")
+#' link.file <- system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage")
 #'
 #' # basic coverage
-#' basic.coverage = ggcoverage(
+#' basic.coverage <- ggcoverage(
 #'   data = track.df, color = "grey",
 #'   mark.region = NULL, range.position = "out"
 #' )
 #'
 #' # add annotations
 #' basic.coverage +
-#'   geom_tad(matrix = hic.mat, granges = hic.bin.gr, value.cut = 0.99,
-#'            color.palette = "viridis", transform.fun = FailSafe_log10,
-#'            top = FALSE, show.rect = TRUE) +
+#'   geom_tad(
+#'     matrix = hic.mat, granges = hic.bin.gr, value.cut = 0.99,
+#'     color.palette = "viridis", transform.fun = failsafe_log10,
+#'     top = FALSE, show.rect = TRUE
+#'   ) +
 #'   geom_link(link.file = link.file, file.type = "bedpe", show.rect = TRUE)
 #'
 #' @export
 geom_tad <- function(matrix, granges, color.palette = NULL, value.cut = NULL,
                      transform.fun = NULL, plot.space = 0.1, plot.height = 1,
                      top = TRUE, show.rect = FALSE) {
-  structure(list(
-    matrix = matrix, granges = granges, color.palette = color.palette,
-    value.cut = value.cut, transform.fun = transform.fun,
-    plot.space = plot.space, plot.height = plot.height, top = top, show.rect = show.rect
-  ),
-  class = "tad"
+  # test if suggested package is installed
+  requireNamespace("HiCBricks", quietly = TRUE)
+
+  structure(
+    list(
+      matrix = matrix, granges = granges, color.palette = color.palette,
+      value.cut = value.cut, transform.fun = transform.fun,
+      plot.space = plot.space, plot.height = plot.height, top = top, show.rect = show.rect
+    ),
+    class = "tad"
   )
 }
 #' @export

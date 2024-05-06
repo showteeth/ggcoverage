@@ -1,3 +1,15 @@
+# ggcoverage 1.4.0
+## Major changes
+* removed 11 strict dependencies, refactored many functions to work with basic solutions
+* formatted all R code with 'styler'
+* improved arrow style for genomic features
+
+## Minor changes
+* fixed overlapping gene arrows issue
+* dont run failing ideogram example check
+* fixed unavailable URLS
+* use tidy description
+
 # ggcoverage 1.3.0
 ## Major changes
 * Refactored `LoadTrack` function.

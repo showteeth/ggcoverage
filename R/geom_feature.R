@@ -10,7 +10,7 @@
 #' @return Plot.
 #' @importFrom utils read.table
 #' @importFrom dplyr arrange
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom ggplot2 ggplot_add ggplot geom_segment aes_string theme_classic theme element_blank element_text
 #' element_rect margin scale_x_continuous scale_y_continuous coord_cartesian scale_color_manual
 #' @export
@@ -42,11 +42,12 @@
 #' #   )
 geom_feature <- function(feature.file = NULL, feature.df = NULL, feature.color = "black", feature.size = 5,
                          plot.space = 0.1, plot.height = 0.1) {
-  structure(list(
-    feature.file = feature.file, feature.df = feature.df, feature.color = feature.color, feature.size = feature.size,
-    plot.space = plot.space, plot.height = plot.height
-  ),
-  class = "feature"
+  structure(
+    list(
+      feature.file = feature.file, feature.df = feature.df, feature.color = feature.color, feature.size = feature.size,
+      plot.space = plot.space, plot.height = plot.height
+    ),
+    class = "feature"
   )
 }
 

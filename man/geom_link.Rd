@@ -2,15 +2,16 @@
 % Please edit documentation in R/geom_link.R
 \name{geom_link}
 \alias{geom_link}
-\title{Add Links to Coverage Plot.}
+\title{Add Genome Links to Coverage Plot.}
 \usage{
 geom_link(
   link.file,
   file.type = "bedpe",
   score.col = NULL,
   score.threshold = NULL,
-  score.color = c("blue", "grey", "red"),
+  score.color = c("grey70", "#56B1F7", "#132B43"),
   scale.range = 10,
+  plot.curve = "curve",
   plot.space = 0.1,
   plot.height = 0.2,
   show.rect = FALSE
@@ -21,14 +22,15 @@ geom_link(
 
 \item{file.type}{The type of \code{link.file}, choose from bedpe, pairs. Default: bedpe.}
 
-\item{score.col}{Column index contains score information, used when \code{file.type} is bedpe. Default: NULL.}
+\item{score.col}{Column index that contains score information, used when \code{file.type} is bedpe. Default: NULL.}
 
 \item{score.threshold}{The score threshold, used when \code{score.col} is not NULL. Default: NULL.}
 
-\item{score.color}{The score color vector. The length should be three, the first represents the lowest score, the second represents the
-middle score, the third represents the highest score. Default: c("blue", "grey", "red").}
+\item{score.color}{The score color vector. Default: c("grey70", "#56B1F7", "#132B43").}
 
-\item{scale.range}{Scale the height of link according to width, should be greater than or equal to 1 (not scale). Default: 10.}
+\item{scale.range}{Scale the height of links according to width, should be greater than or equal to 1 (not scale). Default: 10.}
+
+\item{plot.curve}{One of 'curve' or 'bezier', for the latter it is required to install package \code{ggforce}. Default: 'curve'.}
 
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
@@ -40,20 +42,26 @@ middle score, the third represents the highest score. Default: c("blue", "grey",
 Plot.
 }
 \description{
-Add Links to Coverage Plot.
+Add Genome Links to Coverage Plot.
 }
 \examples{
 library(ggcoverage)
-# create test dataframe
-# (random, but use seed to obtain same result every time)
+# create random test data
+# use seed to obtain same result every time
 set.seed(123)
+
 df <- data.frame(
-  seqnames = "chr2L", start = seq(from = 8000000, to = 8300000, by = 1000),
-  end = seq(from = 8001000, to = 8301000, by = 1000), score = sample(1:100, 301, replace = TRUE),
+  seqnames = "chr2L",
+  start = seq(from = 8000000, to = 8300000, by = 1000),
+  end = seq(from = 8001000, to = 8301000, by = 1000),
+  score = sample(1:100, 301, replace = TRUE),
   Type = "Example", Group = "Example"
 )
 # get links
-link.file = system.file("extdata", "HiC", "HiC_link.bedpe", package = "ggcoverage")
+link.file <- system.file(
+  "extdata", "HiC", "HiC_link.bedpe",
+  package = "ggcoverage"
+)
 
 # create plot
 ggcoverage(

@@ -12,10 +12,9 @@
 #'
 #' @return Plot.
 #' @importFrom dplyr filter
-#' @importFrom magrittr %>%
-#' @importFrom Biostrings readDNAStringSet letterFrequency
+#' @importFrom dplyr %>%
+#' @importFrom Biostrings readDNAStringSet letterFrequency getSeq
 #' @importFrom GenomicRanges makeGRangesFromDataFrame
-#' @importFrom BSgenome getSeq
 #' @importFrom ggplot2 ggplot_add ggplot geom_line aes_string geom_hline labs theme_classic theme element_blank
 #' element_text element_rect margin scale_x_continuous scale_y_continuous coord_cartesian
 #' @export
@@ -38,12 +37,13 @@
 geom_gc <- function(fa.file = NULL, bs.fa.seq = NULL, chr.split = "[[:space:]]", guide.line = NULL,
                     line.color = "black", guide.line.color = "red", guide.line.type = "dashed",
                     plot.space = 0.1, plot.height = 0.2) {
-  structure(list(
-    fa.file = fa.file, bs.fa.seq = bs.fa.seq, chr.split = chr.split, guide.line = guide.line,
-    line.color = line.color, guide.line.color = guide.line.color, guide.line.type = guide.line.type,
-    plot.space = plot.space, plot.height = plot.height
-  ),
-  class = "gc"
+  structure(
+    list(
+      fa.file = fa.file, bs.fa.seq = bs.fa.seq, chr.split = chr.split, guide.line = guide.line,
+      line.color = line.color, guide.line.color = guide.line.color, guide.line.type = guide.line.type,
+      plot.space = plot.space, plot.height = plot.height
+    ),
+    class = "gc"
   )
 }
 
@@ -102,7 +102,7 @@ ggplot_add.gc <- function(object, plot, object_name) {
     end.field = "end"
   )
   # get GRanges' sequence
-  range.seqs <- BSgenome::getSeq(fa.seq.selected, plot.data.gr)
+  range.seqs <- Biostrings::getSeq(fa.seq.selected, plot.data.gr)
   # calculate GC content
   plot.data$GC <- as.numeric(Biostrings::letterFrequency(x = range.seqs, letters = "GC", as.prob = TRUE))
 

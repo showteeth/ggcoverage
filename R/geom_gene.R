@@ -6,22 +6,23 @@
 #' and tight (place non-overlap genes in one line). Default: loose.
 #' @param gene.size The line size of gene. Default: 1.
 #' @param utr.size The line size of UTR. Default: 2.
-#' @param exon.size The line size of exon. Default: 4.
-#' @param arrow.size The line size of arrow. Default: 1.
+#' @param exon.size The line size of exon. Default: 3.
+#' @param arrow.size The line size of arrow. Default: 1.5.
+#' @param arrow.gap The gap distance between intermittent arrows. Default: NULL.
+#'   Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.
+#' @param arrow.num Total number of intermittent arrows over whole region. Default: 50.
+#'   Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.
 #' @param color.by Color the line by. Default: strand.
 #' @param fill.color Color used for \code{color.by}.
-#' Default: darkblue for - (minus strand), darkgreen for + (plus strand).
+#' Default: blue for - (minus strand), green for + (plus strand).
 #' @param show.utr Logical value, whether to show UTR. Default: TRUE.
-#' @param arrow.gap The gap distance between arrow. Default: NULL.
-#' @param arrow.num Total arrow num of whole region. Default: 50.
-#' @param arrow.length The length of arrow. Default: 0.06.
 #' @param label.size The size of gene label. Default: 3.
 #' @param label.vjust The vjust of gene label. Default: 2.
 #' @param plot.space Top and bottom margin. Default: 0.1.
 #' @param plot.height The relative height of gene annotation to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom rlang .data
 #' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame setdiff
 #' @importFrom IRanges IRanges subsetByOverlaps findOverlaps
@@ -32,44 +33,79 @@
 #' @export
 #'
 #' @examples
-#' # library(ggcoverage)
-#' # library(utils)
-#' # library(rtracklayer)
-#' # meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-#' # sample.meta <- utils::read.csv(meta.file)
+#' library(ggcoverage)
+#' library(utils)
+#' library(rtracklayer)
+#'
+#' # load metadata
+#' meta_file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#' sample_meta <- read.csv(meta_file)
+#'
 #' # track folder
-#' # track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+#' track_folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+#'
 #' # load bigwig file
-#' # track.df <- LoadTrackFile(
-#' #   track.folder = track.folder, format = "bw",
-#' #   meta.info = sample.meta
-#' # )
-#' # gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-#' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
-#' # basic.coverage <- ggcoverage(data = track.df, color = "auto", range.position = "out")
-#' # basic.coverage + geom_gene(gtf.gr = gtf.gr)
-geom_gene <- function(gtf.gr, overlap.gene.gap = 0.1, overlap.style = "loose", gene.size = 1,
-                      utr.size = 2, exon.size = 4, arrow.size = 1, color.by = "strand",
-                      fill.color = c("-" = "darkblue", "+" = "darkgreen"), show.utr = TRUE,
-                      arrow.gap = NULL, arrow.num = 50, arrow.length = 0.06,
-                      label.size = 3, label.vjust = 2, plot.space = 0.1, plot.height = 0.2) {
-  structure(list(
-    gtf.gr = gtf.gr,
-    overlap.gene.gap = overlap.gene.gap, overlap.style = overlap.style, gene.size = gene.size,
-    utr.size = utr.size, exon.size = exon.size, arrow.size = arrow.size, color.by = color.by,
-    fill.color = fill.color, show.utr = show.utr, arrow.gap = arrow.gap, arrow.num = arrow.num,
-    arrow.length = arrow.length, label.size = label.size, label.vjust = label.vjust,
-    plot.space = plot.space, plot.height = plot.height
-  ),
-  class = "gene"
+#' track_df <- LoadTrackFile(
+#'   track.folder = track_folder,
+#'   format = "bw",
+#'   region = "chr14:21,677,306-21,737,601",
+#'   extend = 2000,
+#'   meta.info = sample_meta
+#' )
+#'
+#' # load GTF file
+#' gtf_file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#' gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
+#'
+#' # plot coverage and gene annotation
+#' basic.coverage <- ggcoverage(data = track_df, range.position = "out")
+#' basic.coverage +
+#'   geom_gene(gtf.gr = gtf_gr)
+geom_gene <- function(gtf.gr,
+                      overlap.gene.gap = 0.1,
+                      overlap.style = "loose",
+                      gene.size = 1,
+                      utr.size = 2,
+                      exon.size = 3,
+                      arrow.size = 1.5,
+                      arrow.gap = NULL,
+                      arrow.num = 50,
+                      color.by = "strand",
+                      fill.color = c(
+                        "-" = "cornflowerblue",
+                        "+" = "darkolivegreen3"
+                      ),
+                      show.utr = FALSE,
+                      label.size = 3,
+                      label.vjust = 2,
+                      plot.space = 0.1,
+                      plot.height = 0.2) {
+  structure(
+    list(
+      gtf.gr = gtf.gr,
+      overlap.gene.gap = overlap.gene.gap,
+      overlap.style = overlap.style,
+      gene.size = gene.size,
+      utr.size = utr.size,
+      exon.size = exon.size,
+      arrow.size = arrow.size,
+      arrow.gap = arrow.gap,
+      arrow.num = arrow.num,
+      color.by = color.by,
+      fill.color = fill.color,
+      show.utr = show.utr,
+      label.size = label.size,
+      label.vjust = label.vjust,
+      plot.space = plot.space,
+      plot.height = plot.height
+    ),
+    class = "gene"
   )
 }
 
 #' @export
 ggplot_add.gene <- function(object, plot, object_name) {
   # get plot data
-  # track.data <- plot$layers[[1]]$data
-  # get plot data, plot data should contain bins
   if ("patchwork" %in% class(plot)) {
     track.data <- plot[[1]]$layers[[1]]$data
   } else {
@@ -78,9 +114,7 @@ ggplot_add.gene <- function(object, plot, object_name) {
   # prepare plot range
   # the plot region are not normal, so start is minimum value
   plot.range.chr <- track.data[1, "seqnames"]
-  # plot.range.start <- track.data[1, "start"]
   plot.range.start <- min(track.data[, "start"])
-  # plot.range.end <- track.data[nrow(track.data), "end"]
   plot.range.end <- max(track.data[, "end"])
   plot.range.gr <- GenomicRanges::GRanges(
     seqnames = plot.range.chr,
@@ -99,15 +133,12 @@ ggplot_add.gene <- function(object, plot, object_name) {
   show.utr <- object$show.utr
   arrow.gap <- object$arrow.gap
   arrow.num <- object$arrow.num
-  arrow.length <- object$arrow.length
   label.size <- object$label.size
   label.vjust <- object$label.vjust
   plot.space <- object$plot.space
   plot.height <- object$plot.height
 
-  # process
   # get gene in region
-  # gtf.gr <- rtracklayer::import.gff(gtf.file,format = 'gtf')
   gtf.df.used <- IRanges::subsetByOverlaps(x = gtf.gr, ranges = plot.range.gr) %>% as.data.frame()
   # check information
   used.gtf.columns <- c("seqnames", "start", "end", "strand", "type", "gene_name")
@@ -160,144 +191,69 @@ ggplot_add.gene <- function(object, plot, object_name) {
   gene.info.used.utr$start <- as.numeric(gene.info.used.utr$start)
   gene.info.used.utr$end <- as.numeric(gene.info.used.utr$end)
   # change UTR
-  if (nrow(gene.info.used.utr) == 0) {
-    warning("No UTR detected in provided GTF!")
+  if (show.utr & nrow(gene.info.used.utr) == 0) {
+    warning("No UTR detected in provided GTF, omitting plotting UTRs.")
     show.utr <- FALSE
   }
-  # create plot without arrow
+  # plot genomic features with arrow at the end
   if (show.utr) {
     # substract UTR from exon
     gene.exon.utr <- SplitExonUTR(exon.df = gene.info.used.exon, utr.df = gene.info.used.utr)
     gene.info.used.exon <- gene.exon.utr$exon
     gene.info.used.utr <- gene.exon.utr$utr
-    gene.plot <- ggplot() +
-      geom_segment(
-        data = gene.info.used.gene,
-        mapping = aes_string(
-          x = "start",
-          y = "group",
-          xend = "end",
-          yend = "group",
-          color = color.by
-        ),
-        show.legend = FALSE,
-        size = gene.size
-      ) +
-      geom_segment(
-        data = gene.info.used.utr,
-        mapping = aes_string(
-          x = "start",
-          y = "group",
-          xend = "end",
-          yend = "group",
-          color = color.by
-        ),
-        show.legend = FALSE,
-        size = utr.size
-      ) +
-      geom_segment(
-        data = gene.info.used.exon,
-        mapping = aes_string(
-          x = "start",
-          y = "group",
-          xend = "end",
-          yend = "group",
-          color = color.by
-        ),
-        show.legend = FALSE,
-        size = exon.size
-      )
-  } else {
-    gene.plot <- ggplot() +
-      geom_segment(
-        data = gene.info.used.gene,
-        mapping = aes_string(
-          x = "start",
-          y = "group",
-          xend = "end",
-          yend = "group",
-          color = color.by
-        ),
-        show.legend = FALSE,
-        size = gene.size
-      ) +
-      geom_segment(
-        data = gene.info.used.exon,
-        mapping = aes_string(
-          x = "start",
-          y = "group",
-          xend = "end",
-          yend = "group",
-          color = color.by
-        ),
-        show.legend = FALSE,
-        size = exon.size
-      )
+  }
+  gene.plot <- ggplot() +
+    geom_arrows(gene.info.used.gene, color.by, gene.size, arrow.size) +
+    geom_arrows(gene.info.used.exon, color.by, exon.size, arrow.size)
+  if (show.utr) {
+    gene.plot <- gene.plot +
+      geom_arrows(gene.info.used.utr, color.by, utr.size, arrow.size)
   }
 
-  if (is.null(arrow.gap)) {
-    if (is.null(arrow.num)) {
-      stop("Please provide either arrow.num or arrow.gap!")
-    } else {
+  if (!is.null(arrow.gap) || !is.null(arrow.num)) {
+    if (!is.null(arrow.num)) {
       arrow.gap <- (plot.range.end - plot.range.start) / arrow.num
     }
-  }
-  arrow.list <- list()
-  # create arrow based on gene
-  for (i in 1:nrow(gene.info.used.gene)) {
-    gene.seq <- as.character(gene.info.used.gene[i, "seqnames"])
-    gene.start <- as.numeric(gene.info.used.gene[i, "start"])
-    gene.end <- as.numeric(gene.info.used.gene[i, "end"])
-    gene.strand <- as.character(gene.info.used.gene[i, "strand"])
-    gene.type <- as.character(gene.info.used.gene[i, "type"])
-    gene.gene_type <- as.character(gene.info.used.gene[i, "gene_type"])
-    gene.name <- as.character(gene.info.used.gene[i, "gene_name"])
-    gene.group <- as.numeric(gene.info.used.gene[i, "group"])
-    gene.gap <- gene.end - gene.start
-    if (gene.gap <= arrow.gap) {
-      # create only one arrow
-      arrow.pos <- floor((gene.end + gene.start) / 2)
-      arrow.list[[gene.name]] <- c(
-        gene.seq, arrow.pos, arrow.pos + 1, gene.strand,
-        gene.type, gene.gene_type, gene.name, gene.group
-      )
-    } else {
-      gene.arrow.num <- floor(gene.gap / arrow.gap)
-      gene.arrow.start <- (arrow.gap * 0:gene.arrow.num) + gene.start
-      gene.arrow.end <- gene.arrow.start + 1
-      for (grn in 1:length(gene.arrow.start)) {
-        arrow.list[[paste(gene.name, grn, sep = "_")]] <-
-          c(
-            gene.seq, gene.arrow.start[grn], gene.arrow.end[grn], gene.strand,
-            gene.type, gene.gene_type, gene.name, gene.group
-          )
+    arrow.list <- list()
+    # create arrow based on gene
+    for (i in 1:nrow(gene.info.used.gene)) {
+      gene.seq <- as.character(gene.info.used.gene[i, "seqnames"])
+      gene.start <- as.numeric(gene.info.used.gene[i, "start"])
+      gene.end <- as.numeric(gene.info.used.gene[i, "end"])
+      gene.strand <- as.character(gene.info.used.gene[i, "strand"])
+      gene.type <- as.character(gene.info.used.gene[i, "type"])
+      gene.gene_type <- as.character(gene.info.used.gene[i, "gene_type"])
+      gene.name <- as.character(gene.info.used.gene[i, "gene_name"])
+      gene.group <- as.numeric(gene.info.used.gene[i, "group"])
+      gene.gap <- gene.end - gene.start
+      if (gene.gap <= arrow.gap) {
+        # create only one arrow
+        arrow.pos <- floor((gene.end + gene.start) / 2)
+        arrow.list[[gene.name]] <- c(
+          gene.seq, arrow.pos, arrow.pos + 1, gene.strand,
+          gene.type, gene.gene_type, gene.name, gene.group
+        )
+      } else {
+        gene.arrow.num <- floor(gene.gap / arrow.gap)
+        gene.arrow.start <- (arrow.gap * 0:gene.arrow.num) + gene.start
+        gene.arrow.end <- gene.arrow.start + 1
+        for (grn in 1:length(gene.arrow.start)) {
+          arrow.list[[paste(gene.name, grn, sep = "_")]] <-
+            c(
+              gene.seq, gene.arrow.start[grn], gene.arrow.end[grn], gene.strand,
+              gene.type, gene.gene_type, gene.name, gene.group
+            )
+        }
       }
     }
+    arrow.df <- do.call(rbind, arrow.list) %>% as.data.frame()
+    colnames(arrow.df) <- c("seqnames", "start", "end", "strand", "type", "gene_type", "gene_name", "group")
+    arrow.df$start <- as.numeric(arrow.df$start)
+    arrow.df$end <- as.numeric(arrow.df$end)
+    arrow.df$group <- as.numeric(arrow.df$group)
+    gene.plot <- gene.plot +
+      geom_arrows(arrow.df, color.by, gene.size / 2, arrow.size, 35, TRUE)
   }
-  arrow.df <- do.call(rbind, arrow.list) %>% as.data.frame()
-  colnames(arrow.df) <- c("seqnames", "start", "end", "strand", "type", "gene_type", "gene_name", "group")
-  arrow.df$start <- as.numeric(arrow.df$start)
-  arrow.df$end <- as.numeric(arrow.df$end)
-  arrow.df$group <- as.numeric(arrow.df$group)
-
-  gene.arrow.plot <- gene.plot + geom_segment(
-    data = arrow.df,
-    mapping = aes_string(
-      x = "start",
-      y = "group",
-      xend = "end",
-      yend = "group",
-      color = color.by
-    ),
-    arrow = arrow(
-      ends = ifelse(arrow.df$strand == "-", "first", "last"),
-      type = "open",
-      angle = 45,
-      length = unit(x = arrow.length, units = "inches")
-    ),
-    show.legend = FALSE,
-    size = arrow.size
-  )
 
   label.df <- data.frame(
     pos = (gene.info.used.gene$start + gene.info.used.gene$end) / 2,
@@ -305,7 +261,7 @@ ggplot_add.gene <- function(object, plot, object_name) {
     gene = gene.info.used.gene$gene_name
   )
 
-  gene.final.plot <- gene.arrow.plot +
+  gene.final.plot <- gene.plot +
     geom_text(
       data = label.df,
       mapping = aes_string(x = "pos", y = "group", label = "gene"),
@@ -317,6 +273,7 @@ ggplot_add.gene <- function(object, plot, object_name) {
       fill.color = fill.color, x.range = c(plot.range.start, plot.range.end),
       margin.len = plot.space
     )
+
   # assemble plot
   patchwork::wrap_plots(plot + theme(plot.margin = margin(t = plot.space, b = plot.space)),
     gene.final.plot,

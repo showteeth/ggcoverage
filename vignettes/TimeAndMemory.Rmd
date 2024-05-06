@@ -31,12 +31,14 @@ ls -lh possorted_genome_bam.bam
 library(ggcoverage)
 
 # prepare metadata
-sample.meta = data.frame(SampleName=c('possorted_genome_bam'),
-                         Type = c("possorted_genome_bam"),
-                         Group = c("10x"))
+sample.meta <- data.frame(
+  SampleName = c("possorted_genome_bam"),
+  Type = c("possorted_genome_bam"),
+  Group = c("10x")
+)
 sample.meta
 # prepare track folder
-track.folder = '~/projects/ggcoverage'
+track.folder <- "~/projects/ggcoverage"
 # load the track
 # region length: 3631
 system.time(track.df <- LoadTrackFile(
@@ -68,8 +70,10 @@ With the track dataframe, we can generate coverage plot.
 ```{r big_bam_coverage_time}
 # create basic coverage plot
 # the running time is very small
-system.time(basic.coverage <- ggcoverage(data = track.df, color = "red", 
-                                        range.position = "out", show.mark.label = FALSE))
+system.time(basic.coverage <- ggcoverage(
+  data = track.df, color = "red",
+  range.position = "out", show.mark.label = FALSE
+))
 ```
 
 The coverage plot (the bars are relatively dense, and can be viewed more clearly when saved as a PDF):
@@ -117,20 +121,22 @@ ls -lh ./test2
 ### Sequential normalization
 ```{r sequential_norm, eval=FALSE}
 # prepare sample metadata
-sample.meta = data.frame(SampleName=c('SRR054616_rep1','SRR054616_rep2','SRR054616_rep3'),
-                         Type = c("SRR054616_rep1","SRR054616_rep2","SRR054616_rep3"),
-                         Group = c("rep1", "rep2", "rep3"))
+sample.meta <- data.frame(
+  SampleName = c("SRR054616_rep1", "SRR054616_rep2", "SRR054616_rep3"),
+  Type = c("SRR054616_rep1", "SRR054616_rep2", "SRR054616_rep3"),
+  Group = c("rep1", "rep2", "rep3")
+)
 sample.meta
 
 # track folder
-track.folder = "./test"
+track.folder <- "./test"
 
 # run
 system.time(track.df <- LoadTrackFile(
-    track.folder = track.folder, format = "bam", norm.method = "RPKM",
-    region = "14:21,677,306-21,737,601", bamcoverage.path = "~/anaconda3/bin/bamCoverage",
-    extend = 2000, meta.info = sample.meta
-  ))
+  track.folder = track.folder, format = "bam", norm.method = "RPKM",
+  region = "14:21,677,306-21,737,601", bamcoverage.path = "~/anaconda3/bin/bamCoverage",
+  extend = 2000, meta.info = sample.meta
+))
 
 #> user       system elapsed
 #> 1169.767   35.005 1208.704
@@ -143,13 +149,15 @@ The **elapsed** time (unit: seconds) is the time spent from the start to the end
 ### Parallel normalization
 ```{r parallel_norm, eval=FALSE}
 # prepare sample metadata
-sample.meta = data.frame(SampleName=c('SRR054616_rep1','SRR054616_rep2','SRR054616_rep3'),
-                         Type = c("SRR054616_rep1","SRR054616_rep2","SRR054616_rep3"),
-                         Group = c("rep1", "rep2", "rep3"))
+sample.meta <- data.frame(
+  SampleName = c("SRR054616_rep1", "SRR054616_rep2", "SRR054616_rep3"),
+  Type = c("SRR054616_rep1", "SRR054616_rep2", "SRR054616_rep3"),
+  Group = c("rep1", "rep2", "rep3")
+)
 sample.meta
 
 # track folder
-track.folder = "./test2"
+track.folder <- "./test2"
 
 # run with three cores
 system.time(track.df <- LoadTrackFile(
@@ -170,12 +178,16 @@ system.time(track.df <- LoadTrackFile(
 In general, the loading step is the most time-consuming step. With the track dataframe, we can generate coverage plot.
 ```{r parallel_coverage_time}
 # read the track dataframe
-track.df = utils::read.table(file = "~/projects/ggcoverage/ggcoverage_parallel_track.txt", 
-                             sep = "\t", header = T)
+track.df <- utils::read.table(
+  file = "~/projects/ggcoverage/ggcoverage_parallel_track.txt",
+  sep = "\t", header = T
+)
 # create basic coverage plot
 # the running time is very small
-system.time(basic.coverage <- ggcoverage(data = track.df, color = "auto", 
-                                        range.position = "out", show.mark.label = FALSE))
+system.time(basic.coverage <- ggcoverage(
+  data = track.df, color = "auto",
+  range.position = "out", show.mark.label = FALSE
+))
 ```
 
 The coverage plot:

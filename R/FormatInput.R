@@ -41,7 +41,7 @@ GetRegion <- function(df, chr, start, end = NULL) {
 #' @param extend Extend length of \code{region}. Default: 2000.
 #'
 #' @return A dataframe.
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom dplyr filter arrange
 #'
 #' @export

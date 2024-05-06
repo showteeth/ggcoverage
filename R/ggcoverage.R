@@ -25,17 +25,15 @@
 #' @param mark.label.size The label size of mark label. Default: 4.
 #'
 #' @return A ggplot2 object.
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom ggplot2 ggplot aes_string scale_fill_manual geom_rect geom_text aes theme_classic theme unit
 #' element_blank annotate rel scale_y_continuous expansion scale_x_continuous coord_cartesian geom_step
 #' @importFrom scales comma
 #' @importFrom grDevices colorRampPalette
-#' @importFrom RColorBrewer brewer.pal
 #' @importFrom rlang as_label .data
 #' @importFrom stats as.formula
 #' @importFrom ggh4x facet_wrap2 strip_themed
 #' @importFrom dplyr group_by summarise
-#' @importFrom magrittr %>%
 #' @importFrom ggrepel geom_text_repel
 #' @export
 #'
@@ -89,9 +87,10 @@
 #' ggcoverage(
 #'   data = track.df, facet.key = "Type",
 #'   mark.region = data.frame(
-#'     start = c(21678900,21732001,21737590),
-#'     end = c(21679900,21732400,21737650),
-#'     label=c("M1", "M2", "M3")),
+#'     start = c(21678900, 21732001, 21737590),
+#'     end = c(21679900, 21732400, 21737650),
+#'     label = c("M1", "M2", "M3")
+#'   ),
 #'   mark.color = grey(0.4)
 #' )
 #'

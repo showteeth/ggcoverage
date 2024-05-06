@@ -63,13 +63,10 @@ In general, it is **recommended** to install from [Github
 repository](https://github.com/showteeth/ggcoverage) (update more
 timely).
 
-Once `ggcoverage` is installed, it can be loaded (together with other
-libraries) like this:
+Once `ggcoverage` is installed, it can be loaded as every other package:
 
 ``` r
-library("rtracklayer")
 library("ggcoverage")
-library("ggpattern")
 ```
 
 ## Manual
@@ -259,6 +256,15 @@ basic_coverage
 
 ### Add gene annotation
 
+- default behavior is to draw genes (transcripts), exons and UTRs with
+  different line width
+- can bec adjusted using `gene.size`, `exon.size` and `utr.size`
+  parameters
+- frequency of intermittent arrows (light color) can be adjusted using
+  the `arrow.num` and `arrow.gap` parameters
+- genomic features are colored by `strand` by default, which can be
+  changed using the `color.by` parameter
+
 ``` r
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr)
@@ -290,7 +296,40 @@ basic_coverage +
 
 ### Add ideogram
 
+The ideogram is an overview plot about the respective position on a
+chromosome. The plotting of the ideogram is implemented by the `ggbio`
+package. This package needs to be installed separately (it is only
+‘Suggested’ by `ggcoverage`).
+
 ``` r
+library(ggbio)
+#> Loading required package: BiocGenerics
+#> 
+#> Attaching package: 'BiocGenerics'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     IQR, mad, sd, var, xtabs
+#> The following objects are masked from 'package:base':
+#> 
+#>     anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+#>     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+#>     get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+#>     match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+#>     Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
+#>     table, tapply, union, unique, unsplit, which.max, which.min
+#> Loading required package: ggplot2
+#> Registered S3 method overwritten by 'GGally':
+#>   method from   
+#>   +.gg   ggplot2
+#> Need specific help about ggbio? try mailing 
+#>  the maintainer or visit https://lawremi.github.io/ggbio/
+#> 
+#> Attaching package: 'ggbio'
+#> The following objects are masked from 'package:ggplot2':
+#> 
+#>     geom_bar, geom_rect, geom_segment, ggsave, stat_bin, stat_identity,
+#>     xlim
+
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr) +
   geom_ideogram(genome = "hg19", plot.space = 0)
@@ -323,7 +362,7 @@ basic_coverage +
 ##### Load the data
 
 The DNA-seq data used here are from [Copy number work
-flow](http://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html),
+flow](https://bioconductor.org/help/course-materials/2014/SeattleOct2014/B02.2.3_CopyNumber.html),
 we select tumor sample, and get bin counts with
 `cn.mops::getReadCountsFromBAM` with `WL` 1000.
 
@@ -380,6 +419,19 @@ Add **GC**, **ideogram** and **gene** annotaions.
 # load genome data
 library("BSgenome.Hsapiens.UCSC.hg19")
 #> Loading required package: BSgenome
+#> Loading required package: S4Vectors
+#> Loading required package: stats4
+#> 
+#> Attaching package: 'S4Vectors'
+#> The following object is masked from 'package:utils':
+#> 
+#>     findMatches
+#> The following objects are masked from 'package:base':
+#> 
+#>     expand.grid, I, unname
+#> Loading required package: IRanges
+#> Loading required package: GenomeInfoDb
+#> Loading required package: GenomicRanges
 #> Loading required package: Biostrings
 #> Loading required package: XVector
 #> 
@@ -387,6 +439,7 @@ library("BSgenome.Hsapiens.UCSC.hg19")
 #> The following object is masked from 'package:base':
 #> 
 #>     strsplit
+#> Loading required package: rtracklayer
 
 # create plot
 basic_coverage +
@@ -647,8 +700,6 @@ ggcoverage(
 #> Adding another scale for x, which will replace the existing scale.
 ```
 
-<img src="man/figures/README-base_aa_coverage-1.png" width="100%" style="display: block; margin: auto;" />
-
 **Use star to mark position with SNV**:
 
 ``` r
@@ -806,12 +857,21 @@ basic_coverage +
 
 ## Hi-C data
 
+The Hi-C method maps chromosome contacts in eukaryotic cells. For this
+purpose, DNA and protein complexes are cross-linked and DNA fragments
+then purified. As a result, even distant chromatin fragments can be
+found to interact due to the spatial organization of the DNA and
+histones in the cell. Hi-C data shows these interactions for example as
+a contact map.
+
 The Hi-C data are from [pyGenomeTracks: reproducible plots for
 multivariate genomic
 datasets](https://academic.oup.com/bioinformatics/article/37/3/422/5879987?login=false).
 
 The Hi-C matrix visualization is implemented by
-[HiCBricks](https://github.com/koustav-pal/HiCBricks).
+[`HiCBricks`](https://github.com/koustav-pal/HiCBricks). This package
+needs to be installed separately (it is only ‘Suggested’ by
+`ggcoverage`).
 
 ### Load track data
 
@@ -901,6 +961,18 @@ basic_coverage
 Add **link**, **contact map**annotations:
 
 ``` r
+library(HiCBricks)
+#> Loading required package: curl
+#> Using libcurl 7.81.0 with OpenSSL/3.0.2
+#> Loading required package: rhdf5
+#> Loading required package: R6
+#> Loading required package: grid
+#> 
+#> Attaching package: 'grid'
+#> The following object is masked from 'package:Biostrings':
+#> 
+#>     pattern
+
 basic_coverage +
   geom_tad(
     matrix = hic_mat,
@@ -940,7 +1012,7 @@ experiment.
 ### Load coverage
 
 The exported coverage from [Proteome
-Discoverer](https://www.thermofisher.cn/cn/zh/home/industrial/mass-spectrometry/liquid-chromatography-mass-spectrometry-lc-ms/lc-ms-software/multi-omics-data-analysis/proteome-discoverer-software.html?adobe_mc=MCMID%7C90228073352279367993013412919222863692%7CMCAID%3D3208C32C269355DE-4000028116B65FEB%7CMCORGID%3D5B135A0C5370E6B40A490D44%40AdobeOrg%7CTS=1614293705):
+Discoverer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8006021/):
 
 ``` r
 library(openxlsx)
@@ -1024,7 +1096,7 @@ protein_set
 
 ``` r
 protein_coverage <- ggprotein(
-  coverage.file = coverage_file,
+  coverage.df = coverage_df,
   fasta.file = fasta_file,
   protein.id = "sp|P02769|ALBU_BOVIN",
   range.position = "out"

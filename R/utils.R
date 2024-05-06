@@ -56,7 +56,12 @@ PrepareRegion <- function(region = NULL,
 
 # select color automatically
 AutoColor <- function(data, n, name, key) {
-  getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(n, name))
+  palettes <- list(
+    Set1 = c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"),
+    Set2 = c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"),
+    Set3 = c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#D9D9D9")
+  )
+  getPalette <- grDevices::colorRampPalette(palettes[[name]])
   # sample group with same color
   group.info <- unique(data[, key])
   fill.color <- getPalette(length(group.info))
@@ -77,27 +82,6 @@ AAPadding <- function(len, offset = 0, aa.seq) {
   return(final.aa.df)
 }
 
-# get gene and transcript group
-# divide genes to non-overlap groups (V1)
-# GetGeneGroup = function(gene.gr, fc = "queryHits",sc= "subjectHits", overlap.gene.gap=1){
-#   overlap.df = IRanges::findOverlaps(gene.gr,gene.gr, ignore.strand=TRUE) %>% as.data.frame()
-#   overlap.list = lapply(split(overlap.df,overlap.df[,fc]), function(x){
-#     x[, sc]
-#   })
-#   group.idx = rep(1, length(unique(overlap.df[,fc])))
-#   for (i in seq_along(overlap.list)) {
-#     ovrlap.vec <- overlap.list[[i]]
-#     curr.group = group.idx[i]
-#     remain.vec = setdiff(ovrlap.vec, i)
-#     for (j in remain.vec) {
-#       if(group.idx[j] == curr.group){
-#         group.idx[j] = curr.group + overlap.gene.gap
-#       }
-#     }
-#   }
-#   return(group.idx)
-# }
-
 # divide genes to non-overlap groups (V2)
 GetGeneGroup <- function(gene.gr, fc = "queryHits", sc = "subjectHits", overlap.gene.gap = 1) {
   overlap.df <- IRanges::findOverlaps(gene.gr, gene.gr, ignore.strand = TRUE) %>%
@@ -106,13 +90,13 @@ GetGeneGroup <- function(gene.gr, fc = "queryHits", sc = "subjectHits", overlap.
   overlap.list <- lapply(split(overlap.df, overlap.df[, fc]), function(x) {
     x[, sc]
   })
-  overlap.list <- overlap.list[order(sapply(overlap.list, length))]
+  overlap.list <- overlap.list[order(sapply(overlap.list, length), decreasing = TRUE)]
   group.idx <- rep(1, length(unique(overlap.df[, fc])))
   for (i in names(overlap.list)) {
+    overlap.vec <- overlap.list[[i]]
     i <- as.numeric(i)
-    ovrlap.vec <- overlap.list[[i]]
     curr.group <- group.idx[i]
-    remain.vec <- setdiff(ovrlap.vec, i)
+    remain.vec <- setdiff(overlap.vec, i)
     for (j in remain.vec) {
       if (group.idx[j] == curr.group) {
         group.idx[j] <- curr.group + overlap.gene.gap
@@ -122,7 +106,7 @@ GetGeneGroup <- function(gene.gr, fc = "queryHits", sc = "subjectHits", overlap.
   return(group.idx)
 }
 
-# V3: place non-overlap transcripts together
+# place non-overlapping transcripts together
 GetGeneGroupTight <- function(gene.gr, overlap.gene.gap = 1) {
   # convert to dataframe
   gene.gr.df <- as.data.frame(gene.gr)
@@ -157,7 +141,6 @@ GetGeneGroupTight <- function(gene.gr, overlap.gene.gap = 1) {
   return(group.index)
 }
 
-# SplitExonUTR(exon.df = gene.info.used.exon, utr.df = gene.info.used.utr)
 # substract UTR from exon
 SplitExonUTR <- function(exon.df, utr.df) {
   # get metadata
@@ -257,13 +240,11 @@ SplitTxExonUTR <- function(exon.df, utr.df) {
 }
 
 # From: https://github.com/jorainer/biovizBase/blob/master/R/ideogram.R
-# Fix bug: the names on the supplied 'seqlengths' vector must be identical to the seqnames
+# Fix bug: the names on the supplied 'seqlengths' vector must be
+# identical to the seqnames
 getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
   .gnm <- genome
   lst <- lapply(.gnm, function(genome) {
-    # print(genome)
-    ## to remove the "heavy dependency" we put require here.
-    # require(rtracklayer)
     if (!(exists("session") && extends(class(session), "BrowserSession"))) {
       session <- rtracklayer::browserSession()
     }
@@ -283,7 +264,8 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
           seqnames = df$chrom,
           IRanges(start = df$chromStart, end = df$chromEnd)
         )
-        S4Vectors::values(gr) <- df[, c("name", "gieStain")]
+        gr@elementMetadata$name <- df$name
+        gr@elementMetadata$gieStain <- df$gieStain
         message("Loading ranges...")
 
         gr.r <- rtracklayer::GRangesForUCSCGenome(genome)
@@ -293,7 +275,7 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
         suppressWarnings(GenomeInfoDb::seqlengths(gr) <- new.seqlength)
         gr <- GenomicRanges::trim(gr)
       } else {
-        message("cytoBand informatin is not available, only get ranges.")
+        message("cytoBand information is not available, only getting ranges.")
         message("Loading ranges...")
         gr <- rtracklayer::GRangesForUCSCGenome(genome)
         message("Done")
@@ -362,3 +344,76 @@ GetPlotData <- function(plot, layer.num = 1) {
   plot.data <- eval(parse(text = paste0(plot.layer.str, "$layers[[1]]$data")))
   return(plot.data)
 }
+
+#' Plot genomic features as arrows.
+#' @description
+#' This function is a variation of geom_segment to plot (gene) features
+#' as arrows. Mainly meant for internal use, not to be called directly.
+#'
+#' @param data data frame describing arrow position, with columns
+#'   start, end, group, and a custom 'color' column
+#' @param color name of the color column in the data frame
+#' @param line_width line_width of the (arrow) segment
+#' @param arrow_size size of the arrow
+#' @param arrow_angle angle of the arrow. Default: 35°
+#' @param intermittent If TRUE, arrows are only drawn intermittently in
+#'   half-transparent white color. Default: FALSE.
+#' @importFrom grDevices grey
+#' @return A geom layer for ggplot2 objects.
+#' @export
+geom_arrows <-
+  function(data,
+           color,
+           line_width,
+           arrow_size,
+           arrow_angle = 35,
+           intermittent = FALSE) {
+    if (nrow(data)) {
+      if (!"strand" %in% colnames(data)) {
+        data$strand <- "+"
+      }
+      if (!intermittent) {
+        geom_segment(
+          data = data,
+          mapping = aes_string(
+            x = "start",
+            y = "group",
+            xend = "end",
+            yend = "group",
+            color = color
+          ),
+          arrow = arrow(
+            ends = ifelse(data$strand == "+", "last", "first"),
+            angle = arrow_angle,
+            length = unit(arrow_size, "points"),
+            type = "open"
+          ),
+          lineend = "butt",
+          linejoin = "mitre",
+          show.legend = FALSE,
+          linewidth = line_width
+        )
+      } else {
+        geom_segment(
+          data = data,
+          mapping = aes_string(
+            x = "start",
+            y = "group",
+            xend = "end",
+            yend = "group"
+          ),
+          arrow = arrow(
+            ends = ifelse(data$strand == "+", "last", "first"),
+            angle = arrow_angle,
+            length = unit(arrow_size, "points"),
+            type = "closed"
+          ),
+          lineend = "butt",
+          linejoin = "mitre",
+          show.legend = FALSE,
+          linewidth = line_width,
+          color = grDevices::grey(1, alpha = 0.5)
+        )
+      }
+    }
+  }

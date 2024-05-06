@@ -26,7 +26,6 @@
 GetConsensusPeak <- function(peak.file, peak.folder = NULL, mspc.path = NULL, rep.type = c("bio", "tec"), stringency.threshold = 1e-8,
                              weak.threshold = 1e-4, gamma = 1e-8, alpha = 0.05, min.overlap.num = 1,
                              multiple.intersections = c("Lowest", "Highest"), parallelism.degree = 1) {
-
   # check parameters
   rep.type <- match.arg(arg = rep.type)
   multiple.intersections <- match.arg(arg = multiple.intersections)

@@ -7,21 +7,22 @@
 #' and tight (place non-overlap transcripts in one line). Default: loose.
 #' @param tx.size The line size of transcript. Default: 1.
 #' @param utr.size The line size of UTR. Default: 2.
-#' @param exon.size The line size of exon. Default: 4.
-#' @param arrow.size The line size of arrow. Default: 1.
+#' @param exon.size The line size of exon. Default: 3.
+#' @param arrow.size The line size of arrow. Default: 1.5.
+#' @param arrow.gap The gap distance between intermittent arrows. Default: NULL.
+#'   Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.
+#' @param arrow.num Total number of intermittent arrows over whole region. Default: 50.
+#'   Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.
 #' @param color.by Color the line by. Default: strand.
 #' @param fill.color Color used for \code{color.by}.
-#' Default: darkblue for - (minus strand), darkgreen for + (plus strand).
-#' @param arrow.gap The gap distance between arrow. Default: NULL.
-#' @param arrow.num Total arrow num of whole region. Default: 50.
-#' @param arrow.length The length of arrow. Default: 0.06.
+#' Default: blue for - (minus strand), green for + (plus strand).
 #' @param label.size The size of transcript label. Default: 3.
 #' @param label.vjust The vjust of transcript label. Default: 2.
 #' @param plot.space Top and bottom margin. Default: 0.1.
 #' @param plot.height The relative height of transcript annotation to coverage plot. Default: 0.2.
 #'
 #' @return Plot.
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom rlang .data
 #' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame setdiff
 #' @importFrom IRanges IRanges subsetByOverlaps findOverlaps
@@ -32,37 +33,76 @@
 #' @export
 #'
 #' @examples
-#' # library(ggcoverage)
-#' # library(utils)
-#' # library(rtracklayer)
-#' # meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-#' # sample.meta <- utils::read.csv(meta.file)
+#' library(ggcoverage)
+#' library(utils)
+#' library(rtracklayer)
+#'
+#' # load metadata
+#' meta_file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#' sample_meta <- read.csv(meta_file)
+#'
 #' # track folder
-#' # track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+#' track_folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+#'
 #' # load bigwig file
-#' # track.df <- LoadTrackFile(
-#' #   track.folder = track.folder, format = "bw",
-#' #   meta.info = sample.meta
-#' # )
-#' # gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-#' # gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
-#' # basic.coverage <- ggcoverage(data = track.df, color = "auto", range.position = "out")
-#' # basic.coverage + geom_transcript(gtf.gr = gtf.gr, label.vjust = 1.5)
-geom_transcript <- function(gtf.gr, gene.name = "HNRNPC", overlap.tx.gap = 0.1, overlap.style = "loose",
-                            tx.size = 1, utr.size = 2, exon.size = 4, arrow.size = 1, color.by = "strand",
-                            fill.color = c("-" = "darkblue", "+" = "darkgreen"),
-                            arrow.gap = NULL, arrow.num = 50, arrow.length = 0.06,
-                            label.size = 3, label.vjust = 2, plot.space = 0.1, plot.height = 1) {
-  structure(list(
-    gtf.gr = gtf.gr, gene.name = gene.name, overlap.tx.gap = overlap.tx.gap, overlap.style = overlap.style,
-    tx.size = tx.size, utr.size = utr.size, exon.size = exon.size, arrow.size = arrow.size, color.by = color.by,
-    fill.color = fill.color, arrow.gap = arrow.gap, arrow.num = arrow.num,
-    arrow.length = arrow.length, label.size = label.size, label.vjust = label.vjust,
-    plot.space = plot.space, plot.height = plot.height
-  ),
-  class = "transcript"
-  )
-}
+#' track_df <- LoadTrackFile(
+#'   track.folder = track_folder,
+#'   format = "bw",
+#'   region = "chr14:21,677,306-21,737,601",
+#'   extend = 2000,
+#'   meta.info = sample_meta
+#' )
+#'
+#' # load GTF file
+#' gtf_file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#' gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
+#'
+#' # plot coverage and gene annotation
+#' basic.coverage <- ggcoverage(data = track_df, range.position = "out")
+#' basic.coverage +
+#'   geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5)
+geom_transcript <-
+  function(gtf.gr,
+           gene.name = "HNRNPC",
+           overlap.tx.gap = 0.1,
+           overlap.style = "loose",
+           tx.size = 1,
+           utr.size = 2,
+           exon.size = 3,
+           arrow.size = 3,
+           arrow.gap = NULL,
+           arrow.num = 50,
+           color.by = "strand",
+           fill.color = c(
+             "-" = "cornflowerblue",
+             "+" = "darkolivegreen3"
+           ),
+           label.size = 3,
+           label.vjust = 2,
+           plot.space = 0.1,
+           plot.height = 1) {
+    structure(
+      list(
+        gtf.gr = gtf.gr,
+        gene.name = gene.name,
+        overlap.tx.gap = overlap.tx.gap,
+        overlap.style = overlap.style,
+        tx.size = tx.size,
+        utr.size = utr.size,
+        exon.size = exon.size,
+        arrow.size = arrow.size,
+        arrow.gap = arrow.gap,
+        arrow.num = arrow.num,
+        color.by = color.by,
+        fill.color = fill.color,
+        label.size = label.size,
+        label.vjust = label.vjust,
+        plot.space = plot.space,
+        plot.height = plot.height
+      ),
+      class = "transcript"
+    )
+  }
 
 #' @export
 ggplot_add.transcript <- function(object, plot, object_name) {
@@ -100,7 +140,6 @@ ggplot_add.transcript <- function(object, plot, object_name) {
   fill.color <- object$fill.color
   arrow.gap <- object$arrow.gap
   arrow.num <- object$arrow.num
-  arrow.length <- object$arrow.length
   label.size <- object$label.size
   label.vjust <- object$label.vjust
   plot.space <- object$plot.space
@@ -163,50 +202,17 @@ ggplot_add.transcript <- function(object, plot, object_name) {
 
   # create basic plot
   tx.plot <- ggplot() +
-    geom_segment(
-      data = gene.tx.df.tx,
-      mapping = aes_string(
-        x = "start",
-        y = "group",
-        xend = "end",
-        yend = "group",
-        color = "strand"
-      ),
-      show.legend = FALSE,
-      size = tx.size
-    )
+    geom_arrows(gene.tx.df.tx, color.by, tx.size, arrow.size)
 
   # deal with missing UTR
   if (is.null(gene.tx.df.utr)) {
     warning("No UTR detected in provided GTF!")
   } else {
     tx.plot <- tx.plot +
-      geom_segment(
-        data = gene.tx.df.utr,
-        mapping = aes_string(
-          x = "start",
-          y = "group",
-          xend = "end",
-          yend = "group",
-          color = "strand"
-        ),
-        show.legend = FALSE,
-        size = utr.size
-      )
+      geom_arrows(gene.tx.df.utr, color.by, utr.size, arrow.size)
   }
   tx.plot <- tx.plot +
-    geom_segment(
-      data = gene.tx.df.exon,
-      mapping = aes_string(
-        x = "start",
-        y = "group",
-        xend = "end",
-        yend = "group",
-        color = "strand"
-      ),
-      show.legend = FALSE,
-      size = exon.size
-    ) +
+    geom_arrows(gene.tx.df.exon, color.by, exon.size, arrow.size) +
     theme_classic()
 
   if (is.null(arrow.gap)) {
@@ -253,24 +259,8 @@ ggplot_add.transcript <- function(object, plot, object_name) {
   arrow.df$end <- as.numeric(arrow.df$end)
   arrow.df$group <- as.numeric(arrow.df$group)
   # add arrow
-  tx.arrow.plot <- tx.plot + geom_segment(
-    data = arrow.df,
-    mapping = aes_string(
-      x = "start",
-      y = "group",
-      xend = "end",
-      yend = "group",
-      color = color.by
-    ),
-    arrow = arrow(
-      ends = ifelse(arrow.df$strand == "-", "first", "last"),
-      type = "open",
-      angle = 45,
-      length = unit(x = arrow.length, units = "inches")
-    ),
-    show.legend = FALSE,
-    size = arrow.size
-  )
+  tx.arrow.plot <- tx.plot +
+    geom_arrows(arrow.df, color.by, tx.size / 2, arrow.size, 35, TRUE)
 
   # prepare label dataframe
   label.df <- data.frame(

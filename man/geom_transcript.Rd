@@ -11,13 +11,12 @@ geom_transcript(
   overlap.style = "loose",
   tx.size = 1,
   utr.size = 2,
-  exon.size = 4,
-  arrow.size = 1,
-  color.by = "strand",
-  fill.color = c(`-` = "darkblue", `+` = "darkgreen"),
+  exon.size = 3,
+  arrow.size = 3,
   arrow.gap = NULL,
   arrow.num = 50,
-  arrow.length = 0.06,
+  color.by = "strand",
+  fill.color = c(`-` = "cornflowerblue", `+` = "darkolivegreen3"),
   label.size = 3,
   label.vjust = 2,
   plot.space = 0.1,
@@ -38,20 +37,20 @@ and tight (place non-overlap transcripts in one line). Default: loose.}
 
 \item{utr.size}{The line size of UTR. Default: 2.}
 
-\item{exon.size}{The line size of exon. Default: 4.}
+\item{exon.size}{The line size of exon. Default: 3.}
 
-\item{arrow.size}{The line size of arrow. Default: 1.}
+\item{arrow.size}{The line size of arrow. Default: 1.5.}
+
+\item{arrow.gap}{The gap distance between intermittent arrows. Default: NULL.
+Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.}
+
+\item{arrow.num}{Total number of intermittent arrows over whole region. Default: 50.
+Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.}
 
 \item{color.by}{Color the line by. Default: strand.}
 
 \item{fill.color}{Color used for \code{color.by}.
-Default: darkblue for - (minus strand), darkgreen for + (plus strand).}
-
-\item{arrow.gap}{The gap distance between arrow. Default: NULL.}
-
-\item{arrow.num}{Total arrow num of whole region. Default: 50.}
-
-\item{arrow.length}{The length of arrow. Default: 0.06.}
+Default: blue for - (minus strand), green for + (plus strand).}
 
 \item{label.size}{The size of transcript label. Default: 3.}
 
@@ -68,20 +67,32 @@ Plot.
 Add Transcript Annotation to Coverage Plot.
 }
 \examples{
-# library(ggcoverage)
-# library(utils)
-# library(rtracklayer)
-# meta.file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-# sample.meta <- utils::read.csv(meta.file)
+library(ggcoverage)
+library(utils)
+library(rtracklayer)
+
+# load metadata
+meta_file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+sample_meta <- read.csv(meta_file)
+
 # track folder
-# track.folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+track_folder <- system.file("extdata", "RNA-seq", package = "ggcoverage")
+
 # load bigwig file
-# track.df <- LoadTrackFile(
-#   track.folder = track.folder, format = "bw",
-#   meta.info = sample.meta
-# )
-# gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-# gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
-# basic.coverage <- ggcoverage(data = track.df, color = "auto", range.position = "out")
-# basic.coverage + geom_transcript(gtf.gr = gtf.gr, label.vjust = 1.5)
+track_df <- LoadTrackFile(
+  track.folder = track_folder,
+  format = "bw",
+  region = "chr14:21,677,306-21,737,601",
+  extend = 2000,
+  meta.info = sample_meta
+)
+
+# load GTF file
+gtf_file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
+
+# plot coverage and gene annotation
+basic.coverage <- ggcoverage(data = track_df, range.position = "out")
+basic.coverage +
+  geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5)
 }

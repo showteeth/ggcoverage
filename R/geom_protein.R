@@ -1,6 +1,6 @@
 #' Layer for Protein Coverage Plot.
 #'
-#' @param coverage.file Exported protein coverage file, should be in excel.
+#' @param coverage.df Protein coverage, for example output from Proteome Discoverer.
 #' @param fasta.file Input reference protein fasta file.
 #' @param protein.id The protein ID of exported coverage file. This should be unique and in \code{fasta.file}.
 #' @param XCorr.threshold The cross-correlation threshold. Default: 2.
@@ -21,12 +21,10 @@
 #' out (normal y axis). Default: in.
 #'
 #' @return A ggplot2 object.
-#' @importFrom openxlsx read.xlsx
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @importFrom dplyr filter group_by summarise arrange
 #' @importFrom rlang .data
 #' @importFrom Biostrings readAAStringSet
-#' @importFrom stringr str_locate
 #' @importFrom GenomicRanges reduce GRanges setdiff
 #' @importFrom IRanges IRanges
 #' @importFrom ggplot2 ggplot geom_rect geom_text aes aes_string
@@ -35,18 +33,33 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' library(ggplot2)
-#' library(ggcoverage)
+#' library(openxlsx)
+#'
+#' # import coverage dataframe with function from openxlsx
 #' coverage.file <- system.file(
-#'   "extdata", "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage"
+#'   "extdata", "Proteomics", "MS_BSA_coverage.xlsx",
+#'   package = "ggcoverage"
 #' )
+#' coverage.df <- read.xlsx(coverage.file)
+#' head(coverage.df)
+#'
+#' # get fasta file
 #' fasta.file <- system.file(
-#'   "extdata", "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage"
+#'   "extdata", "Proteomics", "MS_BSA_coverage.fasta",
+#'   package = "ggcoverage"
 #' )
-#' protein.id = "sp|P02769|ALBU_BOVIN"
+#'
+#' protein.id <- "sp|P02769|ALBU_BOVIN"
 #' ggplot() +
-#'   geom_protein(coverage.file = coverage.file, fasta.file = fasta.file, protein.id = protein.id)
-geom_protein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold = 2,
+#'   geom_protein(
+#'     coverage.df = coverage.df,
+#'     fasta.file = fasta.file,
+#'     protein.id = protein.id
+#'   )
+#' }
+geom_protein <- function(coverage.df, fasta.file, protein.id, XCorr.threshold = 2,
                          confidence = "High", contaminant = NULL, remove.na = TRUE,
                          color = "grey", mark.bare = TRUE, mark.color = "red", mark.alpha = 0.5,
                          show.table = TRUE, table.position = c("top_right", "top_left", "bottom_right", "bottom_left"),
@@ -55,8 +68,6 @@ geom_protein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold 
   table.position <- match.arg(arg = table.position)
   range.position <- match.arg(arg = range.position)
 
-  # load coverage dataframe
-  coverage.df <- openxlsx::read.xlsx(coverage.file)
   # remove suffix and prefix string
   coverage.df$Annotated.Sequence <- gsub(pattern = ".*\\.(.*)\\..*", replacement = "\\1", x = coverage.df$Annotated.Sequence)
   # filter converge according to confidence
@@ -103,7 +114,8 @@ geom_protein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold 
 
   # get the region
   aa.anno.region <- sapply(coverage.df$peptide, function(x) {
-    stringr::str_locate(pattern = x, aa.seq.used)
+    re_result <- regexpr(x, aa.seq.used)
+    c(re_result, re_result + attr(re_result, which = "match.length")) - 1
   }) %>%
     t() %>%
     as.data.frame()
@@ -197,7 +209,8 @@ geom_protein <- function(coverage.file, fasta.file, protein.id, XCorr.threshold 
     summary.table <- ggplot2::annotation_custom(
       grob = gridExtra::tableGrob(
         d = coverage.summary,
-        theme = table_theme),
+        theme = table_theme
+      ),
       xmin = table_xmin, xmax = table_xmax,
       ymin = table_ymin, ymax = table_ymax
     )

@@ -66,3 +66,43 @@ Plot.
 \description{
 Add Ideogram Annotation to Coverage Plot.
 }
+\examples{
+\dontrun{
+library(ggbio)
+
+# load metadata
+meta_file <-
+  system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+sample_meta <- read.csv(meta_file)
+
+# track folder
+track_folder <-
+  system.file("extdata", "RNA-seq", package = "ggcoverage")
+# load bigwig file
+track_df <- LoadTrackFile(
+  track.folder = track_folder,
+  format = "bw",
+  region = "chr14:21,677,306-21,737,601",
+  extend = 2000,
+  meta.info = sample_meta
+)
+
+# gene annotation
+gtf_file <-
+  system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
+
+# coverage plot + ideogram
+basic_coverage <- ggcoverage(
+  data = track_df,
+  plot.type = "facet",
+  range.position = "in",
+  facet.y.scale = "fixed"
+)
+
+basic_coverage +
+  geom_gene(gtf.gr = gtf_gr) +
+  geom_ideogram(genome = "hg19", plot.space = 0)
+}
+
+}
