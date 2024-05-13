@@ -31,7 +31,7 @@
 #' @importFrom utils menu
 #' @importFrom rtracklayer ucscGenomes ucscTableQuery tableName getTable
 #'   GRangesForUCSCGenome browserSession
-#' @importFrom GenomeInfoDb seqlengths seqlengths<- seqnames
+#' @importFrom GenomeInfoDb seqlengths genome seqlengths<- seqnames
 #' @export
 #'
 #' @examples
@@ -95,22 +95,6 @@ geom_ideogram <- function(genome = "hg19", mark.color = "red", mark.alpha = 0.7,
 
 #' @export
 ggplot_add.ideogram <- function(object, plot, object_name) {
-  # if (length(plot$layers) == 0) {
-  #   # geom_base
-  #   # get plot data
-  #   plot.data <- plot[[1]]$layers[[1]]$data
-  #   # prepare plot range
-  #   plot.chr <- as.character(plot.data[1, "seqnames"])
-  #   plot.region.start <- plot.data[1, "start"]
-  #   plot.region.end <- plot.data[nrow(plot.data), "end"]
-  # } else {
-  #   # get plot data
-  #   plot.data <- plot$layers[[1]]$data
-  #   # prepare plot range
-  #   plot.chr <- as.character(plot.data[1, "seqnames"])
-  #   plot.region.start <- plot$coordinates$limits$x[1]
-  #   plot.region.end <- plot$coordinates$limits$x[2]
-  # }
   # get plot data, plot data should contain bins
   if ("patchwork" %in% class(plot)) {
     plot.data <- plot[[1]]$layers[[1]]$data
@@ -146,7 +130,7 @@ ggplot_add.ideogram <- function(object, plot, object_name) {
   plot.height <- object$plot.height
 
   # get genome and chr ideogram
-  genome.info <- suppressWarnings(getIdeogram(genome = genome, subchr = plot.chr, cytobands = TRUE))
+  genome.info <- suppressWarnings(getIdeogram(genomes = genome, subchr = plot.chr, cytobands = TRUE))
   genome.info.df <- genome.info %>% as.data.frame()
   # get genome length
   genome.length <- genome.info.df[nrow(genome.info.df), "end"]
