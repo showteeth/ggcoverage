@@ -242,9 +242,8 @@ SplitTxExonUTR <- function(exon.df, utr.df) {
 # From: https://github.com/jorainer/biovizBase/blob/master/R/ideogram.R
 # Fix bug: the names on the supplied 'seqlengths' vector must be
 # identical to the seqnames
-getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
-  .gnm <- genome
-  lst <- lapply(.gnm, function(genome) {
+getIdeogram <- function(genomes, subchr = NULL, cytobands = TRUE) {
+  lst <- lapply(genomes, function(genome) {
     if (!(exists("session") && extends(class(session), "BrowserSession"))) {
       session <- rtracklayer::browserSession()
     }
@@ -255,8 +254,9 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
     }
     if (cytobands) {
       message("Loading ideogram...")
+      GenomeInfoDb::genome(session) <- genome
       tryres <- try(query <-
-        rtracklayer::ucscTableQuery(session, "cytoBand", genome))
+        rtracklayer::ucscTableQuery(session, table = "cytoBand", genome = genome))
       if (!inherits(tryres, "try-error")) {
         rtracklayer::tableName(query) <- "cytoBand"
         df <- rtracklayer::getTable(query)
@@ -292,7 +292,7 @@ getIdeogram <- function(genome, subchr = NULL, cytobands = TRUE) {
     gr <- sort(gr)
     gr
   })
-  names(lst) <- .gnm
+  names(lst) <- genomes
   if (length(lst) == 1) {
     res <- lst[[1]]
   } else {

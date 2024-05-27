@@ -16,8 +16,15 @@ commit](https://img.shields.io/github/last-commit/showteeth/ggcoverage)
 
 ## Introduction
 
-The goal of `ggcoverage` is simplify the process of visualizing omics
-coverage. It contains three main parts:
+The goal of `ggcoverage` is to visualize coverage tracks from genomics,
+transcriptomics or proteomics data. It contains functions to load data
+from BAM, BigWig, BedGraph, txt, or xlsx files, create genome/protein
+coverage plots, and add various annotations including base and amino
+acid composition, GC content, copy number variation (CNV), genes,
+transcripts, ideograms, peak highlights, HiC contact maps, contact links
+and protein features. It is based on and integrates well with `ggplot2`.
+
+It contains three main parts:
 
 - **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph,
   txt/xlsx files from various omics data, including WGS, RNA-seq,
@@ -41,14 +48,11 @@ coverage. It contains three main parts:
   - **peotein feature annotation**: Visualize protein coverage with
     features
 
-`ggcoverage` utilizes `ggplot2` plotting system, so its usage is
-**ggplot2-style**!
-
 ## Installation
 
-`ggcoverage` is an R package distributed as part of the
-[CRAN](https://cran.r-project.org/). To install the package, start R and
-enter one of the following commands:
+`ggcoverage` is an R package distributed as part of the [CRAN
+repository](https://cran.r-project.org/). To install the package, start
+R and enter one of the following commands:
 
 ``` r
 # install via CRAN (not yet available)
@@ -59,11 +63,12 @@ install.package("remotes")
 remotes::install_github("showteeth/ggcoverage")
 ```
 
-In general, it is **recommended** to install from [Github
-repository](https://github.com/showteeth/ggcoverage) (update more
-timely).
+In general, it is **recommended** to install from the [Github
+repository](https://github.com/showteeth/ggcoverage) (updated more
+regularly).
 
-Once `ggcoverage` is installed, it can be loaded as every other package:
+Once `ggcoverage` is installed, it can be loaded like every other
+package:
 
 ``` r
 library("ggcoverage")
@@ -75,18 +80,18 @@ library("ggcoverage")
 [vignettes](https://showteeth.github.io/ggcoverage/):
 
 - **detailed manual**: step-by-step usage
-- **customize the plot**: customize the plot and add additional layer
+- **customize the plot**: customize the plot and add additional layers
 
 ## RNA-seq data
 
 ### Load the data
 
-The RNA-seq data used here are from [Transcription profiling by high
+The RNA-seq data used here is from [Transcription profiling by high
 throughput sequencing of HNRNPC knockdown and control HeLa
-cells](https://bioconductor.org/packages/release/data/experiment/html/RNAseqData.HNRNPC.bam.chr14.html),
-we select four sample to use as example: ERR127307_chr14,
-ERR127306_chr14, ERR127303_chr14, ERR127302_chr14, and all bam files are
-converted to bigwig file with
+cells](https://bioconductor.org/packages/release/data/experiment/html/RNAseqData.HNRNPC.bam.chr14.html).
+We select four samples to use as example: `ERR127307_chr14`,
+`ERR127306_chr14`, `ERR127303_chr14`, `ERR127302_chr14`, and all bam
+files were converted to bigwig files with
 [deeptools](https://deeptools.readthedocs.io/en/develop/).
 
 Load metadata:
@@ -149,8 +154,8 @@ mark_region
 
 To add **gene annotation**, the gtf file should contain **gene_type**
 and **gene_name** attributes in **column 9**; to add **transcript
-annotation**, the gtf file should contain **transcript_name** attribute
-in **column 9**.
+annotation**, the gtf file should contain a **transcript_name**
+attribute in **column 9**.
 
 ``` r
 gtf_file <-
@@ -274,7 +279,7 @@ basic_coverage +
 
 ### Add transcript annotation
 
-**In “loose” stype (default style; each transcript occupies one line)**:
+**In “loose” style (default style; each transcript occupies one line)**:
 
 ``` r
 basic_coverage +
@@ -283,13 +288,16 @@ basic_coverage +
 
 <img src="man/figures/README-transcript_coverage-1.png" width="100%" style="display: block; margin: auto;" />
 
-**In “tight” style (place non-overlap transcripts in one line)**:
+**In “tight” style (attempted to place non-overlapping transcripts in
+one line)**:
 
 ``` r
 basic_coverage +
-  geom_transcript(gtf.gr = gtf_gr,
-                  overlap.style = "tight",
-                  label.vjust = 1.5)
+  geom_transcript(
+    gtf.gr = gtf_gr,
+    overlap.style = "tight",
+    label.vjust = 1.5
+  )
 ```
 
 <img src="man/figures/README-transcript_coverage_tight-1.png" width="100%" style="display: block; margin: auto;" />
@@ -315,8 +323,8 @@ library(ggbio)
 #>     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
 #>     get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
 #>     match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
-#>     Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
-#>     table, tapply, union, unique, unsplit, which.max, which.min
+#>     Position, rank, rbind, Reduce, rownames, sapply, setdiff, table,
+#>     tapply, union, unique, unsplit, which.max, which.min
 #> Loading required package: ggplot2
 #> Registered S3 method overwritten by 'GGally':
 #>   method from   
@@ -329,6 +337,9 @@ library(ggbio)
 #> 
 #>     geom_bar, geom_rect, geom_segment, ggsave, stat_bin, stat_identity,
 #>     xlim
+```
+
+``` r
 
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr) +
@@ -376,7 +387,9 @@ cnv_meta_info <- data.frame(
 
 # track file
 track_file <- system.file("extdata",
-                          "DNA-seq", "CNV_example.txt", package = "ggcoverage")
+  "DNA-seq", "CNV_example.txt",
+  package = "ggcoverage"
+)
 
 # load txt file
 track_df <- LoadTrackFile(
@@ -439,7 +452,16 @@ library("BSgenome.Hsapiens.UCSC.hg19")
 #> The following object is masked from 'package:base':
 #> 
 #>     strsplit
+#> Loading required package: BiocIO
 #> Loading required package: rtracklayer
+#> 
+#> Attaching package: 'rtracklayer'
+#> The following object is masked from 'package:BiocIO':
+#> 
+#>     FileForFormat
+```
+
+``` r
 
 # create plot
 basic_coverage +
@@ -469,10 +491,15 @@ track_file <-
   system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
 
 # load track
-track_df <- LoadTrackFile(track.file = track_file,
-                          format = "bw",
-                          region = "4:1-160000000")
+track_df <- LoadTrackFile(
+  track.file = track_file,
+  format = "bw",
+  region = "4:1-160000000"
+)
 #> No metadata provided, returning coverage as is.
+```
+
+``` r
 
 # add chr prefix
 track_df$seqnames <- paste0("chr", track_df$seqnames)
@@ -509,7 +536,8 @@ basic_coverage
 # prepare files
 cnv_file <-
   system.file("extdata", "DNA-seq", "SRR054616_copynumber.txt",
-              package = "ggcoverage")
+    package = "ggcoverage"
+  )
 
 # read CNV
 cnv_df <- read.table(file = cnv_file, sep = "\t", header = TRUE)
@@ -533,9 +561,11 @@ Add **GC**, **ideogram** and **CNV** annotations.
 # create plot
 basic_coverage +
   geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
-  geom_cnv(cnv.df = cnv_df,
-           bin.col = 3,
-           cn.col = 4) +
+  geom_cnv(
+    cnv.df = cnv_df,
+    bin.col = 3,
+    cn.col = 4
+  ) +
   geom_ideogram(
     genome = "hg19",
     plot.space = 0,
@@ -563,8 +593,9 @@ sample_meta <- data.frame(
 
 # load bam file
 bam_file <- system.file("extdata",
-                        "DNA-seq", "tumorA.chr4.selected.bam",
-                        package = "ggcoverage")
+  "DNA-seq", "tumorA.chr4.selected.bam",
+  package = "ggcoverage"
+)
 
 track_df <- LoadTrackFile(
   track.file = bam_file,
@@ -575,6 +606,9 @@ track_df <- LoadTrackFile(
 #> No 'region' specified; extracting coverage for an example range
 #> (<=100,000 bases, first annotated sequence)
 #> Coverage extracted from sequence/chromosome: chr10
+```
+
+``` r
 
 head(track_df)
 #>   seqnames    start      end width strand score   Type  Group
@@ -588,11 +622,12 @@ head(track_df)
 
 #### Default color scheme
 
-For base and amino acid annotation, we have following default color
-schemes, you can change with `nuc.color` and `aa.color` parameters.
+For base and amino acid annotation, the package comes with the following
+default color schemes. Color schemes can be changed with `nuc.color` and
+`aa.color` parameters.
 
-Default color scheme for base annotation is `Clustal-style`, more
-popular color schemes is available
+THe default color scheme for base annotation is `Clustal-style`, more
+popular color schemes are available
 [here](https://www.biostars.org/p/171056/).
 
 ``` r
@@ -690,9 +725,11 @@ ggcoverage(
   single.nuc = TRUE,
   rect.color = "white"
 ) +
-  geom_base(bam.file = bam_file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
-            mark.type = "twill") +
+  geom_base(
+    bam.file = bam_file,
+    bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+    mark.type = "twill"
+  ) +
   geom_ideogram(genome = "hg19", plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
@@ -711,9 +748,11 @@ ggcoverage(
   single.nuc = TRUE,
   rect.color = "white"
 ) +
-  geom_base(bam.file = bam_file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
-            mark.type = "star") +
+  geom_base(
+    bam.file = bam_file,
+    bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+    mark.type = "star"
+  ) +
   geom_ideogram(genome = "hg19", plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
@@ -734,9 +773,11 @@ ggcoverage(
   single.nuc = TRUE,
   rect.color = "white"
 ) +
-  geom_base(bam.file = bam_file,
-            bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
-            mark.type = "highlight") +
+  geom_base(
+    bam.file = bam_file,
+    bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19,
+    mark.type = "highlight"
+  ) +
   geom_ideogram(genome = "hg19", plot.space = 0)
 #> Loading ideogram...
 #> Loading ranges...
@@ -748,11 +789,11 @@ ggcoverage(
 
 ## ChIP-seq data
 
-The ChIP-seq data used here are from
-[DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html),
-I select four sample to use as example: Chr18_MCF7_input,
-Chr18_MCF7_ER_1, Chr18_MCF7_ER_3, Chr18_MCF7_ER_2, and all bam files are
-converted to bigwig file with
+The ChIP-seq data used here is from
+[DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html).
+Four samples are selected as examples: `Chr18_MCF7_input`,
+`Chr18_MCF7_ER_1`, `Chr18_MCF7_ER_3`, `Chr18_MCF7_ER_2`, and all bam
+files were converted to bigwig files with
 [deeptools](https://deeptools.readthedocs.io/en/develop/).
 
 Create metadata:
@@ -822,9 +863,11 @@ mark_region
 ### Basic coverage
 
 ``` r
-basic_coverage <- ggcoverage(data = track_df,
-                             mark.region = mark_region,
-                             show.mark.label = FALSE)
+basic_coverage <- ggcoverage(
+  data = track_df,
+  mark.region = mark_region,
+  show.mark.label = FALSE
+)
 basic_coverage
 ```
 
@@ -839,9 +882,10 @@ annotation, we first **get consensus peaks** with
 ``` r
 # get consensus peak file
 peak_file <- system.file("extdata",
-                         "ChIP-seq",
-                         "consensus.peak",
-                         package = "ggcoverage")
+  "ChIP-seq",
+  "consensus.peak",
+  package = "ggcoverage"
+)
 
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr) +
@@ -864,7 +908,7 @@ found to interact due to the spatial organization of the DNA and
 histones in the cell. Hi-C data shows these interactions for example as
 a contact map.
 
-The Hi-C data are from [pyGenomeTracks: reproducible plots for
+The Hi-C data is taken from [pyGenomeTracks: reproducible plots for
 multivariate genomic
 datasets](https://academic.oup.com/bioinformatics/article/37/3/422/5879987?login=false).
 
@@ -887,6 +931,9 @@ track_df <- LoadTrackFile(
   extend = 0
 )
 #> No metadata provided, returning coverage as is.
+```
+
+``` r
 
 track_df$score <- ifelse(track_df$score < 0, 0, track_df$score)
 
@@ -908,7 +955,9 @@ Matrix:
 ``` r
 ## matrix
 hic_mat_file <- system.file("extdata",
-                            "HiC", "HiC_mat.txt", package = "ggcoverage")
+  "HiC", "HiC_mat.txt",
+  package = "ggcoverage"
+)
 hic_mat <- read.table(file = hic_mat_file, sep = "\t")
 hic_mat <- as.matrix(hic_mat)
 ```
@@ -972,6 +1021,9 @@ library(HiCBricks)
 #> The following object is masked from 'package:Biostrings':
 #> 
 #>     pattern
+```
+
+``` r
 
 basic_coverage +
   geom_tad(
@@ -983,9 +1035,11 @@ basic_coverage +
     top = FALSE,
     show.rect = TRUE
   ) +
-  geom_link(link.file = link_file,
-            file.type = "bedpe",
-            show.rect = TRUE)
+  geom_link(
+    link.file = link_file,
+    file.type = "bedpe",
+    show.rect = TRUE
+  )
 #> Read 534 lines after Skipping 0 lines
 #> Inserting Data at location: 1
 #> Data length: 534
@@ -1001,13 +1055,13 @@ basic_coverage +
 
 ## Mass spectrometry protein coverage
 
-[Mass spectrometry (MS) is an important method for the accurate mass
-determination and characterization of proteins, and a variety of methods
-and instrumentations have been developed for its many
-uses](https://en.wikipedia.org/wiki/Protein_mass_spectrometry). After
-MS, we can check the coverage of protein to check the quality of the
-data and find the reason why the segment did not appear and improve the
-experiment.
+[Mass
+spectrometry](https://en.wikipedia.org/wiki/Protein_mass_spectrometry)
+(MS) is an important method for the accurate mass determination and
+characterization of proteins, and a variety of methods and instruments
+have been developed for its many uses. With `ggcoverage`, we can easily
+inspect the peptide coverage of a protein in order to learn about the
+quality of the data.
 
 ### Load coverage
 
@@ -1019,7 +1073,9 @@ library(openxlsx)
 # prepare coverage dataframe
 coverage_file <-
   system.file("extdata",
-              "Proteomics", "MS_BSA_coverage.xlsx", package = "ggcoverage")
+    "Proteomics", "MS_BSA_coverage.xlsx",
+    package = "ggcoverage"
+  )
 coverage_df <- openxlsx::read.xlsx(coverage_file, sheet = "Sheet1")
 # check the data
 head(coverage_df)
@@ -1079,7 +1135,9 @@ The input protein fasta:
 ``` r
 fasta_file <-
   system.file("extdata",
-              "Proteomics", "MS_BSA_coverage.fasta", package = "ggcoverage")
+    "Proteomics", "MS_BSA_coverage.fasta",
+    package = "ggcoverage"
+  )
 
 # prepare track dataframe
 protein_set <- Biostrings::readAAStringSet(fasta_file)
@@ -1128,8 +1186,10 @@ protein_feature_df <- data.frame(
 
 # add annotation
 protein_coverage +
-  geom_feature(feature.df = protein_feature_df,
-               feature.color = c("#4d81be", "#173b5e", "#6a521d"))
+  geom_feature(
+    feature.df = protein_feature_df,
+    feature.color = c("#4d81be", "#173b5e", "#6a521d")
+  )
 ```
 
 <img src="man/figures/README-basic_coverage_protein_feature-1.png" width="100%" style="display: block; margin: auto;" />

@@ -28,7 +28,9 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The goal of `ggcoverage` is simplify the process of visualizing omics coverage. It contains three main parts:
+The goal of `ggcoverage` is to visualize coverage tracks from genomics, transcriptomics or proteomics data. It contains functions to load data from BAM, BigWig, BedGraph, txt, or xlsx files, create genome/protein coverage plots, and add various annotations including base and amino acid composition, GC content, copy number variation (CNV), genes, transcripts, ideograms, peak highlights, HiC contact maps, contact links and protein features. It is based on and integrates well with `ggplot2`.
+
+It contains three main parts:
 
 * **Load the data**: `ggcoverage` can load BAM, BigWig (.bw), BedGraph, txt/xlsx files from various omics data, including WGS, RNA-seq, ChIP-seq, ATAC-seq, proteomics, et al.
 * **Create omics coverage plot**
@@ -44,12 +46,9 @@ The goal of `ggcoverage` is simplify the process of visualizing omics coverage. 
   * **link annotation**: Visualize genome coverage with contacts
   * **peotein feature annotation**: Visualize protein coverage with features
 
-`ggcoverage` utilizes `ggplot2` plotting system, so its usage is **ggplot2-style**!
-
-
 ## Installation
 
-`ggcoverage` is an R package distributed as part of the [CRAN](https://cran.r-project.org/).
+`ggcoverage` is an R package distributed as part of the [CRAN repository](https://cran.r-project.org/).
 To install the package, start R and enter one of the following commands:
   
 ```{r install, eval = FALSE}
@@ -61,9 +60,9 @@ install.package("remotes")
 remotes::install_github("showteeth/ggcoverage")
 ```
 
-In general, it is **recommended** to install from [Github repository](https://github.com/showteeth/ggcoverage) (update more timely).
+In general, it is **recommended** to install from the [Github repository](https://github.com/showteeth/ggcoverage) (updated more regularly).
 
-Once `ggcoverage` is installed, it can be loaded as every other package:
+Once `ggcoverage` is installed, it can be loaded like every other package:
 
 ```{r library, message = FALSE, warning = FALSE}
 library("ggcoverage")
@@ -74,14 +73,14 @@ library("ggcoverage")
 `ggcoverage` provides two [vignettes](https://showteeth.github.io/ggcoverage/): 
 
 * **detailed manual**: step-by-step usage
-* **customize the plot**: customize the plot and add additional layer
+* **customize the plot**: customize the plot and add additional layers
 
 
 ## RNA-seq data
 
 ### Load the data
 
-The RNA-seq data used here are from [Transcription profiling by high throughput sequencing of HNRNPC knockdown and control HeLa cells](https://bioconductor.org/packages/release/data/experiment/html/RNAseqData.HNRNPC.bam.chr14.html), we select four sample to use as example: ERR127307_chr14, ERR127306_chr14, ERR127303_chr14, ERR127302_chr14, and all bam files are converted to bigwig file with [deeptools](https://deeptools.readthedocs.io/en/develop/).
+The RNA-seq data used here is from [Transcription profiling by high throughput sequencing of HNRNPC knockdown and control HeLa cells](https://bioconductor.org/packages/release/data/experiment/html/RNAseqData.HNRNPC.bam.chr14.html). We select four samples to use as example: `ERR127307_chr14`, `ERR127306_chr14`, `ERR127303_chr14`, `ERR127302_chr14`, and all bam files were converted to bigwig files with [deeptools](https://deeptools.readthedocs.io/en/develop/).
 
 Load metadata:
 
@@ -125,7 +124,7 @@ mark_region
 
 ### Load GTF
 
-To add **gene annotation**, the gtf file should contain **gene_type** and **gene_name** attributes in **column 9**; to add **transcript annotation**, the gtf file should contain **transcript_name** attribute in **column 9**.
+To add **gene annotation**, the gtf file should contain **gene_type** and **gene_name** attributes in **column 9**; to add **transcript annotation**, the gtf file should contain a **transcript_name** attribute in **column 9**.
 
 ```{r load_gtf}
 gtf_file <-
@@ -230,14 +229,14 @@ basic_coverage +
 
 ### Add transcript annotation
 
-**In "loose" stype (default style; each transcript occupies one line)**:
+**In "loose" style (default style; each transcript occupies one line)**:
 
 ```{r transcript_coverage, warning = FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
 basic_coverage +
   geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5)
 ```
 
-**In "tight" style (place non-overlap transcripts in one line)**:
+**In "tight" style (attempted to place non-overlapping transcripts in one line)**:
 
 ```{r transcript_coverage_tight, warning = FALSE, fig.height = 12, fig.width = 12, fig.align = "center"}
 basic_coverage +
@@ -436,9 +435,9 @@ head(track_df)
 
 #### Default color scheme
 
-For base and amino acid annotation, we have following default color schemes, you can change with `nuc.color` and `aa.color` parameters.
+For base and amino acid annotation, the package comes with the following default color schemes. Color schemes can be changed with `nuc.color` and `aa.color` parameters.
 
-Default color scheme for base annotation is `Clustal-style`, more popular color schemes is available [here](https://www.biostars.org/p/171056/).
+THe default color scheme for base annotation is `Clustal-style`, more popular color schemes are available [here](https://www.biostars.org/p/171056/).
 
 ```{r base_color_scheme, warning = FALSE, fig.height = 2, fig.width = 6, fig.align = "center"}
 # color scheme
@@ -587,7 +586,7 @@ ggcoverage(
 
 ## ChIP-seq data
 
-The ChIP-seq data used here are from [DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html), I select four sample to use as example: Chr18_MCF7_input, Chr18_MCF7_ER_1, Chr18_MCF7_ER_3, Chr18_MCF7_ER_2, and all bam files are converted to bigwig file with [deeptools](https://deeptools.readthedocs.io/en/develop/).
+The ChIP-seq data used here is from [DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html). Four samples are selected as examples: `Chr18_MCF7_input`, `Chr18_MCF7_ER_1`, `Chr18_MCF7_ER_3`, `Chr18_MCF7_ER_2`, and all bam files were converted to bigwig files with [deeptools](https://deeptools.readthedocs.io/en/develop/).
 
 Create metadata:
 
@@ -679,7 +678,7 @@ The Hi-C method maps chromosome contacts in eukaryotic cells.
 For this purpose, DNA and protein complexes are cross-linked and DNA fragments then purified.
 As a result, even distant chromatin fragments can be found to interact due to the spatial organization of the DNA and histones in the cell. Hi-C data shows these interactions for example as a contact map.
 
-The Hi-C data are from [pyGenomeTracks: reproducible plots for multivariate genomic datasets](https://academic.oup.com/bioinformatics/article/37/3/422/5879987?login=false).
+The Hi-C data is taken from [pyGenomeTracks: reproducible plots for multivariate genomic datasets](https://academic.oup.com/bioinformatics/article/37/3/422/5879987?login=false).
 
 The Hi-C matrix visualization is implemented by [`HiCBricks`](https://github.com/koustav-pal/HiCBricks).
 This package needs to be installed separately (it is only 'Suggested' by `ggcoverage`).
@@ -785,7 +784,7 @@ basic_coverage +
 
 ## Mass spectrometry protein coverage
 
-[Mass spectrometry (MS) is an important method for the accurate mass determination and characterization of proteins, and a variety of methods and instrumentations have been developed for its many uses](https://en.wikipedia.org/wiki/Protein_mass_spectrometry). After MS, we can check the coverage of protein to check the quality of the data and find the reason why the segment did not appear and improve the experiment.
+[Mass spectrometry](https://en.wikipedia.org/wiki/Protein_mass_spectrometry) (MS) is an important method for the accurate mass determination and characterization of proteins, and a variety of methods and instruments have been developed for its many uses. With `ggcoverage`, we can easily inspect the peptide coverage of a protein in order to learn about the quality of the data.
 
 ### Load coverage
 
@@ -855,6 +854,5 @@ protein_coverage +
 ```
 
 ## Code of Conduct
-  
-  Please note that the `ggcoverage` project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
 
+Please note that the `ggcoverage` project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
