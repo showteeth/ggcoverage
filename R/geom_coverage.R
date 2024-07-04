@@ -126,9 +126,9 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         if (is.null(names(fill.color))) {
           names(fill.color) <- unique(data[, group.key])
         }
-        sacle_fill_cols <- scale_fill_manual(values = fill.color)
+        scale_fill_cols <- scale_fill_manual(values = fill.color)
       } else {
-        sacle_fill_cols <- NULL
+        scale_fill_cols <- NULL
       }
       if (!single.nuc) {
         mapping <- aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "score", fill = group.key)
@@ -180,9 +180,9 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
             names(fill.color) <- unique(data[, fill.str])
           }
         }
-        sacle_fill_cols <- scale_fill_manual(values = fill.color)
+        scale_fill_cols <- scale_fill_manual(values = fill.color)
       } else {
-        sacle_fill_cols <- NULL
+        scale_fill_cols <- NULL
       }
     } else if (plot.type == "joint") {
       message("For joint visualization, the mapping should contains start, score, color.")
@@ -255,8 +255,8 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
     plot.ele <- list(region.rect, region.facet)
 
     # color the track
-    if (!is.null(sacle_fill_cols)) {
-      plot.ele <- append(plot.ele, sacle_fill_cols)
+    if (!is.null(scale_fill_cols)) {
+      plot.ele <- append(plot.ele, scale_fill_cols)
     }
 
     if (range.position == "in") {
