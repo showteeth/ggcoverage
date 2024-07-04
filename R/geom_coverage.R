@@ -119,7 +119,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         if (length(color) < length(unique(data[, group.key]))) {
           warning("Fewer colors provided than there are groups in ", group.key, " variable, falling back to default colors")
           # sample group with same color
-          fill.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          fill.color <- AutoColor(data = data[[group.key]], pal = "Set1")
         } else {
           fill.color <- color
         }
@@ -140,7 +140,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         if (length(color) != length(unique(data[, group.key]))) {
           warning("The color you provided is not as long as ", group.key, " column in data, select automatically!")
           # sample group with same color
-          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          tmp.color <- AutoColor(data = data[[group.key]], pal = "Set1")
           # change group key color
           color.color.df <- merge(unique(data[c(group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
           color.color <- color.color.df$color
@@ -169,7 +169,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         fill.str.len <- length(unique(data[, fill.str]))
         if (is.null(color) | length(color) != fill.str.len) {
           # sample group with same color
-          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          tmp.color <- AutoColor(data = data[[group.key]], pal = "Set1")
           # change color
           fill.color.df <- merge(unique(data[c(fill.str, group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
           fill.color <- fill.color.df$color
@@ -191,7 +191,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         color.str.len <- length(unique(data[, color.str]))
         if (is.null(color) | length(color) != color.str.len) {
           # sample group with same color
-          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          tmp.color <- AutoColor(data = data[[group.key]], pal = "Set1")
           # change color
           if (color.str == group.key) {
             color.color.df <- merge(unique(data[c(color.str)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
@@ -223,7 +223,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
 
     # facet color
     if (is.null(facet.color)) {
-      facet.color <- AutoColor(data = data, n = 12, name = "Set3", key = facet.key)
+      facet.color <- AutoColor(data = data[[facet.key]], pal = "Set3")
     }
 
     # facet formula

@@ -99,7 +99,7 @@ ggplot_add.feature <- function(object, plot, object_name) {
     }
   } else {
     warning("The color you provided is smaller than Type column in data, select automatically!")
-    used.feature.color <- AutoColor(data = valid.feature, n = 9, name = "Set1", key = "Type")
+    used.feature.color <- AutoColor(data = valid.feature$Type, pal = "Set1")
   }
 
   # create plot

@@ -55,18 +55,18 @@ PrepareRegion <- function(region = NULL,
 }
 
 # select color automatically
-AutoColor <- function(data, n, name, key) {
+AutoColor <- function(data, pal) {
   palettes <- list(
     Set1 = c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"),
     Set2 = c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"),
     Set3 = c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#D9D9D9")
   )
-  getPalette <- grDevices::colorRampPalette(palettes[[name]])
+  get_palette <- grDevices::colorRampPalette(palettes[[pal]])
   # sample group with same color
-  group.info <- unique(data[, key])
-  fill.color <- getPalette(length(group.info))
-  names(fill.color) <- group.info
-  return(fill.color)
+  data_levels <- unique(data)
+  cols <- get_palette(length(data_levels))
+  names(cols) <- data_levels
+  return(cols)
 }
 
 # create aa plot dataframe with padding offset
