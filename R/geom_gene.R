@@ -4,10 +4,14 @@
 #' @param overlap.gene.gap The gap between gene groups. Default: 0.1.
 #' @param overlap.style The style of gene groups, choose from loose (each gene occupies single line)
 #' and tight (place non-overlap genes in one line). Default: loose.
-#' @param gene.size The line size of gene. Default: 1.
-#' @param utr.size The line size of UTR. Default: 2.
-#' @param exon.size The line size of exon. Default: 3.
-#' @param arrow.size The line size of arrow. Default: 1.5.
+#' @param gene.size The line width of genes. Default: 1.
+#' @param utr.size The line width of UTRs. Default: 2.
+#' @param exon.size The line width of exons. Default: 3.
+#' @param arrow.angle Angle of the arrow head. Default 35°
+#' @param arrow.length Length of arrows. Default: 1.5
+#' @param arrow.type Whether to draw "closed" or "open" (default) arrow heads
+
+#' @param
 #' @param arrow.gap The gap distance between intermittent arrows. Default: NULL.
 #'   Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.
 #' @param arrow.num Total number of intermittent arrows over whole region. Default: 50.
@@ -21,6 +25,13 @@
 #' @param plot.space Top and bottom margin. Default: 0.1.
 #' @param plot.height The relative height of gene annotation to coverage plot. Default: 0.2.
 #'
+
+arrow.gap = NULL,
+arrow.num = 50,
+arrow.size.im = 0.5,
+arrow.length.im = 1.5,
+arrow.type.im = "closed",
+color.by.im = NULL,
 #' @return Plot.
 #' @importFrom dplyr %>%
 #' @importFrom rlang .data
@@ -61,16 +72,37 @@
 #' basic.coverage <- ggcoverage(data = track_df, range.position = "out")
 #' basic.coverage +
 #'   geom_gene(gtf.gr = gtf_gr)
+#'
+#'# plot with custom style
+#' basic_coverage +
+#'   geom_gene(
+#'     gtf.gr = gtf_gr,
+#'     exon.size = 2.0,
+#'     arrow.size.im = 1.0,
+#'     arrow.length.im = 5,
+#'     arrow.type.im = "open",
+#'     color.by.im = "strand",
+#'     fill.color = c(
+#'       "-" = "darkblue",
+#'       "+" = "darkgreen"
+#'     )
+#'   )
 geom_gene <- function(gtf.gr,
                       overlap.gene.gap = 0.1,
                       overlap.style = "loose",
                       gene.size = 1,
                       utr.size = 2,
                       exon.size = 3,
-                      arrow.size = 1.5,
+                      arrow.angle = 35,
+                      arrow.length = 1.5,
+                      arrow.type = "open",
+                      color.by = "strand",
                       arrow.gap = NULL,
                       arrow.num = 50,
-                      color.by = "strand",
+                      arrow.size.im = 0.5,
+                      arrow.length.im = 1.5,
+                      arrow.type.im = "closed",
+                      color.by.im = NULL,
                       fill.color = c(
                         "-" = "cornflowerblue",
                         "+" = "darkolivegreen3"
@@ -88,10 +120,16 @@ geom_gene <- function(gtf.gr,
       gene.size = gene.size,
       utr.size = utr.size,
       exon.size = exon.size,
-      arrow.size = arrow.size,
+      arrow.angle = arrow.angle,
+      arrow.length = arrow.length,
+      arrow.type = arrow.type,
+      color.by = color.by,
       arrow.gap = arrow.gap,
       arrow.num = arrow.num,
-      color.by = color.by,
+      arrow.size.im = arrow.size.im,
+      arrow.length.im = arrow.length.im,
+      arrow.type.im = arrow.type.im,
+      color.by.im = color.by.im,
       fill.color = fill.color,
       show.utr = show.utr,
       label.size = label.size,
@@ -121,22 +159,9 @@ ggplot_add.gene <- function(object, plot, object_name) {
     ranges = IRanges::IRanges(plot.range.start, plot.range.end)
   )
   # get parameters
-  gtf.gr <- object$gtf.gr
-  overlap.gene.gap <- object$overlap.gene.gap
-  overlap.style <- object$overlap.style
-  gene.size <- object$gene.size
-  utr.size <- object$utr.size
-  exon.size <- object$exon.size
-  arrow.size <- object$arrow.size
-  color.by <- object$color.by
-  fill.color <- object$fill.color
-  show.utr <- object$show.utr
-  arrow.gap <- object$arrow.gap
-  arrow.num <- object$arrow.num
-  label.size <- object$label.size
-  label.vjust <- object$label.vjust
-  plot.space <- object$plot.space
-  plot.height <- object$plot.height
+  for (ob in names(object)) {
+    assign(x = ob, value = object[[ob]])
+  }
 
   # get gene in region
   gtf.df.used <- IRanges::subsetByOverlaps(x = gtf.gr, ranges = plot.range.gr) %>% as.data.frame()
@@ -203,11 +228,11 @@ ggplot_add.gene <- function(object, plot, object_name) {
     gene.info.used.utr <- gene.exon.utr$utr
   }
   gene.plot <- ggplot() +
-    geom_arrows(gene.info.used.gene, color.by, gene.size, arrow.size) +
-    geom_arrows(gene.info.used.exon, color.by, exon.size, arrow.size)
+    geom_arrows(gene.info.used.gene, color.by, gene.size, arrow.length, arrow.angle, arrow.type) +
+    geom_arrows(gene.info.used.exon, color.by, exon.size, arrow.length, arrow.angle, arrow.type)
   if (show.utr) {
     gene.plot <- gene.plot +
-      geom_arrows(gene.info.used.utr, color.by, utr.size, arrow.size)
+      geom_arrows(gene.info.used.utr, color.by, utr.size, arrow.length, arrow.angle, arrow.type)
   }
 
   if (!is.null(arrow.gap) || !is.null(arrow.num)) {
@@ -251,8 +276,21 @@ ggplot_add.gene <- function(object, plot, object_name) {
     arrow.df$start <- as.numeric(arrow.df$start)
     arrow.df$end <- as.numeric(arrow.df$end)
     arrow.df$group <- as.numeric(arrow.df$group)
+    if (is.null(color.by.im)) {
+      color.by.im <- color.by
+      arrow.df[[color.by]] <- "im"
+      fill.color["im"] <- grDevices::grey(1, alpha = 0.5)
+    } else if (color.by.im %in% colnames(arrow.df)) {
+      stopifnot(unique(arrow.df[[color.by.im]]) %in% names(fill.color))
+    } else {
+      stop(paste0(
+        "The selected variable '",
+        color.by.im ,
+        "' for 'color.by.im' is not available in the data"
+      ))
+    }
     gene.plot <- gene.plot +
-      geom_arrows(arrow.df, color.by, gene.size / 2, arrow.size, 35, TRUE)
+      geom_arrows(arrow.df, color.by.im, arrow.size.im, arrow.length.im, arrow.angle, arrow.type.im)
   }
 
   label.df <- data.frame(
