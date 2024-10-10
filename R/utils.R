@@ -357,7 +357,6 @@ GetPlotData <- function(plot, layer.num = 1) {
 #' @param arrow_size size of the arrow
 #' @param arrow_angle angle of the arrow in degrees
 #' @param arrow_type type of arrow, either 'open' or 'closed'
-#' @importFrom grDevices grey
 #' @return A geom layer for ggplot2 objects.
 #' @export
 geom_arrows <-

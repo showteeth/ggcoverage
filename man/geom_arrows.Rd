@@ -4,14 +4,7 @@
 \alias{geom_arrows}
 \title{Plot genomic features as arrows.}
 \usage{
-geom_arrows(
-  data,
-  color,
-  line_width,
-  arrow_size,
-  arrow_angle = 35,
-  intermittent = FALSE
-)
+geom_arrows(data, color, line_width, arrow_size, arrow_angle, arrow_type)
 }
 \arguments{
 \item{data}{data frame describing arrow position, with columns
@@ -23,10 +16,9 @@ start, end, group, and a custom 'color' column}
 
 \item{arrow_size}{size of the arrow}
 
-\item{arrow_angle}{angle of the arrow. Default: 35°}
+\item{arrow_angle}{angle of the arrow in degrees}
 
-\item{intermittent}{If TRUE, arrows are only drawn intermittently in
-half-transparent white color. Default: FALSE.}
+\item{arrow_type}{type of arrow, either 'open' or 'closed'}
 }
 \value{
 A geom layer for ggplot2 objects.

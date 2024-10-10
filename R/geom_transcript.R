@@ -1,25 +1,37 @@
 #' Add Transcript Annotation to Coverage Plot.
 #'
-#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.
+#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}.
+#'   Default: NULL.
 #' @param gene.name Gene name of all transcripts. Default: HNRNPC.
 #' @param overlap.tx.gap The gap between transcript groups. Default: 0.1.
-#' @param overlap.style The style of transcript groups, choose from loose (each transcript occupies single line)
-#' and tight (place non-overlap transcripts in one line). Default: loose.
-#' @param tx.size The line size of transcript. Default: 1.
-#' @param utr.size The line size of UTR. Default: 2.
-#' @param exon.size The line size of exon. Default: 3.
-#' @param arrow.size The line size of arrow. Default: 1.5.
+#' @param overlap.style The style of transcript groups, choose from loose (each
+#'   transcript occupies single line) and tight (place non-overlap transcripts
+#'   in one line). Default: loose.
+#' @param tx.size Line size of transcript. Default: 1.
+#' @param utr.size Line size of UTR. Default: 2.
+#' @param exon.size Line size of exon. Default: 3.
+#' @param arrow.angle Angle of the arrow head. Default 35°
+#' @param arrow.length Length of arrows. Default: 1.5
+#' @param arrow.type Whether to draw "closed" or "open" (default) arrow heads
+#' @param color.by Color the line by. Default: strand.
 #' @param arrow.gap The gap distance between intermittent arrows. Default: NULL.
 #'   Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.
-#' @param arrow.num Total number of intermittent arrows over whole region. Default: 50.
-#'   Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.
-#' @param color.by Color the line by. Default: strand.
-#' @param fill.color Color used for \code{color.by}.
-#' Default: blue for - (minus strand), green for + (plus strand).
+#' @param arrow.num Total number of intermittent arrows over whole region.
+#'   Default: 50. Set arrow.num and arrow.gap to NULL to suppress intermittent
+#'   arrows.
+#' @param arrow.size.im Line width of intermittent arrows. Default: 0.5
+#' @param arrow.length.im Length of intermittent arrows. Default: 1.5
+#' @param arrow.type.im Whether to draw "closed" (default) or "open" heads for
+#'   intermittent arrows
+#' @param color.by.im Color the intermittent arrows by variable. Default: NULL
+#'   (draws semi-transparent, white arrows)
+#' @param fill.color Color used for \code{color.by}. Default: blue for - (minus
+#'   strand), green for + (plus strand).
 #' @param label.size The size of transcript label. Default: 3.
 #' @param label.vjust The vjust of transcript label. Default: 2.
 #' @param plot.space Top and bottom margin. Default: 0.1.
-#' @param plot.height The relative height of transcript annotation to coverage plot. Default: 0.2.
+#' @param plot.height The relative height of transcript annotation to coverage
+#'   plot. Default: 0.2.
 #'
 #' @return Plot.
 #' @importFrom dplyr %>%
@@ -30,6 +42,7 @@
 #' @importFrom ggplot2 ggplot_add ggplot geom_segment aes_string arrow unit geom_text labs theme_classic theme element_blank
 #' element_text element_rect margin scale_y_continuous scale_color_manual scale_x_continuous coord_cartesian
 #' @importFrom patchwork wrap_plots
+#' @importFrom grDevices grey
 #' @export
 #'
 #' @examples
@@ -58,9 +71,24 @@
 #' gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
 #'
 #' # plot coverage and gene annotation
-#' basic.coverage <- ggcoverage(data = track_df, range.position = "out")
-#' basic.coverage +
+#' basic_coverage <- ggcoverage(data = track_df, range.position = "out")
+#' basic_coverage +
 #'   geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5)
+#'
+#' # plot with custom style
+#' basic_coverage +
+#'   geom_transcript(
+#'     gtf.gr = gtf_gr,
+#'     exon.size = 2.0,
+#'     arrow.size.im = 1.0,
+#'     arrow.length.im = 5,
+#'     arrow.type.im = "open",
+#'     color.by.im = "strand",
+#'     fill.color = c(
+#'       "-" = "darkblue",
+#'       "+" = "darkgreen"
+#'     )
+#'   )
 geom_transcript <-
   function(gtf.gr,
            gene.name = "HNRNPC",
@@ -69,10 +97,16 @@ geom_transcript <-
            tx.size = 1,
            utr.size = 2,
            exon.size = 3,
-           arrow.size = 3,
+           arrow.angle = 35,
+           arrow.length = 1.5,
+           arrow.type = "open",
+           color.by = "strand",
            arrow.gap = NULL,
            arrow.num = 50,
-           color.by = "strand",
+           arrow.size.im = 0.5,
+           arrow.length.im = 1.5,
+           arrow.type.im = "closed",
+           color.by.im = NULL,
            fill.color = c(
              "-" = "cornflowerblue",
              "+" = "darkolivegreen3"
@@ -81,33 +115,37 @@ geom_transcript <-
            label.vjust = 2,
            plot.space = 0.1,
            plot.height = 1) {
-    structure(
-      list(
-        gtf.gr = gtf.gr,
-        gene.name = gene.name,
-        overlap.tx.gap = overlap.tx.gap,
-        overlap.style = overlap.style,
-        tx.size = tx.size,
-        utr.size = utr.size,
-        exon.size = exon.size,
-        arrow.size = arrow.size,
-        arrow.gap = arrow.gap,
-        arrow.num = arrow.num,
-        color.by = color.by,
-        fill.color = fill.color,
-        label.size = label.size,
-        label.vjust = label.vjust,
-        plot.space = plot.space,
-        plot.height = plot.height
-      ),
-      class = "transcript"
-    )
-  }
+  structure(
+    list(
+      gtf.gr = gtf.gr,
+      gene.name = gene.name,
+      overlap.tx.gap = overlap.tx.gap,
+      overlap.style = overlap.style,
+      tx.size = tx.size,
+      utr.size = utr.size,
+      exon.size = exon.size,
+      arrow.angle = arrow.angle,
+      arrow.length = arrow.length,
+      arrow.type = arrow.type,
+      color.by = color.by,
+      arrow.gap = arrow.gap,
+      arrow.num = arrow.num,
+      arrow.size.im = arrow.size.im,
+      arrow.length.im = arrow.length.im,
+      arrow.type.im = arrow.type.im,
+      color.by.im = color.by.im,
+      fill.color = fill.color,
+      label.size = label.size,
+      label.vjust = label.vjust,
+      plot.space = plot.space,
+      plot.height = plot.height
+    ),
+    class = "transcript"
+  )
+}
 
 #' @export
 ggplot_add.transcript <- function(object, plot, object_name) {
-  # get plot data
-  # track.data <- plot$layers[[1]]$data
   # get plot data, plot data should contain bins
   if ("patchwork" %in% class(plot)) {
     track.data <- plot[[1]]$layers[[1]]$data
@@ -135,11 +173,17 @@ ggplot_add.transcript <- function(object, plot, object_name) {
   tx.size <- object$tx.size
   utr.size <- object$utr.size
   exon.size <- object$exon.size
-  arrow.size <- object$arrow.size
+  arrow.angle <- object$arrow.angle
+  arrow.length <- object$arrow.length
+  arrow.type <- object$arrow.type
   color.by <- object$color.by
-  fill.color <- object$fill.color
   arrow.gap <- object$arrow.gap
   arrow.num <- object$arrow.num
+  arrow.size.im <- object$arrow.size.im
+  arrow.length.im <- object$arrow.length.im
+  arrow.type.im <- object$arrow.type.im
+  color.by.im <- object$color.by.im
+  fill.color <- object$fill.color
   label.size <- object$label.size
   label.vjust <- object$label.vjust
   plot.space <- object$plot.space
@@ -202,17 +246,17 @@ ggplot_add.transcript <- function(object, plot, object_name) {
 
   # create basic plot
   tx.plot <- ggplot() +
-    geom_arrows(gene.tx.df.tx, color.by, tx.size, arrow.size)
+    geom_arrows(gene.tx.df.tx, color.by, tx.size, arrow.length, arrow.angle, arrow.type)
 
   # deal with missing UTR
   if (is.null(gene.tx.df.utr)) {
     warning("No UTR detected in provided GTF!")
   } else {
     tx.plot <- tx.plot +
-      geom_arrows(gene.tx.df.utr, color.by, utr.size, arrow.size)
+      geom_arrows(gene.tx.df.utr, color.by, utr.size, arrow.length, arrow.angle, arrow.type)
   }
   tx.plot <- tx.plot +
-    geom_arrows(gene.tx.df.exon, color.by, exon.size, arrow.size) +
+    geom_arrows(gene.tx.df.exon, color.by, exon.size, arrow.length, arrow.angle, arrow.type) +
     theme_classic()
 
   if (is.null(arrow.gap)) {
@@ -258,9 +302,22 @@ ggplot_add.transcript <- function(object, plot, object_name) {
   arrow.df$start <- as.numeric(arrow.df$start)
   arrow.df$end <- as.numeric(arrow.df$end)
   arrow.df$group <- as.numeric(arrow.df$group)
+  if (is.null(color.by.im)) {
+    color.by.im <- color.by
+    arrow.df[[color.by]] <- "im"
+    fill.color["im"] <- grDevices::grey(1, alpha = 0.5)
+  } else if (color.by.im %in% colnames(arrow.df)) {
+    stopifnot(unique(arrow.df[[color.by.im]]) %in% names(fill.color))
+  } else {
+    stop(paste0(
+      "The selected variable '",
+      color.by.im ,
+      "' for 'color.by.im' is not available in the data"
+    ))
+  }
   # add arrow
   tx.arrow.plot <- tx.plot +
-    geom_arrows(arrow.df, color.by, tx.size / 2, arrow.size, 35, TRUE)
+    geom_arrows(arrow.df, color.by.im, arrow.size.im, arrow.length.im, arrow.angle, arrow.type.im)
 
   # prepare label dataframe
   label.df <- data.frame(

@@ -1,46 +1,50 @@
 #' Add Gene Annotation to Coverage Plot.
 #'
-#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.
+#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}.
+#'   Default: NULL.
 #' @param overlap.gene.gap The gap between gene groups. Default: 0.1.
-#' @param overlap.style The style of gene groups, choose from loose (each gene occupies single line)
-#' and tight (place non-overlap genes in one line). Default: loose.
-#' @param gene.size The line width of genes. Default: 1.
-#' @param utr.size The line width of UTRs. Default: 2.
-#' @param exon.size The line width of exons. Default: 3.
+#' @param overlap.style The style of gene groups, choose from loose (each gene
+#'   occupies single line) and tight (place non-overlap genes in one line).
+#'   Default: loose.
+#' @param gene.size Line width of genes. Default: 1.
+#' @param utr.size Line width of UTRs. Default: 2.
+#' @param exon.size Line width of exons. Default: 3.
 #' @param arrow.angle Angle of the arrow head. Default 35°
 #' @param arrow.length Length of arrows. Default: 1.5
 #' @param arrow.type Whether to draw "closed" or "open" (default) arrow heads
-
-#' @param
+#' @param color.by Color the lines/arrows by variable. Default: "strand".
 #' @param arrow.gap The gap distance between intermittent arrows. Default: NULL.
 #'   Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.
-#' @param arrow.num Total number of intermittent arrows over whole region. Default: 50.
-#'   Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.
-#' @param color.by Color the line by. Default: strand.
+#' @param arrow.num Total number of intermittent arrows over whole region.
+#'   Default: 50. Set arrow.num and arrow.gap to NULL to suppress intermittent
+#'   arrows.
+#' @param arrow.size.im Line width of intermittent arrows. Default: 0.5
+#' @param arrow.length.im Length of intermittent arrows. Default: 1.5
+#' @param arrow.type.im Whether to draw "closed" (default) or "open" heads for
+#'   intermittent arrows
+#' @param color.by.im Color the intermittent arrows by variable. Default: NULL
+#'   (draws semi-transparent, white arrows)
 #' @param fill.color Color used for \code{color.by}.
-#' Default: blue for - (minus strand), green for + (plus strand).
+#'   Default: blue for - (minus strand), green for + (plus strand).
 #' @param show.utr Logical value, whether to show UTR. Default: TRUE.
 #' @param label.size The size of gene label. Default: 3.
 #' @param label.vjust The vjust of gene label. Default: 2.
 #' @param plot.space Top and bottom margin. Default: 0.1.
-#' @param plot.height The relative height of gene annotation to coverage plot. Default: 0.2.
+#' @param plot.height The relative height of gene annotation to coverage plot.
+#'   Default: 0.2.
 #'
-
-arrow.gap = NULL,
-arrow.num = 50,
-arrow.size.im = 0.5,
-arrow.length.im = 1.5,
-arrow.type.im = "closed",
-color.by.im = NULL,
 #' @return Plot.
 #' @importFrom dplyr %>%
 #' @importFrom rlang .data
 #' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame setdiff
 #' @importFrom IRanges IRanges subsetByOverlaps findOverlaps
 #' @importFrom dplyr filter select arrange
-#' @importFrom ggplot2 ggplot_add ggplot geom_segment aes_string arrow unit geom_text labs theme_classic theme element_blank
-#' element_text element_rect margin scale_y_continuous scale_color_manual scale_x_continuous coord_cartesian
+#' @importFrom ggplot2 ggplot_add ggplot geom_segment aes_string arrow unit
+#'   geom_text labs theme_classic theme element_blank element_text element_rect
+#'   margin scale_y_continuous scale_color_manual scale_x_continuous
+#'   coord_cartesian
 #' @importFrom patchwork wrap_plots
+#' @importFrom grDevices grey
 #' @export
 #'
 #' @examples
@@ -69,8 +73,8 @@ color.by.im = NULL,
 #' gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
 #'
 #' # plot coverage and gene annotation
-#' basic.coverage <- ggcoverage(data = track_df, range.position = "out")
-#' basic.coverage +
+#' basic_coverage <- ggcoverage(data = track_df, range.position = "out")
+#' basic_coverage +
 #'   geom_gene(gtf.gr = gtf_gr)
 #'
 #'# plot with custom style
@@ -159,9 +163,28 @@ ggplot_add.gene <- function(object, plot, object_name) {
     ranges = IRanges::IRanges(plot.range.start, plot.range.end)
   )
   # get parameters
-  for (ob in names(object)) {
-    assign(x = ob, value = object[[ob]])
-  }
+  gtf.gr <- object$gtf.gr
+  overlap.gene.gap <- object$overlap.gene.gap
+  overlap.style <- object$overlap.style
+  gene.size <- object$gene.size
+  utr.size <- object$utr.size
+  exon.size <- object$exon.size
+  arrow.angle <- object$arrow.angle
+  arrow.length <- object$arrow.length
+  arrow.type <- object$arrow.type
+  color.by <- object$color.by
+  arrow.gap <- object$arrow.gap
+  arrow.num <- object$arrow.num
+  arrow.size.im <- object$arrow.size.im
+  arrow.length.im <- object$arrow.length.im
+  arrow.type.im <- object$arrow.type.im
+  color.by.im <- object$color.by.im
+  fill.color <- object$fill.color
+  show.utr <- object$show.utr
+  label.size <- object$label.size
+  label.vjust <- object$label.vjust
+  plot.space <- object$plot.space
+  plot.height <- object$plot.height
 
   # get gene in region
   gtf.df.used <- IRanges::subsetByOverlaps(x = gtf.gr, ranges = plot.range.gr) %>% as.data.frame()

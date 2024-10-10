@@ -12,10 +12,16 @@ geom_transcript(
   tx.size = 1,
   utr.size = 2,
   exon.size = 3,
-  arrow.size = 3,
+  arrow.angle = 35,
+  arrow.length = 1.5,
+  arrow.type = "open",
+  color.by = "strand",
   arrow.gap = NULL,
   arrow.num = 50,
-  color.by = "strand",
+  arrow.size.im = 0.5,
+  arrow.length.im = 1.5,
+  arrow.type.im = "closed",
+  color.by.im = NULL,
   fill.color = c(`-` = "cornflowerblue", `+` = "darkolivegreen3"),
   label.size = 3,
   label.vjust = 2,
@@ -24,33 +30,50 @@ geom_transcript(
 )
 }
 \arguments{
-\item{gtf.gr}{Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.}
+\item{gtf.gr}{Granges object of GTF, created with \code{\link{import.gff}}.
+Default: NULL.}
 
 \item{gene.name}{Gene name of all transcripts. Default: HNRNPC.}
 
 \item{overlap.tx.gap}{The gap between transcript groups. Default: 0.1.}
 
-\item{overlap.style}{The style of transcript groups, choose from loose (each transcript occupies single line)
-and tight (place non-overlap transcripts in one line). Default: loose.}
+\item{overlap.style}{The style of transcript groups, choose from loose (each
+transcript occupies single line) and tight (place non-overlap transcripts
+in one line). Default: loose.}
 
-\item{tx.size}{The line size of transcript. Default: 1.}
+\item{tx.size}{Line size of transcript. Default: 1.}
 
-\item{utr.size}{The line size of UTR. Default: 2.}
+\item{utr.size}{Line size of UTR. Default: 2.}
 
-\item{exon.size}{The line size of exon. Default: 3.}
+\item{exon.size}{Line size of exon. Default: 3.}
 
-\item{arrow.size}{The line size of arrow. Default: 1.5.}
+\item{arrow.angle}{Angle of the arrow head. Default 35°}
+
+\item{arrow.length}{Length of arrows. Default: 1.5}
+
+\item{arrow.type}{Whether to draw "closed" or "open" (default) arrow heads}
+
+\item{color.by}{Color the line by. Default: strand.}
 
 \item{arrow.gap}{The gap distance between intermittent arrows. Default: NULL.
 Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.}
 
-\item{arrow.num}{Total number of intermittent arrows over whole region. Default: 50.
-Set arrow.num and arrow.gap to NULL to suppress intermittent arrows.}
+\item{arrow.num}{Total number of intermittent arrows over whole region.
+Default: 50. Set arrow.num and arrow.gap to NULL to suppress intermittent
+arrows.}
 
-\item{color.by}{Color the line by. Default: strand.}
+\item{arrow.size.im}{Line width of intermittent arrows. Default: 0.5}
 
-\item{fill.color}{Color used for \code{color.by}.
-Default: blue for - (minus strand), green for + (plus strand).}
+\item{arrow.length.im}{Length of intermittent arrows. Default: 1.5}
+
+\item{arrow.type.im}{Whether to draw "closed" (default) or "open" heads for
+intermittent arrows}
+
+\item{color.by.im}{Color the intermittent arrows by variable. Default: NULL
+(draws semi-transparent, white arrows)}
+
+\item{fill.color}{Color used for \code{color.by}. Default: blue for - (minus
+strand), green for + (plus strand).}
 
 \item{label.size}{The size of transcript label. Default: 3.}
 
@@ -58,7 +81,8 @@ Default: blue for - (minus strand), green for + (plus strand).}
 
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
-\item{plot.height}{The relative height of transcript annotation to coverage plot. Default: 0.2.}
+\item{plot.height}{The relative height of transcript annotation to coverage
+plot. Default: 0.2.}
 }
 \value{
 Plot.
@@ -92,7 +116,22 @@ gtf_file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
 gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
 
 # plot coverage and gene annotation
-basic.coverage <- ggcoverage(data = track_df, range.position = "out")
-basic.coverage +
+basic_coverage <- ggcoverage(data = track_df, range.position = "out")
+basic_coverage +
   geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5)
+
+# plot with custom style
+basic_coverage +
+  geom_transcript(
+    gtf.gr = gtf_gr,
+    exon.size = 2.0,
+    arrow.size.im = 1.0,
+    arrow.length.im = 5,
+    arrow.type.im = "open",
+    color.by.im = "strand",
+    fill.color = c(
+      "-" = "darkblue",
+      "+" = "darkgreen"
+    )
+  )
 }
