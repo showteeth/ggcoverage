@@ -31,7 +31,7 @@
 #' @importFrom stats as.formula
 #' @importFrom ggh4x facet_wrap2 strip_themed elem_list_rect
 #' @importFrom dplyr group_by summarise
-#' @importFrom dplyr %>%
+#' @importFrom dplyr %>% filter
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom utils tail
 #'
@@ -336,34 +336,24 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
   # add rect
   if (!is.null(mark.region)) {
     # get valid mark region
-    region.start <- data[1, "start"]
-    region.end <- data[nrow(data), "end"]
-    valid.region.list <- list()
-    for (r in 1:nrow(mark.region)) {
-      if (mark.region[r, "start"] <= region.end & mark.region[r, "end"] >= region.start) {
-        if (mark.region[r, "end"] >= region.end) {
-          mark.region[r, "end"] <- region.end
-        }
-        if (mark.region[r, "start"] <= region.start) {
-          mark.region[r, "start"] <- region.start
-        }
-        valid.region.list[[r]] <- mark.region[r, ]
-      }
-    }
-    valid.region.df <- do.call(rbind, valid.region.list) %>% as.data.frame()
-    colnames(valid.region.df) <- colnames(mark.region)
-
+    region.start <- min(data$start)
+    region.end <- max(data$end)
+    mark.region <- dplyr::filter(
+      mark.region,
+      .data[["start"]] >= region.start,
+      .data[["end"]] <= region.end
+    )
     region.mark <- geom_rect(
-      data = valid.region.df,
+      data = mark.region,
       aes_string(xmin = "start", xmax = "end", ymin = "-Inf", ymax = "Inf"),
       fill = mark.color, alpha = mark.alpha
     )
     plot.ele <- append(plot.ele, region.mark)
     # add rect label
     if (show.mark.label) {
-      if ("label" %in% colnames(valid.region.df)) {
+      if ("label" %in% colnames(mark.region)) {
         # create mark region label
-        region.label <- valid.region.df
+        region.label <- mark.region
         if (plot.type == "facet") {
           region.label[, facet.key] <- facet.order[1]
         }
