@@ -355,7 +355,10 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         # create mark region label
         region.label <- mark.region
         if (plot.type == "facet") {
-          region.label[, facet.key] <- facet.order[1]
+          region.label[, facet.key] <- factor(
+            rep(facet.order[1], nrow(mark.region)),
+            facet.order
+          )
         }
         region.mark.label <- geom_text_repel(
           data = region.label,
