@@ -31,7 +31,7 @@
 #' @importFrom stats as.formula
 #' @importFrom ggh4x facet_wrap2 strip_themed elem_list_rect
 #' @importFrom dplyr group_by summarise
-#' @importFrom dplyr %>%
+#' @importFrom dplyr %>% filter
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom utils tail
 #'
@@ -119,16 +119,16 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         if (length(color) < length(unique(data[, group.key]))) {
           warning("Fewer colors provided than there are groups in ", group.key, " variable, falling back to default colors")
           # sample group with same color
-          fill.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          fill.color <- AutoColor(data = data[[group.key]], pal = "Set1")
         } else {
           fill.color <- color
         }
         if (is.null(names(fill.color))) {
           names(fill.color) <- unique(data[, group.key])
         }
-        sacle_fill_cols <- scale_fill_manual(values = fill.color)
+        scale_fill_cols <- scale_fill_manual(values = fill.color)
       } else {
-        sacle_fill_cols <- NULL
+        scale_fill_cols <- NULL
       }
       if (!single.nuc) {
         mapping <- aes_string(xmin = "start", xmax = "end", ymin = "0", ymax = "score", fill = group.key)
@@ -140,7 +140,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         if (length(color) != length(unique(data[, group.key]))) {
           warning("The color you provided is not as long as ", group.key, " column in data, select automatically!")
           # sample group with same color
-          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          tmp.color <- AutoColor(data = data[[group.key]], pal = "Set1")
           # change group key color
           color.color.df <- merge(unique(data[c(group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
           color.color <- color.color.df$color
@@ -169,7 +169,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         fill.str.len <- length(unique(data[, fill.str]))
         if (is.null(color) | length(color) != fill.str.len) {
           # sample group with same color
-          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          tmp.color <- AutoColor(data = data[[group.key]], pal = "Set1")
           # change color
           fill.color.df <- merge(unique(data[c(fill.str, group.key)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
           fill.color <- fill.color.df$color
@@ -180,9 +180,9 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
             names(fill.color) <- unique(data[, fill.str])
           }
         }
-        sacle_fill_cols <- scale_fill_manual(values = fill.color)
+        scale_fill_cols <- scale_fill_manual(values = fill.color)
       } else {
-        sacle_fill_cols <- NULL
+        scale_fill_cols <- NULL
       }
     } else if (plot.type == "joint") {
       message("For joint visualization, the mapping should contains start, score, color.")
@@ -191,7 +191,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
         color.str.len <- length(unique(data[, color.str]))
         if (is.null(color) | length(color) != color.str.len) {
           # sample group with same color
-          tmp.color <- AutoColor(data = data, n = 9, name = "Set1", key = group.key)
+          tmp.color <- AutoColor(data = data[[group.key]], pal = "Set1")
           # change color
           if (color.str == group.key) {
             color.color.df <- merge(unique(data[c(color.str)]), data.frame(color = tmp.color), by.x = group.key, by.y = 0)
@@ -223,7 +223,7 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
 
     # facet color
     if (is.null(facet.color)) {
-      facet.color <- AutoColor(data = data, n = 12, name = "Set3", key = facet.key)
+      facet.color <- AutoColor(data = data[[facet.key]], pal = "Set3")
     }
 
     # facet formula
@@ -255,8 +255,8 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
     plot.ele <- list(region.rect, region.facet)
 
     # color the track
-    if (!is.null(sacle_fill_cols)) {
-      plot.ele <- append(plot.ele, sacle_fill_cols)
+    if (!is.null(scale_fill_cols)) {
+      plot.ele <- append(plot.ele, scale_fill_cols)
     }
 
     if (range.position == "in") {
@@ -336,36 +336,29 @@ geom_coverage <- function(data, mapping = NULL, color = NULL, rect.color = NA,
   # add rect
   if (!is.null(mark.region)) {
     # get valid mark region
-    region.start <- data[1, "start"]
-    region.end <- data[nrow(data), "end"]
-    valid.region.list <- list()
-    for (r in 1:nrow(mark.region)) {
-      if (mark.region[r, "start"] <= region.end & mark.region[r, "end"] >= region.start) {
-        if (mark.region[r, "end"] >= region.end) {
-          mark.region[r, "end"] <- region.end
-        }
-        if (mark.region[r, "start"] <= region.start) {
-          mark.region[r, "start"] <- region.start
-        }
-        valid.region.list[[r]] <- mark.region[r, ]
-      }
-    }
-    valid.region.df <- do.call(rbind, valid.region.list) %>% as.data.frame()
-    colnames(valid.region.df) <- colnames(mark.region)
-
+    region.start <- min(data$start)
+    region.end <- max(data$end)
+    mark.region <- dplyr::filter(
+      mark.region,
+      .data[["start"]] >= region.start,
+      .data[["end"]] <= region.end
+    )
     region.mark <- geom_rect(
-      data = valid.region.df,
+      data = mark.region,
       aes_string(xmin = "start", xmax = "end", ymin = "-Inf", ymax = "Inf"),
       fill = mark.color, alpha = mark.alpha
     )
     plot.ele <- append(plot.ele, region.mark)
     # add rect label
     if (show.mark.label) {
-      if ("label" %in% colnames(valid.region.df)) {
+      if ("label" %in% colnames(mark.region)) {
         # create mark region label
-        region.label <- valid.region.df
+        region.label <- mark.region
         if (plot.type == "facet") {
-          region.label[, facet.key] <- facet.order[1]
+          region.label[, facet.key] <- factor(
+            rep(facet.order[1], nrow(mark.region)),
+            facet.order
+          )
         }
         region.mark.label <- geom_text_repel(
           data = region.label,

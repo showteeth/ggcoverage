@@ -55,18 +55,18 @@ PrepareRegion <- function(region = NULL,
 }
 
 # select color automatically
-AutoColor <- function(data, n, name, key) {
+AutoColor <- function(data, pal) {
   palettes <- list(
     Set1 = c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"),
     Set2 = c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3"),
     Set3 = c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#D9D9D9")
   )
-  getPalette <- grDevices::colorRampPalette(palettes[[name]])
+  get_palette <- grDevices::colorRampPalette(palettes[[pal]])
   # sample group with same color
-  group.info <- unique(data[, key])
-  fill.color <- getPalette(length(group.info))
-  names(fill.color) <- group.info
-  return(fill.color)
+  data_levels <- unique(data)
+  cols <- get_palette(length(data_levels))
+  names(cols) <- data_levels
+  return(cols)
 }
 
 # create aa plot dataframe with padding offset
@@ -355,10 +355,8 @@ GetPlotData <- function(plot, layer.num = 1) {
 #' @param color name of the color column in the data frame
 #' @param line_width line_width of the (arrow) segment
 #' @param arrow_size size of the arrow
-#' @param arrow_angle angle of the arrow. Default: 35°
-#' @param intermittent If TRUE, arrows are only drawn intermittently in
-#'   half-transparent white color. Default: FALSE.
-#' @importFrom grDevices grey
+#' @param arrow_angle angle of the arrow in degrees
+#' @param arrow_type type of arrow, either 'open' or 'closed'
 #' @return A geom layer for ggplot2 objects.
 #' @export
 geom_arrows <-
@@ -366,54 +364,32 @@ geom_arrows <-
            color,
            line_width,
            arrow_size,
-           arrow_angle = 35,
-           intermittent = FALSE) {
+           arrow_angle,
+           arrow_type) {
     if (nrow(data)) {
       if (!"strand" %in% colnames(data)) {
         data$strand <- "+"
       }
-      if (!intermittent) {
-        geom_segment(
-          data = data,
-          mapping = aes_string(
-            x = "start",
-            y = "group",
-            xend = "end",
-            yend = "group",
-            color = color
-          ),
-          arrow = arrow(
-            ends = ifelse(data$strand == "+", "last", "first"),
-            angle = arrow_angle,
-            length = unit(arrow_size, "points"),
-            type = "open"
-          ),
-          lineend = "butt",
-          linejoin = "mitre",
-          show.legend = FALSE,
-          linewidth = line_width
-        )
-      } else {
-        geom_segment(
-          data = data,
-          mapping = aes_string(
-            x = "start",
-            y = "group",
-            xend = "end",
-            yend = "group"
-          ),
-          arrow = arrow(
-            ends = ifelse(data$strand == "+", "last", "first"),
-            angle = arrow_angle,
-            length = unit(arrow_size, "points"),
-            type = "closed"
-          ),
-          lineend = "butt",
-          linejoin = "mitre",
-          show.legend = FALSE,
-          linewidth = line_width,
-          color = grDevices::grey(1, alpha = 0.5)
-        )
-      }
+      geom_segment(
+        inherit.aes = TRUE,
+        data = data,
+        mapping = aes(
+          x = .data[["start"]],
+          y = .data[["group"]],
+          xend = .data[["end"]],
+          yend = .data[["group"]],
+          color = .data[[color]]
+        ),
+        arrow = arrow(
+          ends = ifelse(data$strand == "+", "last", "first"),
+          angle = arrow_angle,
+          length = unit(arrow_size, "points"),
+          type = arrow_type
+        ),
+        lineend = "butt",
+        linejoin = "mitre",
+        show.legend = FALSE,
+        linewidth = line_width
+      )
     }
   }

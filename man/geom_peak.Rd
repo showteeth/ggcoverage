@@ -7,8 +7,9 @@
 geom_peak(
   bed.file = NULL,
   peak.df = NULL,
-  peak.color = "black",
+  peak.color = NULL,
   peak.size = 5,
+  color.by = NULL,
   plot.space = 0.1,
   plot.height = 0.1
 )
@@ -18,13 +19,15 @@ geom_peak(
 
 \item{peak.df}{The dataframe contains consensus peaks. Default: NULL.}
 
-\item{peak.color}{Peak color. Default: black.}
+\item{peak.color}{Peak colors. Default: NULL.}
 
 \item{peak.size}{The line size of peak. Default: 5.}
 
+\item{color.by}{Name of optional column in bed file/data frame which is used for coloring. Default: NULL.}
+
 \item{plot.space}{Top and bottom margin. Default: 0.1.}
 
-\item{plot.height}{The relative height of peak annotation to coverage plot. Default: 0.2.}
+\item{plot.height}{The relative height of peak annotation to coverage plot. Default: 0.1.}
 }
 \value{
 Plot.
@@ -33,29 +36,45 @@ Plot.
 Add Peak Annotation to Coverage Plot.
 }
 \examples{
-# library(ggcoverage)
-# library(rtracklayer)
-# sample.meta <- data.frame(
-#   SampleName = c("Chr18_MCF7_ER_1", "Chr18_MCF7_ER_2", "Chr18_MCF7_ER_3", "Chr18_MCF7_input"),
-#   Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),
-#   Group = c("IP", "IP", "IP", "Input")
-# )
-# track folder
-# track.folder <- system.file("extdata", "ChIP-seq", package = "ggcoverage")
-# load bigwig file
-# track.df <- LoadTrackFile(
-#   track.folder = track.folder, format = "bw",
-#   meta.info = sample.meta
-# )
-# gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-# gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
-# create mark region
-# mark.region <- data.frame(start = c(76822533), end = c(76823743), label = c("Promoter"))
-# basic.coverage <- ggcoverage(
-#   data = track.df, color = "auto", region = "chr18:76822285-76900000",
-#   mark.region = mark.region, show.mark.label = FALSE
-# )
-# get consensus peak file
-# peak.file <- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
-# basic.coverage + geom_gene(gtf.gr = gtf.gr) + geom_peak(bed.file = peak.file)
+# load metadata
+sample_meta <- data.frame(
+  SampleName = c(
+    "Chr18_MCF7_ER_1",
+    "Chr18_MCF7_ER_2",
+    "Chr18_MCF7_ER_3",
+    "Chr18_MCF7_input"
+  ),
+  Type = c("MCF7_ER_1", "MCF7_ER_2", "MCF7_ER_3", "MCF7_input"),
+  Group = c("IP", "IP", "IP", "Input")
+)
+
+# import coverage track
+track_folder <- system.file("extdata", "ChIP-seq", package = "ggcoverage")
+track_df <- LoadTrackFile(
+  track.folder = track_folder,
+  format = "bw",
+  region = "chr18:76822285-76900000",
+  meta.info = sample_meta
+)
+
+# create mock peak file
+df_peaks <- data.frame(
+  seqnames = c("chr18", "chr18", "chr18"),
+  start = c(76822533, 76846900, 76880000),
+  end = c(76836900, 76860000, 76887000),
+  score = c(4, 6, 13)
+)
+
+# plot with default color
+ggcoverage(data = track_df) +
+  geom_peak(peak.df = df_peaks, peak.size = 3)
+
+# plot with color by 'score' variable
+ggcoverage(data = track_df) +
+  geom_peak(peak.df = df_peaks, peak.size = 3, color.by = "score")
+
+# plot with color by 'score' variable and custom color scale
+ggcoverage(data = track_df) +
+  geom_peak(peak.df = df_peaks, peak.size = 3, color.by = "score", peak.color = rainbow(5))
+
 }
