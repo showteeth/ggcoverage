@@ -471,7 +471,7 @@ graphics::mtext(
 graphics::par(opar)
 ```
 
-Default color scheme for amino acid annotation is from [Residual colours: a proposal for aminochromography](https://academic.oup.com/peds/article/10/7/743/1593029?login=false):
+Default color scheme for amino acid annotation is from [Residual colours: a proposal for aminochromography](https://pubmed.ncbi.nlm.nih.gov/9342138/):
 
 ```{r aa_color_scheme, warning = FALSE, fig.height = 9, fig.width = 10, fig.align = "center"}
 aa_color <- c(
@@ -678,7 +678,7 @@ The Hi-C method maps chromosome contacts in eukaryotic cells.
 For this purpose, DNA and protein complexes are cross-linked and DNA fragments then purified.
 As a result, even distant chromatin fragments can be found to interact due to the spatial organization of the DNA and histones in the cell. Hi-C data shows these interactions for example as a contact map.
 
-The Hi-C data is taken from [pyGenomeTracks: reproducible plots for multivariate genomic datasets](https://academic.oup.com/bioinformatics/article/37/3/422/5879987?login=false).
+The Hi-C data is taken from [pyGenomeTracks: reproducible plots for multivariate genomic datasets](https://pubmed.ncbi.nlm.nih.gov/32745185/).
 
 The Hi-C matrix visualization is implemented by [`HiCBricks`](https://github.com/koustav-pal/HiCBricks).
 This package needs to be installed separately (it is only 'Suggested' by `ggcoverage`).
@@ -788,7 +788,7 @@ basic_coverage +
 
 ### Load coverage
 
-The exported coverage from [Proteome Discoverer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8006021/):
+The exported coverage from [Proteome Discoverer](https://doi.org/10.3390/proteomes9010015):
 
 ```{r ms_coverage_data}
 library(openxlsx)
