@@ -1,6 +1,6 @@
 #' Add Gene Annotation to Coverage Plot.
 #'
-#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}.
+#' @param gtf.gr Granges object of GTF, created with \code{\link[rtracklayer]{import.gff}}.
 #'   Default: NULL.
 #' @param overlap.gene.gap The gap between gene groups. Default: 0.1.
 #' @param overlap.style The style of gene groups, choose from loose (each gene

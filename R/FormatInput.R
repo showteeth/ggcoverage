@@ -34,7 +34,7 @@ GetRegion <- function(df, chr, start, end = NULL) {
 #'
 #' @param data Track dataframe loaded by \code{\link{LoadTrackFile}}.
 #' @param region Region used to create coverage plot, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.
-#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.
+#' @param gtf.gr Granges object of GTF, created with \code{\link[rtracklayer]{import.gff}}. Default: NULL.
 #' @param gene.name The name of gene. Default: HNRNPC.
 #' @param gene.name.type Gene name type (filed of \code{gtf.gr}), chosen from gene_name and gene_id.
 #' Default: gene_name.

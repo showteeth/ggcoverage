@@ -70,16 +70,16 @@ star (add star mark to position with SNV), and highlight (position without SNV i
 \item{show.aa}{Logical value, whether to show amino acid. Default: TRUE.}
 
 \item{sens}{Sense to translate: F for forward sense and R for reverse sense.
-Parameter of \code{\link{translate}}. Default: F.}
+Parameter of \code{\link[Biostrings]{translate}}. Default: F.}
 
 \item{numcode}{The ncbi genetic code number for translation.
-Parameter of \code{\link{translate}}. By default the standard genetic code is used.}
+Parameter of \code{\link[Biostrings]{translate}}. By default the standard genetic code is used.}
 
 \item{NAstring}{How to translate amino-acids when there are ambiguous bases in codons.
-Parameter of \code{\link{translate}}. Default: X.}
+Parameter of \code{\link[Biostrings]{translate}}. Default: X.}
 
 \item{ambiguous}{If TRUE, ambiguous bases are taken into account so that for instance GGN is
-translated to Gly in the standard genetic code. Parameter of \code{\link{translate}}. Default: FALSE.}
+translated to Gly in the standard genetic code. Parameter of \code{\link[Biostrings]{translate}}. Default: FALSE.}
 
 \item{aa.color}{Color scheme for amino acids.}
 
