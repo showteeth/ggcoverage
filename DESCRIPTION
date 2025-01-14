@@ -7,7 +7,7 @@ Authors@R: c(
     person("Michael", "Jahn", , "jahn@mpusp.mpg.de", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0002-3913-153X"))
   )
-Maintainer: Michael Jahn <jahn@mpusp.mpg.de>
+Maintainer: Yabing Song <songyb0519@gmail.com>
 Description: The goal of `ggcoverage` is to visualize coverage tracks from
     genomics, transcriptomics or proteomics data. It contains functions to
     load data from BAM, BigWig, BedGraph, txt, or xlsx files, create

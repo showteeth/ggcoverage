@@ -337,9 +337,6 @@ library(ggbio)
 #> 
 #>     geom_bar, geom_rect, geom_segment, ggsave, stat_bin, stat_identity,
 #>     xlim
-```
-
-``` r
 
 basic_coverage +
   geom_gene(gtf.gr = gtf_gr) +
@@ -459,9 +456,6 @@ library("BSgenome.Hsapiens.UCSC.hg19")
 #> The following object is masked from 'package:BiocIO':
 #> 
 #>     FileForFormat
-```
-
-``` r
 
 # create plot
 basic_coverage +
@@ -497,9 +491,6 @@ track_df <- LoadTrackFile(
   region = "4:1-160000000"
 )
 #> No metadata provided, returning coverage as is.
-```
-
-``` r
 
 # add chr prefix
 track_df$seqnames <- paste0("chr", track_df$seqnames)
@@ -606,9 +597,6 @@ track_df <- LoadTrackFile(
 #> No 'region' specified; extracting coverage for an example range
 #> (<=100,000 bases, first annotated sequence)
 #> Coverage extracted from sequence/chromosome: chr10
-```
-
-``` r
 
 head(track_df)
 #>   seqnames    start      end width strand score   Type  Group
@@ -669,7 +657,7 @@ graphics::par(opar)
 
 Default color scheme for amino acid annotation is from [Residual
 colours: a proposal for
-aminochromography](https://academic.oup.com/peds/article/10/7/743/1593029?login=false):
+aminochromography](https://doi.org/10.1093/protein/10.7.743):
 
 ``` r
 aa_color <- c(
@@ -910,7 +898,7 @@ a contact map.
 
 The Hi-C data is taken from [pyGenomeTracks: reproducible plots for
 multivariate genomic
-datasets](https://academic.oup.com/bioinformatics/article/37/3/422/5879987?login=false).
+datasets](https://doi.org/10.1093/bioinformatics/btaa692).
 
 The Hi-C matrix visualization is implemented by
 [`HiCBricks`](https://github.com/koustav-pal/HiCBricks). This package
@@ -931,9 +919,6 @@ track_df <- LoadTrackFile(
   extend = 0
 )
 #> No metadata provided, returning coverage as is.
-```
-
-``` r
 
 track_df$score <- ifelse(track_df$score < 0, 0, track_df$score)
 
@@ -1021,9 +1006,6 @@ library(HiCBricks)
 #> The following object is masked from 'package:Biostrings':
 #> 
 #>     pattern
-```
-
-``` r
 
 basic_coverage +
   geom_tad(
@@ -1066,7 +1048,7 @@ quality of the data.
 ### Load coverage
 
 The exported coverage from [Proteome
-Discoverer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8006021/):
+Discoverer](https://doi.org/10.3390/proteomes9010015):
 
 ``` r
 library(openxlsx)

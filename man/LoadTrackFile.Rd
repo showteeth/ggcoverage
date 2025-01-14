@@ -36,7 +36,7 @@ Default: NULL, coverage is extracted from the first annotated chromosome/sequenc
 
 \item{extend}{Extend length of \code{region}. Default: 2000.}
 
-\item{gtf.gr}{Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.}
+\item{gtf.gr}{Granges object of GTF, created with \code{\link[rtracklayer]{import.gff}}. Default: NULL.}
 
 \item{gene.name}{The name of gene. Default: HNRNPC.}
 

@@ -1,6 +1,6 @@
 #' Add Transcript Annotation to Coverage Plot.
 #'
-#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}.
+#' @param gtf.gr Granges object of GTF, created with \code{\link[rtracklayer]{import.gff}}.
 #'   Default: NULL.
 #' @param gene.name Gene name of all transcripts. Default: HNRNPC.
 #' @param overlap.tx.gap The gap between transcript groups. Default: 0.1.

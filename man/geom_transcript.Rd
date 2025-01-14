@@ -30,7 +30,7 @@ geom_transcript(
 )
 }
 \arguments{
-\item{gtf.gr}{Granges object of GTF, created with \code{\link{import.gff}}.
+\item{gtf.gr}{Granges object of GTF, created with \code{\link[rtracklayer]{import.gff}}.
 Default: NULL.}
 
 \item{gene.name}{Gene name of all transcripts. Default: HNRNPC.}

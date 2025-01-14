@@ -30,7 +30,7 @@ geom_gene(
 )
 }
 \arguments{
-\item{gtf.gr}{Granges object of GTF, created with \code{\link{import.gff}}.
+\item{gtf.gr}{Granges object of GTF, created with \code{\link[rtracklayer]{import.gff}}.
 Default: NULL.}
 
 \item{overlap.gene.gap}{The gap between gene groups. Default: 0.1.}

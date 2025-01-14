@@ -6,7 +6,7 @@
 #' @param region Region to extract coverage for, eg: chr14:21,677,306-21,737,601 or chr14:21,677,306.
 #'   Default: NULL, coverage is extracted from the first annotated chromosome/sequence.
 #' @param extend Extend length of \code{region}. Default: 2000.
-#' @param gtf.gr Granges object of GTF, created with \code{\link{import.gff}}. Default: NULL.
+#' @param gtf.gr Granges object of GTF, created with \code{\link[rtracklayer]{import.gff}}. Default: NULL.
 #' @param gene.name The name of gene. Default: HNRNPC.
 #' @param gene.name.type Gene name type (filed of \code{gtf.gr}), chosen from gene_name and gene_id.
 #'   Default: gene_name.
