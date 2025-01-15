@@ -42,18 +42,28 @@ Plot.
 Add GC Content Annotation to Coverage Plot.
 }
 \examples{
-# library(ggcoverage)
-# library(utils)
-# library(rtracklayer)
-# library("BSgenome.Hsapiens.UCSC.hg19")
-# track folder
-# track.file <- system.file("extdata", "DNA-seq", "CNV_example.txt", package = "ggcoverage")
-# track.df <- utils::read.table(track.file, header = TRUE)
-# gtf.file <- system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-# gtf.gr <- rtracklayer::import.gff(con = gtf.file, format = "gtf")
-# basic.coverage <- ggcoverage(
-#   data = track.df, color = NULL, mark.region = NULL,
-#   region = "chr4:61750000-62,700,000", range.position = "out"
-# )
-# basic.coverage + geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
+if (requireNamespace("BSgenome.Hsapiens.UCSC.hg19", quietly = TRUE)) {
+  library("BSgenome.Hsapiens.UCSC.hg19")
+
+  # load track data
+  track_file <-
+    system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
+  track_df <- LoadTrackFile(
+    track.file = track_file,
+    format = "bw",
+    region = "4:1-160000000"
+  )
+  track_df$seqnames <- paste0("chr", track_df$seqnames)
+
+  # plot coverage and GC content
+  basic_coverage <- ggcoverage(
+    data = track_df,
+    color = "grey",
+    mark.region = NULL,
+    range.position = "out"
+  )
+
+  basic_coverage +
+    geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
+}
 }

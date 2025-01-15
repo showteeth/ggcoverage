@@ -22,23 +22,36 @@
 #' @export
 #'
 #' @examples
-#' # library(ggcoverage)
-#' # library(utils)
-#' # library("BSgenome.Hsapiens.UCSC.hg19")
-#' # # prepare files
-#' # cnv.file <- system.file("extdata", "DNA-seq", "SRR054616_copynumber.txt", package = "ggcoverage")
-#' # track.file <- system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
-#' # # read CNV
-#' # cnv.df = read.table(file = cnv.file, sep = "\t", header = TRUE)
-#' # # load track
-#' # track.df = LoadTrackFile(track.file = track.file, format = "bw")
-#' # track.df$seqnames = paste0("chr", track.df$seqnames)
-#' # # plot
-#' # ggcoverage(data = track.df, color = "grey", region = "chr4:1-160000000",
-#' #            mark.region = NULL, range.position = "out") +
-#' #   geom_gc(bs.fa.seq=BSgenome.Hsapiens.UCSC.hg19) +
-#' #   geom_cnv(cnv.df = cnv.df, bin.col = 3, cn.col = 4) +
-#' #   geom_ideogram(genome = "hg19",plot.space = 0, highlight.centromere = TRUE)
+#' if (requireNamespace("BSgenome.Hsapiens.UCSC.hg19", quietly = TRUE)) {
+#'   library("BSgenome.Hsapiens.UCSC.hg19")
+#'
+#'   # load track data
+#'   track_file <-
+#'     system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
+#'   track_df <- LoadTrackFile(
+#'     track.file = track_file,
+#'     format = "bw",
+#'     region = "4:1-160000000"
+#'   )
+#'   track_df$seqnames <- paste0("chr", track_df$seqnames)
+#'
+#'   # read CNV data
+#'   cnv_file <-
+#'     system.file("extdata", "DNA-seq", "SRR054616_copynumber.txt", package = "ggcoverage")
+#'   cnv_df <- read.table(file = cnv_file, sep = "\t", header = TRUE)
+#'
+#'   # plot coverage, GC content, CNV
+#'   basic_coverage <- ggcoverage(
+#'     data = track_df,
+#'     color = "grey",
+#'     mark.region = NULL,
+#'     range.position = "out"
+#'   )
+#'
+#'   basic_coverage +
+#'     geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19) +
+#'     geom_cnv(cnv.df = cnv_df, bin.col = 3, cn.col = 4)
+#' }
 geom_cnv <- function(cnv.df, bin.col = 3, cn.col = 4, ref.cn = 2,
                      bin.point.color = "grey", bin.point.alpha = 0.6, cn.line.color = "red",
                      ref.line.color = "black", plot.space = 0.1, plot.height = 0.2) {

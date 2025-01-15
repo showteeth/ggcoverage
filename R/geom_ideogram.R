@@ -36,6 +36,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # note that you need to have package 'ggbio' installed
 #' library(ggbio)
 #'
 #' # load metadata

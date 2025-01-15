@@ -102,38 +102,39 @@ Plot.
 Add Base and Amino Acid Annotation to Coverage Plot.
 }
 \examples{
-library("BSgenome.Hsapiens.UCSC.hg19")
+if (requireNamespace("BSgenome.Hsapiens.UCSC.hg19", quietly = TRUE)) {
+  library("BSgenome.Hsapiens.UCSC.hg19")
 
-# get sample metadata
-sample.meta <- data.frame(
-  SampleName = c("tumorA.chr4.selected"),
-  Type = c("tumorA"),
-  Group = c("tumorA")
-)
-
-# get bam file
-bam.file <-
-  system.file("extdata", "DNA-seq", "tumorA.chr4.selected.bam", package = "ggcoverage")
-
-# load bam file
-track.df <- LoadTrackFile(
-  track.file = bam.file,
-  meta.info = sample.meta,
-  single.nuc = TRUE,
-  single.nuc.region = "chr4:62474235-62474295"
-)
-
-# plot
-ggcoverage(
-  data = track.df,
-  color = "grey",
-  range.position = "out",
-  single.nuc = TRUE,
-  rect.color = "white"
-) +
-  geom_base(
-    bam.file = bam.file,
-    bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19
+  # get sample metadata
+  sample.meta <- data.frame(
+    SampleName = c("tumorA.chr4.selected"),
+    Type = c("tumorA"),
+    Group = c("tumorA")
   )
 
+  # get bam file
+  bam.file <-
+    system.file("extdata", "DNA-seq", "tumorA.chr4.selected.bam", package = "ggcoverage")
+
+  # load bam file
+  track.df <- LoadTrackFile(
+    track.file = bam.file,
+    meta.info = sample.meta,
+    single.nuc = TRUE,
+    single.nuc.region = "chr4:62474235-62474295"
+  )
+
+  # plot
+  ggcoverage(
+    data = track.df,
+    color = "grey",
+    range.position = "out",
+    single.nuc = TRUE,
+    rect.color = "white"
+  ) +
+    geom_base(
+      bam.file = bam.file,
+      bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19
+    )
+}
 }

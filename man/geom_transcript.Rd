@@ -91,10 +91,6 @@ Plot.
 Add Transcript Annotation to Coverage Plot.
 }
 \examples{
-library(ggcoverage)
-library(utils)
-library(rtracklayer)
-
 # load metadata
 meta_file <- system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
 sample_meta <- read.csv(meta_file)
@@ -120,18 +116,4 @@ basic_coverage <- ggcoverage(data = track_df, range.position = "out")
 basic_coverage +
   geom_transcript(gtf.gr = gtf_gr, label.vjust = 1.5)
 
-# plot with custom style
-basic_coverage +
-  geom_transcript(
-    gtf.gr = gtf_gr,
-    exon.size = 2.0,
-    arrow.size.im = 1.0,
-    arrow.length.im = 5,
-    arrow.type.im = "open",
-    color.by.im = "strand",
-    fill.color = c(
-      "-" = "darkblue",
-      "+" = "darkgreen"
-    )
-  )
 }
