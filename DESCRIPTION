@@ -1,7 +1,7 @@
 Type: Package
 Package: ggcoverage
 Title: Visualize Genome/Protein Coverage with Various Annotations
-Version: 1.4.0
+Version: 1.4.1
 Authors@R: c(
     person("Yabing", "Song", , "songyb0519@gmail.com", role = c("aut", "cre", "cph")),
     person("Michael", "Jahn", , "jahn@mpusp.mpg.de", role = c("aut", "cph"),
