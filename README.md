@@ -423,7 +423,10 @@ basic_coverage
 
 ##### Add GC annotations
 
-Add **GC**, **ideogram** and **gene** annotaions.
+Add **GC**, **ideogram** and **gene** annotations. The plotting of the
+GC content requires the genome annotation package
+`BSgenome.Hsapiens.UCSC.hg19`. This package needs to be installed
+separately (it is only ‘Suggested’ by `ggcoverage`).
 
 ``` r
 # load genome data
@@ -657,7 +660,7 @@ graphics::par(opar)
 
 Default color scheme for amino acid annotation is from [Residual
 colours: a proposal for
-aminochromography](https://doi.org/10.1093/protein/10.7.743):
+aminochromography](https://pubmed.ncbi.nlm.nih.gov/9342138/):
 
 ``` r
 aa_color <- c(
@@ -898,7 +901,7 @@ a contact map.
 
 The Hi-C data is taken from [pyGenomeTracks: reproducible plots for
 multivariate genomic
-datasets](https://doi.org/10.1093/bioinformatics/btaa692).
+datasets](https://pubmed.ncbi.nlm.nih.gov/32745185/).
 
 The Hi-C matrix visualization is implemented by
 [`HiCBricks`](https://github.com/koustav-pal/HiCBricks). This package

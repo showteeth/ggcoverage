@@ -337,7 +337,9 @@ basic_coverage
 
 ##### Add GC annotations
 
-Add **GC**, **ideogram** and **gene** annotaions.
+Add **GC**, **ideogram** and **gene** annotations.
+The plotting of the GC content requires the genome annotation package `BSgenome.Hsapiens.UCSC.hg19`.
+This package needs to be installed separately (it is only 'Suggested' by `ggcoverage`).
 
 ```{r gc_coverage, eval = FALSE}
 # load genome data

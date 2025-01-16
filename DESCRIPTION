@@ -1,21 +1,21 @@
 Type: Package
 Package: ggcoverage
 Title: Visualize Genome/Protein Coverage with Various Annotations
-Version: 1.4.0
+Version: 1.4.1
 Authors@R: c(
     person("Yabing", "Song", , "songyb0519@gmail.com", role = c("aut", "cre", "cph")),
     person("Michael", "Jahn", , "jahn@mpusp.mpg.de", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0002-3913-153X"))
   )
 Maintainer: Yabing Song <songyb0519@gmail.com>
-Description: The goal of `ggcoverage` is to visualize coverage tracks from
+Description: The goal of 'ggcoverage' is to visualize coverage tracks from
     genomics, transcriptomics or proteomics data. It contains functions to
     load data from BAM, BigWig, BedGraph, txt, or xlsx files, create
     genome/protein coverage plots, and add various annotations including
     base and amino acid composition, GC content, copy number variation
     (CNV), genes, transcripts, ideograms, peak highlights, HiC contact
     maps, contact links and protein features. It is based on and
-    integrates well with `ggplot2`.
+    integrates well with 'ggplot2'.
 License: MIT + file LICENSE
 URL: https://showteeth.github.io/ggcoverage/,
     https://github.com/showteeth/ggcoverage
@@ -49,7 +49,6 @@ Suggests:
     ggforce,
     graphics,
     HiCBricks,
-    HiCDataHumanIMR90,
     htmltools,
     knitr,
     rmarkdown
