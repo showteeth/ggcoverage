@@ -1,9 +1,19 @@
 # Resubmission
 
-Update for current submission: We have substantially removed the size of test
-files for the examples, reducing overall package size from ~30 Mb to only ~6 Mb.
-A further reduction was not possible as the package contains examples for 
-many different NGS file types.
+Update for current submission: 
+
+- We have substantially removed the size of test files for the examples,
+reducing overall package size from ~30 Mb to only ~6 Mb. A further reduction
+was not possible as the package contains examples for many different NGS file
+types.
+
+- Examples were reduced to run in shorter time or excluded from running at all.
+Please note that the 5 sec threshold feels very arbitrary and heavily depends
+on the test environment -- this package never exceeds the threshold when
+tested locally on a 3 year old average laptop, or in 3 different github actions 
+workflows, but regularly fails on the CRAN server.
+
+Background information:
 
 This package has been submitted previously (2023, v0.7.1) and was removed from
 CRAN due to several issues. In the mean time many functions were re-factored,

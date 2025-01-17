@@ -22,7 +22,7 @@
 #' @export
 #'
 #' @examples
-#' if (requireNamespace("BSgenome.Hsapiens.UCSC.hg19", quietly = TRUE)) {
+#' \dontrun{
 #'   library("BSgenome.Hsapiens.UCSC.hg19")
 #'
 #'   # load track data

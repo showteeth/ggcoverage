@@ -46,7 +46,7 @@ Plot.
 Add CNV Annotation to Coverage Plot.
 }
 \examples{
-if (requireNamespace("BSgenome.Hsapiens.UCSC.hg19", quietly = TRUE)) {
+\dontrun{
   library("BSgenome.Hsapiens.UCSC.hg19")
 
   # load track data
