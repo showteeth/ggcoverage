@@ -24,30 +24,32 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' library(ggplot2)
-#' library(openxlsx)
+#' \donttest{
+#'   if (requireNamespace("openxlsx", quietly = TRUE)) {
+#'     library(ggplot2)
+#'     library(openxlsx)
 #'
-#' # import coverage dataframe with function from openxlsx
-#' coverage.file <- system.file(
-#'   "extdata", "Proteomics", "MS_BSA_coverage.xlsx",
-#'   package = "ggcoverage"
-#' )
-#' coverage.df <- read.xlsx(coverage.file)
-#' head(coverage.df)
+#'     # import coverage dataframe with function from openxlsx
+#'     coverage.file <- system.file(
+#'       "extdata", "Proteomics", "MS_BSA_coverage.xlsx",
+#'       package = "ggcoverage"
+#'     )
+#'     coverage.df <- read.xlsx(coverage.file)
+#'     head(coverage.df)
 #'
-#' # get fasta file
-#' fasta.file <- system.file(
-#'   "extdata", "Proteomics", "MS_BSA_coverage.fasta",
-#'   package = "ggcoverage"
-#' )
+#'     # get fasta file
+#'     fasta.file <- system.file(
+#'       "extdata", "Proteomics", "MS_BSA_coverage.fasta",
+#'       package = "ggcoverage"
+#'     )
 #'
-#' protein.id <- "sp|P02769|ALBU_BOVIN"
-#' ggprotein(
-#'   coverage.df = coverage.df,
-#'   fasta.file = fasta.file,
-#'   protein.id = protein.id
-#' )
+#'     protein.id <- "sp|P02769|ALBU_BOVIN"
+#'     ggprotein(
+#'       coverage.df = coverage.df,
+#'       fasta.file = fasta.file,
+#'       protein.id = protein.id
+#'     )
+#'   }
 #' }
 ggprotein <- function(coverage.df, fasta.file, protein.id, XCorr.threshold = 2,
                       confidence = "High", contaminant = NULL, remove.na = TRUE,

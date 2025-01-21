@@ -51,7 +51,8 @@ A dataframe contains all consensus peak.
 Get Consensus Peak from Replicates with MSPC.
 }
 \examples{
-# library(ggcoverage)
-# peak.file <- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
-# peak.df <- GetConsensusPeak(peak.file = peak.file)
+peak_file <- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
+peak_df <- GetConsensusPeak(peak.file = peak_file)
+head(peak_df)
+
 }
