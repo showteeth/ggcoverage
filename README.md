@@ -626,10 +626,8 @@ popular color schemes are available
 nuc_color <- c(
   "A" = "#ff2b08", "C" = "#009aff", "G" = "#ffb507", "T" = "#00bc0d"
 )
-opar <- graphics::par()
 
 # create plot
-graphics::par(mar = c(1, 5, 1, 1))
 graphics::image(
   seq_along(nuc_color),
   1,
@@ -652,12 +650,6 @@ graphics::mtext(
 
 <img src="man/figures/README-base_color_scheme-1.png" width="100%" style="display: block; margin: auto;" />
 
-``` r
-
-# reset par default
-graphics::par(opar)
-```
-
 Default color scheme for amino acid annotation is from [Residual
 colours: a proposal for
 aminochromography](https://pubmed.ncbi.nlm.nih.gov/9342138/):
@@ -673,7 +665,6 @@ aa_color <- c(
   " " = "#FFFFFF"
 )
 
-graphics::par(mar = c(1, 5, 1, 1))
 graphics::image(
   1:5,
   1:5,
@@ -696,12 +687,6 @@ graphics::mtext(
 ```
 
 <img src="man/figures/README-aa_color_scheme-1.png" width="100%" style="display: block; margin: auto;" />
-
-``` r
-
-# reset par default
-graphics::par(opar)
-```
 
 #### Add base and amino acid annotation
 
