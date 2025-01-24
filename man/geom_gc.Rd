@@ -42,28 +42,30 @@ Plot.
 Add GC Content Annotation to Coverage Plot.
 }
 \examples{
-\dontrun{
-  library("BSgenome.Hsapiens.UCSC.hg19")
+\donttest{
+  if (requireNamespace("BSgenome.Hsapiens.UCSC.hg19", quietly = TRUE)) {
+    library("BSgenome.Hsapiens.UCSC.hg19")
 
-  # load track data
-  track_file <-
-    system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
-  track_df <- LoadTrackFile(
-    track.file = track_file,
-    format = "bw",
-    region = "4:1-160000000"
-  )
-  track_df$seqnames <- paste0("chr", track_df$seqnames)
+    # load track data
+    track_file <-
+      system.file("extdata", "DNA-seq", "SRR054616.bw", package = "ggcoverage")
+    track_df <- LoadTrackFile(
+      track.file = track_file,
+      format = "bw",
+      region = "4:1-160000000"
+    )
+    track_df$seqnames <- paste0("chr", track_df$seqnames)
 
-  # plot coverage and GC content
-  basic_coverage <- ggcoverage(
-    data = track_df,
-    color = "grey",
-    mark.region = NULL,
-    range.position = "out"
-  )
+    # plot coverage and GC content
+    basic_coverage <- ggcoverage(
+      data = track_df,
+      color = "grey",
+      mark.region = NULL,
+      range.position = "out"
+    )
 
-  basic_coverage +
-    geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
+    basic_coverage +
+      geom_gc(bs.fa.seq = BSgenome.Hsapiens.UCSC.hg19)
+  }
 }
 }

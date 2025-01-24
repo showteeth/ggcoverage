@@ -35,43 +35,44 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # note that you need to have package 'ggbio' installed
-#' library(ggbio)
+#' \donttest{
+#'   if (requireNamespace("ggbio", quietly = TRUE)) {
+#'     library(ggbio)
 #'
-#' # load metadata
-#' meta_file <-
-#'   system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
-#' sample_meta <- read.csv(meta_file)
+#'     # load metadata
+#'     meta_file <-
+#'       system.file("extdata", "RNA-seq", "meta_info.csv", package = "ggcoverage")
+#'     sample_meta <- read.csv(meta_file)
 #'
-#' # track folder
-#' track_folder <-
-#'   system.file("extdata", "RNA-seq", package = "ggcoverage")
-#' # load bigwig file
-#' track_df <- LoadTrackFile(
-#'   track.folder = track_folder,
-#'   format = "bw",
-#'   region = "chr14:21,677,306-21,737,601",
-#'   extend = 2000,
-#'   meta.info = sample_meta
-#' )
+#'     # track folder
+#'     track_folder <-
+#'       system.file("extdata", "RNA-seq", package = "ggcoverage")
+#'     # load bigwig file
+#'     track_df <- LoadTrackFile(
+#'       track.folder = track_folder,
+#'       format = "bw",
+#'       region = "chr14:21,677,306-21,737,601",
+#'       extend = 2000,
+#'       meta.info = sample_meta
+#'     )
 #'
-#' # gene annotation
-#' gtf_file <-
-#'   system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
-#' gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
+#'     # gene annotation
+#'     gtf_file <-
+#'       system.file("extdata", "used_hg19.gtf", package = "ggcoverage")
+#'     gtf_gr <- rtracklayer::import.gff(con = gtf_file, format = "gtf")
 #'
-#' # coverage plot + ideogram
-#' basic_coverage <- ggcoverage(
-#'   data = track_df,
-#'   plot.type = "facet",
-#'   range.position = "in",
-#'   facet.y.scale = "fixed"
-#' )
+#'     # coverage plot + ideogram
+#'     basic_coverage <- ggcoverage(
+#'       data = track_df,
+#'       plot.type = "facet",
+#'       range.position = "in",
+#'       facet.y.scale = "fixed"
+#'     )
 #'
-#' basic_coverage +
-#'   geom_gene(gtf.gr = gtf_gr) +
-#'   geom_ideogram(genome = "hg19", plot.space = 0)
+#'     basic_coverage +
+#'       geom_gene(gtf.gr = gtf_gr) +
+#'       geom_ideogram(genome = "hg19", plot.space = 0)
+#'   }
 #' }
 #'
 geom_ideogram <- function(genome = "hg19", mark.color = "red", mark.alpha = 0.7, mark.line.size = 1,

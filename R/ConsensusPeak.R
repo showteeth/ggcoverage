@@ -20,12 +20,21 @@
 #' @export
 #'
 #' @examples
-#' # library(ggcoverage)
-#' # peak.file <- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
-#' # peak.df <- GetConsensusPeak(peak.file = peak.file)
-GetConsensusPeak <- function(peak.file, peak.folder = NULL, mspc.path = NULL, rep.type = c("bio", "tec"), stringency.threshold = 1e-8,
-                             weak.threshold = 1e-4, gamma = 1e-8, alpha = 0.05, min.overlap.num = 1,
-                             multiple.intersections = c("Lowest", "Highest"), parallelism.degree = 1) {
+#' peak_file <- system.file("extdata", "ChIP-seq", "consensus.peak", package = "ggcoverage")
+#' peak_df <- GetConsensusPeak(peak.file = peak_file)
+#' head(peak_df)
+#'
+GetConsensusPeak <- function(peak.file,
+                             peak.folder = NULL,
+                             mspc.path = NULL,
+                             rep.type = c("bio", "tec"),
+                             stringency.threshold = 1e-8,
+                             weak.threshold = 1e-4,
+                             gamma = 1e-8,
+                             alpha = 0.05,
+                             min.overlap.num = 1,
+                             multiple.intersections = c("Lowest", "Highest"),
+                             parallelism.degree = 1) {
   # check parameters
   rep.type <- match.arg(arg = rep.type)
   multiple.intersections <- match.arg(arg = multiple.intersections)
@@ -39,7 +48,9 @@ GetConsensusPeak <- function(peak.file, peak.folder = NULL, mspc.path = NULL, re
     stop("Peak file number is less than or equal to one!")
   } else if (length(peak.file) == 1) {
     # read file directly, do not get consensus peaks
-    consensus.peak.df <- read.table(file = peak.file, sep = "\t", header = FALSE)
+    consensus.peak.df <- read.table(file = peak.file,
+                                    sep = "\t",
+                                    header = FALSE)
     consensus.peak.df <- consensus.peak.df[, 1:5]
     colnames(consensus.peak.df) <- c("chr", "start", "stop", "name", "score")
   } else {
@@ -62,9 +73,26 @@ GetConsensusPeak <- function(peak.file, peak.folder = NULL, mspc.path = NULL, re
 
     # full command
     mspc.cmd <- paste(
-      mspc.path, input.para, "-r", rep.type, "-s", stringency.threshold,
-      "-w", weak.threshold, "-g", gamma, "-a", alpha, "-c", min.overlap.num, "-m", multiple.intersections,
-      "-d", parallelism.degree, "-o", out.folder
+      mspc.path,
+      input.para,
+      "-r",
+      rep.type,
+      "-s",
+      stringency.threshold,
+      "-w",
+      weak.threshold,
+      "-g",
+      gamma,
+      "-a",
+      alpha,
+      "-c",
+      min.overlap.num,
+      "-m",
+      multiple.intersections,
+      "-d",
+      parallelism.degree,
+      "-o",
+      out.folder
     )
     # change language information
     full.mspc.cmd <- paste0("export LC_ALL=en_US.UTF-8;", mspc.cmd)
@@ -78,11 +106,17 @@ GetConsensusPeak <- function(peak.file, peak.folder = NULL, mspc.path = NULL, re
     # obtain results
     if (!file.exists(file.path(out.folder, "ConsensusPeaks.bed"))) {
       out.base <- basename(out.folder)
-      all.tmp.dirs <- sort(dir(path = dirname(out.folder), pattern = out.base, full.names = TRUE))
+      all.tmp.dirs <- sort(dir(
+        path = dirname(out.folder),
+        pattern = out.base,
+        full.names = TRUE
+      ))
       out.folder <- all.tmp.dirs[length(all.tmp.dirs)]
     }
     consensus.peak.file <- file.path(out.folder, "ConsensusPeaks.bed")
-    consensus.peak.df <- read.table(file = consensus.peak.file, sep = "\t", header = TRUE)
+    consensus.peak.df <- read.table(file = consensus.peak.file,
+                                    sep = "\t",
+                                    header = TRUE)
   }
   return(consensus.peak.df)
 }
